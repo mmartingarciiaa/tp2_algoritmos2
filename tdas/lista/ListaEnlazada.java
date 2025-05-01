@@ -21,6 +21,12 @@ public class ListaEnlazada<T> implements Lista<T> {
     private Nodo<T> ultimo;
     private int largo;
 
+    public ListaEnlazada() {
+    this.primero = null;
+    this.ultimo = null;
+    this.largo = 0;
+    }
+
     @Override
     public boolean estaVacia() {
         return primero == null && ultimo == null;

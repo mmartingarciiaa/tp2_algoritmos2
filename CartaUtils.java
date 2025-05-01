@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
+import tdas.lista.ListaEnlazada;
 /* por Patricio */
 /**
  * Clase que permite crear una lista de cartas base.
@@ -17,15 +16,15 @@ public class CartaUtils {
      * @return una lista de cartas base con la cantidad especificada de copias de cada tipo de carta.
      * @throws RuntimeException si la cantidad de copias de cada carta es menor a 1.
      */
-    public static List<Carta> crearListaDeCartasBase(int cantidadDeCopiasDeCadaCarta) throws RuntimeException {
-        List<Carta> cartas = new ArrayList<>();
+    public static ListaEnlazada<Carta> crearListaDeCartasBase(int cantidadDeCopiasDeCadaCarta) throws RuntimeException {
+        ListaEnlazada<Carta> cartas = new ListaEnlazada<>();
 
         if(cantidadDeCopiasDeCadaCarta < 1) {
             throw new RuntimeException("La cantidad de copias de cartas debe ser mayor a 0.");
         }
 
         for(int i = 0; i < cantidadDeCopiasDeCadaCarta; i++) {
-            cartas.add(
+            cartas.insertarUltimo(
                 new Carta(
                     "Campo de Fuerza",
                     "Aumenta la defensa de una base durante un número de turnos.",
@@ -33,7 +32,7 @@ public class CartaUtils {
                 )
             );
 
-            cartas.add(
+            cartas.insertarUltimo(
                 new Carta(
                     "Rastreador Cuantico",
                     "Revela si hay naves enemigas en un radio de L (valor random) sectores desde la posición elegida.",
@@ -41,7 +40,7 @@ public class CartaUtils {
                 )
             );
 
-            cartas.add(
+            cartas.insertarUltimo(
                 new Carta(
                     "Doble salto hiperespacial",
                     "Permite mover una nave dos veces en el mismo turno.",
@@ -49,7 +48,7 @@ public class CartaUtils {
                 )
             );
 
-            cartas.add(
+            cartas.insertarUltimo(
                 new Carta(
                     "Base adicional",
                     "Permite agregar una base adicional.",
@@ -57,7 +56,7 @@ public class CartaUtils {
                 )
             );
 
-            cartas.add(
+            cartas.insertarUltimo(
                 new Carta(
                     "Vida adicional a la base",
                     "Aumenta la vida de la base de forma permanente.",
@@ -65,7 +64,7 @@ public class CartaUtils {
                 )
             );
 
-            cartas.add(
+            cartas.insertarUltimo(
                 new Carta(
                     "Daño extra",
                     "La nave hace un daño extra al atacar.",
@@ -73,7 +72,7 @@ public class CartaUtils {
                 )
             );
 
-            cartas.add(
+            cartas.insertarUltimo(
                 new Carta(
                     "Daño en area",
                     "La nave hace daño en area al atacar.",
@@ -81,7 +80,7 @@ public class CartaUtils {
                 )
             );
 
-            cartas.add(
+            cartas.insertarUltimo(
                 new Carta(
                     "Escudo para nave",
                     "La nave recibe un escudo durante un turno.",

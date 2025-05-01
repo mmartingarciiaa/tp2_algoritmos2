@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import tdas.lista.ListaEnlazada;
+
 
 public class Menu {
     // Enumeración para las acciones posibles en el menú
@@ -42,9 +44,10 @@ public class Menu {
     private int dimension; // Dimensiones del tablero
 
     private int numJugadores;  // Número de jugadores
-    private int jugadorActual = 1; // Jugador actual (1 a número de jugadores)
+    private int jugadorActual = 1; // Jugador actual (1 a número de jugadores) [Usar una cola para el turno]
     private Jugador[] jugadores;    // Arreglo de jugadores
 
+    private Mazo mazo; // Instancia de la clase Mazo
     Scanner sc = new Scanner(System.in);    // Creo un objeto Scanner
 
     // Método para mostrar el mensaje inicial del juego y configurar el tablero
@@ -82,9 +85,9 @@ public class Menu {
                 int z = leerPosicion("Z: ", dimension);
                 Pieza pieza = tablero.obtenerSector(x, y, z).obtenerValor();
                 if (pieza.obtenerTipo().equals(VACIO)) {
-                    Pieza base = new Pieza(tipo, x, y, z, BASE + (i + 1));
+                    Pieza base = new Pieza(tipo, dueño, x, y, z, BASE + (i + 1)); 
                     tablero.asignarValor(x, y, z, base);
-                    jugadores[i].asignarBase(base);
+                    jugadores[i].agregarBase(base);
                     baseCreada = true;
                 } else {
                     System.out.println("¡Error! Ya existe una pieza en esa posición.");
@@ -97,10 +100,12 @@ public class Menu {
     // Método para mostrar el menú de opciones y realizar las acciones
     public void menu() {
         Accion accion;
+        ListaEnlazada<Carta> listaCartas = CartaUtils.crearListaDeCartasBase(jugadores.length);
+        mazo = new Mazo(listaCartas); // Crear el mazo de cartas base
         while(jugadores.length > 1) {
             System.err.println("Turno de jugador " + jugadores[jugadorActual - 1].obtenerNombre());
             System.out.println("Opciones:");
-            System.out.println("1. Agregar nave");
+            System.out.println("1. Agregar nave"); // 
             System.out.println("2. Mover nave (no implementado)");
             System.out.println("3. Agregar satélite (no implementado)");
             System.out.println("4. Atacar sector");
@@ -125,7 +130,7 @@ public class Menu {
                     }
                     break;
                 case MOVER_NAVE:
-                    System.out.println("Mover nave no implementado.");
+                    
                     break;
                 case AGREGAR_SATELITE:
                     System.out.println("Agregar satélite no implementado.");
@@ -143,10 +148,11 @@ public class Menu {
                     }
                     break;
                 case ROBAR_CARTA:
-                    System.out.println("Robar carta no implementado.");
+                    jugadores[jugadorActual - 1].agregarCarta(mazo.sacarCarta());
                     break;
                 case USAR_CARTA:
-                    System.out.println("Usar carta no implementado.");
+                    Carta cartaAUsar = jugadores[jugadorActual - 1].sacarCarta();
+                    usarCarta(cartaAUsar);
                     break;
                 case ALIANZA:
                     System.out.println("Alianza no implementado.");
@@ -244,13 +250,74 @@ public class Menu {
             System.out.println("¡La nave enemiga ha sido destruida!");
             ficha.cambiarTipo(RADIACION);
             tablero.asignarValor(XAjustado, YAjustado, ZAjustado, ficha);
-            // queda implementar la logica de eliminar la nave del jugador
+            jugadores[jugadorActual - 1].eliminarNave(XAjustado, YAjustado, ZAjustado);
         }
     
-        tablero.imprimirtablero(tablero.tablero);
         return true;
     }
     
+    private void usarCarta(Carta carta) {
+        switch (carta.getTipo()) {
+            case CAMPO_DE_FUERZA:
+                // Lógica para usar el campo de fuerza
+                break;
+            case RASTREADOR_CUANTICO:
+                // Lógica para usar el rastreador cuántico
+                break;
+            case DOBLE_SALTO_HIPERESPACIAL:
+                // Lógica para usar el doble salto hiperespacial
+                break;
+            case BASE_ADICIONAL:
+                // Lógica para usar la base adicional
+                break;
+            case SUMAR_VIDA_A_BASE:
+                System.out.println("Elija la base:");
+                
+                int posicionX = leerPosicion("Ingrese la posición en X: ", dimension);
+                int posicionY = leerPosicion("Ingrese la posición en Y: ", dimension);
+                int posicionZ = leerPosicion("Ingrese la posición en Z: ", dimension);
+                Sector sector = tablero.obtenerSector(posicionX - 1, posicionY - 1, posicionZ - 1);
+                Pieza base = sector.obtenerValor();
+                if (base.dueño.equals(jugadores[jugadorActual - 1])) {
+                    base.aumentarEscudo(3);
+                }
+                break;
+            case NAVE_HACE_DAÑO_EXTRA:
+                // Lógica para hacer daño extra con la nave
+                break;
+            case NAVE_HACE_DAÑO_EN_AREA:
+                // Lógica para hacer daño en área con la nave
+                break;
+            case NAVE_OBTIENE_ESCUDO:
+                for (Pieza nave : jugadores[jugadorActual - 1].obtenerNaves()) {
+                    nave.aumentarEscudo(3); // Aumentar el escudo de la nave en 1
+                }
+                break;
+            default:
+                System.out.println("Tipo de carta no reconocido.");
+                break;
+        }
+        System.out.println("Usando carta: " + carta.getNombre());
+    }
+    
+    // Método para mover naves
+    /**
+     * mostrar todas las naves, el usuario elige la nave y las coords nuevas
+     * 
+     * eliminamos del tablero esa nave en dichas coords y en su 
+     * 
+     */
+    private void moverNave(int x, int y, int z) {
+        ListaEnlazada<Pieza> naves = jugadores[jugadorActual - 1].obtenerNaves();
+        System.out.println("Elija la base:");
+        for (Pieza base : bases) {
+            int[] coords = base.obtenerCoordenadas();
+            System.out.println(base.obtenerValor() + "X: " + coords[0] + " Y: " + coords[1] + " Z: " + coords[2]);
+        }
+        int posicionX = leerPosicion("Ingrese la posición en X: ", dimension);
+        int posicionY = leerPosicion("Ingrese la posición en Y: ", dimension);
+        int posicionZ = leerPosicion("Ingrese la posición en Z: ", dimension);
+    }
     // Método para finalizar el juego
     private void finDelJuego(int jugador) {
         System.out.println("¡El jugador " + ((jugador == 1) ? jugador1.nombre : jugador2.nombre) + " ha ganado!");

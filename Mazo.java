@@ -1,5 +1,9 @@
 /* por Patricio */
-import java.util.List;
+import tdas.lista.ListaEnlazada;
+import tdas.lista.IteradorLista;
+import tdas.pila.PilaDinamica;
+import java.util.Random;
+
 public class Mazo {
     private PilaDinamica<Carta> cartasDelMazo = null;
 
@@ -16,7 +20,7 @@ public class Mazo {
             throw new RuntimeException("La lista de cartas no puede ser nula.");
         }
 
-        this.cartasDelMazo = new PilaDinamica<Carta>();
+        this.cartasDelMazo = new PilaDinamica<>();
         this.mezclarMazo(cartas);
     }
 
@@ -27,7 +31,7 @@ public class Mazo {
      */
     private void mezclarMazo(ListaEnlazada<Carta> cartas) throws RuntimeException {
         while(cartas.largo() > 0) {
-            IteradorLista<Cartas> iteradorDeCarta = cartas.iterador();
+            IteradorLista<Carta> iteradorDeCarta = cartas.iterador();
             Random random = new Random();
             int indiceAleatorio = random.nextInt(cartas.size());
             int i = 0;
