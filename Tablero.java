@@ -1,10 +1,11 @@
-
-// donde se desarrolla el juego
+import tdas.lista.IteradorLista;
+import tdas.lista.ListaEnlazada;
 
 public class Tablero {
     private final int TAMANIO;
 	private final ListaEnlazada<Sector>[] tablero;
 
+	@SuppressWarnings("unchecked")
 	public Tablero(int dimension) {
 		this.TAMANIO = dimension;
 		this.tablero = (ListaEnlazada<Sector>[]) new ListaEnlazada[TAMANIO];
@@ -27,7 +28,7 @@ public class Tablero {
     
 	// Método asignarValor asigna un valor al sector del tablero correspondiente a las coordenadas indicadas por parámetro
 	public void asignarValor(int x, int y, int z, Pieza valor) {
-		iter = tablero[x].iterador();
+		IteradorLista<Sector> iter = tablero[x].iterador();
 		while (iter.haySiguiente()) {
 			Sector sector = iter.verActual();
 			if (sector.obtenerCoordenadas()[1] == y && sector.obtenerCoordenadas()[2] == z) {
@@ -39,7 +40,7 @@ public class Tablero {
 	}
 
 	public Sector obtenerSector(int x, int y, int z) {
-		iter = tablero[x].iterador();
+		IteradorLista<Sector> iter = tablero[x].iterador();
 		while (iter.haySiguiente()) {
 			Sector sector = iter.verActual();
 			if (sector.obtenerCoordenadas()[1] == y && sector.obtenerCoordenadas()[2] == z) {
@@ -47,6 +48,7 @@ public class Tablero {
 			}
 			iter.siguiente();
 		}
+		return null;
 	}
 }
 

@@ -1,5 +1,3 @@
-package objetosAuxiliares;
-
 // Class Jugador es la clase donde se almacenan los datos del jugador
 // como la nave, la base y sus coordenadas para acceder a ellos
 // en cualquier momento del juego
