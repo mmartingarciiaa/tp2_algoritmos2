@@ -1,19 +1,22 @@
 /* por Patricio */
 import java.util.List;
 public class Mazo {
-    private Pila<Carta> cartasMezcladas = new Pila<Carta>();
+    private PilaDinamica<Carta> cartasDelMazo = null;
 
     /**
-     * Constructor de la clase Mazo que inicializa un mazo de cartas mezclado a partir de una lista proporcionada.
+     * Constructor de la clase Mazo. Inicializa un mazo de cartas a partir de la lista de cartas proporcionada.
+     * La lista de cartas se mezcla de forma aleatoria y se almacena internamente para su gestión.
      *
-     * @param cartas una lista de cartas inicial para el mazo. No debe ser nula.
-     * @throws RuntimeException si la lista de cartas es nula.
+     * @param cartas una lista enlazada de objetos de tipo Carta que será utilizada para inicializar el mazo.
+     *               No debe ser nula; si es nula, se lanzará una excepción.
+     * @throws RuntimeException si la lista de cartas proporcionada es nula.
      */
-    public Mazo(List<Carta> cartas) throws RuntimeException {
+    public Mazo(ListaEnlazada<Carta> cartas) throws RuntimeException {
         if(cartas == null) {
             throw new RuntimeException("La lista de cartas no puede ser nula.");
         }
 
+        this.cartasDelMazo = new PilaDinamica<Carta>();
         this.mezclarMazo(cartas);
     }
 
@@ -22,10 +25,19 @@ public class Mazo {
      *
      * @param cartas una lista de cartas que será mezclada. No debe ser nula y debe contener elementos.
      */
-    private void mezclarMazo(List<Carta> cartas) {
-        while(cartas.size() > 0) {
-            int indiceAleatorio = (int) (Math.random() * cartas.size());
-            cartasMezcladas.apilar(cartas.remove(indiceAleatorio));
+    private void mezclarMazo(ListaEnlazada<Carta> cartas) throws RuntimeException {
+        while(cartas.largo() > 0) {
+            IteradorLista<Cartas> iteradorDeCarta = cartas.iterador();
+            Random random = new Random();
+            int indiceAleatorio = random.nextInt(cartas.size());
+            int i = 0;
+
+            while (i < indiceAleatorio) {
+                iteradorDeCarta.siguiente();
+                i++;
+            }
+
+            cartasDelMazo.apilar(iteradorDeCarta.borrar());
         }
     }
 
@@ -37,10 +49,10 @@ public class Mazo {
      * @throws RuntimeException si el mazo no tiene más cartas disponibles.
      */
     public Carta sacarCarta() throws RuntimeException {
-        if (this.cartasMezcladas.estaVacia()) {
+        if (this.cartasDelMazo.estaVacia()) {
             throw new RuntimeException("No hay mas cartas en el mazo.");
         }
-        return cartasMezcladas.desapilar();
+        return cartasDelMazo.desapilar();
     }
 
     /**
@@ -49,6 +61,6 @@ public class Mazo {
      * @return el número total de cartas restantes en el mazo.
      */
     public int cantidadDeCartas() {
-        return this.cartasMezcladas.contarElementos();
+        return this.cartasDelMazo.contarElementos();
     }
 }
