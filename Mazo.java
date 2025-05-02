@@ -4,8 +4,8 @@ import tdas.lista.IteradorLista;
 import tdas.pila.PilaDinamica;
 import java.util.Random;
 
-public class Mazo {
-    private PilaDinamica<Carta> cartasDelMazo = null;
+public class Mazo<T> {
+    private PilaDinamica<T> cartasDelMazo = null;
 
     /**
      * Constructor de la clase Mazo. Inicializa un mazo de cartas a partir de la lista de cartas proporcionada.
@@ -15,7 +15,7 @@ public class Mazo {
      *               No debe ser nula; si es nula, se lanzará una excepción.
      * @throws RuntimeException si la lista de cartas proporcionada es nula.
      */
-    public Mazo(ListaEnlazada<Carta> cartas) throws RuntimeException {
+    public Mazo(ListaEnlazada<T> cartas) throws RuntimeException {
         if(cartas == null) {
             throw new RuntimeException("La lista de cartas no puede ser nula.");
         }
@@ -29,9 +29,9 @@ public class Mazo {
      *
      * @param cartas una lista de cartas que será mezclada. No debe ser nula y debe contener elementos.
      */
-    private void mezclarMazo(ListaEnlazada<Carta> cartas) throws RuntimeException {
+    private void mezclarMazo(ListaEnlazada<T> cartas) throws RuntimeException {
         while(cartas.largo() > 0) {
-            IteradorLista<Carta> iteradorDeCarta = cartas.iterador();
+            IteradorLista<T> iteradorDeCarta = cartas.iterador();
             Random random = new Random();
             int indiceAleatorio = random.nextInt(cartas.size());
             int i = 0;
