@@ -19,7 +19,8 @@ public class Tablero {
 
 			for (int y = 0; y < TAMANIO; y++) {
 				for (int z = 0; z < TAMANIO; z++) {
-					Sector sector = new Sector(x, y, z, VACIO);
+					Pieza pieza = new Pieza(TipoPieza.VACIO, null, x, y, z, "_", 0);
+					Sector sector = new Sector(x, y, z, pieza);
 					tablero[x].insertarUltimo(sector);
 				}
 			}

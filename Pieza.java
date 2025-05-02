@@ -3,18 +3,51 @@ public class Pieza {
 
 	private TipoPieza tipo;
 	private String nombre;
-	private int[] coordenadas = new int[3];
+	private final int[] coordenadas;
+	private final Jugador duenio;
+	private int vida;
 	
-	
-	public Pieza(TipoPieza tipo, int x, int y, int z, String nombre) {
-		
+	public Pieza(TipoPieza tipo, Jugador duenio, int x, int y, int z, String nombre, int vida) {
 		this.tipo = tipo;
-		this.coordenadas[0] = x;
-		this.coordenadas[1] = y;
-		this.coordenadas[2] = z;
+		this.duenio = duenio;
+		this.coordenadas = new int[] {x, y, z};
 		this.nombre = nombre;
+		this.vida = vida;
 	}
 	
+	/**
+	 * Devuelve el nombre del dueño de la base
+	 * @return
+	 */
+	public Jugador obtenerDuenio() {
+		return duenio;
+	}
+
+	/**
+	 * @return: Devuelve como esta representada la pieza en el tablero 
+	 */
+	public String obtenerNombre() {
+		return nombre;
+	}
+	
+	/**
+	 * Cambia el nombre de la pieza.
+	 * 
+	 * @param nuevoNombre: El nuevo nombre que se le asignará a la pieza.
+	 */
+	public void cambiarNombre(String nuevoNombre) {
+		this.nombre = nuevoNombre;
+	}
+
+	/**
+	 * 
+	 * @return: Devuelve el tipo de pieza 
+	 */
+	
+	public TipoPieza obtenerTipo() {
+		return tipo;
+	}
+
 	/**
 	 * pre:
 	 * @param tipo: tiene que pertenecer a TipoPieza
@@ -28,15 +61,6 @@ public class Pieza {
 	
 	/**
 	 * 
-	 * @return: Devuelve el tipo de pieza 
-	 */
-	
-	public TipoPieza obtenerTipo() {
-		return tipo;
-	}
-	
-	/**
-	 * 
 	 * @return: Devuelve las coordenadas pasadas 
 	 */
 	
@@ -44,12 +68,21 @@ public class Pieza {
 		return coordenadas;
 	}
 	
-	/**
-	 * @return: Devuelve como esta representada la pieza en el tablero 
-	 */
-	public String obtenerNombre() {
-		return nombre;
+	public void cambiarCoordenadas(int x, int y, int z) {
+		this.coordenadas[0] = x;
+		this.coordenadas[1] = y;
+		this.coordenadas[2] = z;
 	}
 	
+	public void aumentarVida(int vida) {
+		this.vida += vida;
+	}
+	
+	public int obtenerVida() {
+		return vida;
+	}
 
+	public void reducirVida(int danioInfligido) {
+		this.vida -= danioInfligido;
+	}
 }

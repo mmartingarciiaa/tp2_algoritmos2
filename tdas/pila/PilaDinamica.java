@@ -61,4 +61,8 @@ public class PilaDinamica<T> implements Pila<T> {
     private void redimensionar(int nuevaCapacidad) {
         datos = Arrays.copyOf(datos, nuevaCapacidad);
     }
+
+    public int cantidad() {
+        return cantidad;
+    }
 }

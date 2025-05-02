@@ -1,8 +1,8 @@
 /* por Patricio */
-import tdas.lista.ListaEnlazada;
-import tdas.lista.IteradorLista;
-import tdas.pila.PilaDinamica;
 import java.util.Random;
+import tdas.lista.IteradorLista;
+import tdas.lista.ListaEnlazada;
+import tdas.pila.PilaDinamica;
 
 public class Mazo<T> {
     private PilaDinamica<T> cartasDelMazo = null;
@@ -33,7 +33,7 @@ public class Mazo<T> {
         while(cartas.largo() > 0) {
             IteradorLista<T> iteradorDeCarta = cartas.iterador();
             Random random = new Random();
-            int indiceAleatorio = random.nextInt(cartas.size());
+            int indiceAleatorio = random.nextInt(cartas.largo());
             int i = 0;
 
             while (i < indiceAleatorio) {
@@ -52,7 +52,7 @@ public class Mazo<T> {
      * @return la carta extraída de la parte superior de la pila interna.
      * @throws RuntimeException si el mazo no tiene más cartas disponibles.
      */
-    public Carta sacarCarta() throws RuntimeException {
+    public T sacarCarta() throws RuntimeException {
         if (this.cartasDelMazo.estaVacia()) {
             throw new RuntimeException("No hay mas cartas en el mazo.");
         }
@@ -65,6 +65,6 @@ public class Mazo<T> {
      * @return el número total de cartas restantes en el mazo.
      */
     public int cantidadDeCartas() {
-        return this.cartasDelMazo.contarElementos();
+        return this.cartasDelMazo.cantidad();
     }
 }
