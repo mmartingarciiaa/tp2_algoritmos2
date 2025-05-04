@@ -95,11 +95,13 @@ public class Bitmap {
      */
     public void generarBMPCompleto(Tablero tablero) throws IOException {
         int dimension = tablero.obtenerDimension();
-        int anchoImagen = dimension * TAM_CELDA;
-        int altoImagen = dimension * (dimension * TAM_CELDA + ESPACIADO_CAPAS) - ESPACIADO_CAPAS;
-
+    
+        // Acomodar capas horizontalmente: ancho se multiplica por Z
+        int anchoImagen = dimension * (dimension * TAM_CELDA + ESPACIADO_CAPAS) - ESPACIADO_CAPAS;
+        int altoImagen = dimension * TAM_CELDA;
+    
         Bitmap bmp = new Bitmap(anchoImagen, altoImagen);
-
+    
         for (int x = 0; x < dimension; x++) {
             ListaEnlazada<Sector> sectoresEnX = tablero.obtenerSector(x);
             IteradorLista<Sector> iter = sectoresEnX.iterador();
@@ -107,40 +109,44 @@ public class Bitmap {
                 Sector sector = iter.verActual();
                 int[] coords = sector.obtenerCoordenadas();
                 int y = coords[1], z = coords[2];
-                int saltoPorZ = z * (dimension * TAM_CELDA + ESPACIADO_CAPAS);
                 int yInvertido = dimension - 1 - y;
-
+    
+                // Desplazar horizontalmente por Z
+                int desplazamientoZ = z * (dimension * TAM_CELDA + ESPACIADO_CAPAS);
+                int xFinal = x * TAM_CELDA + desplazamientoZ;
+                int yFinal = yInvertido * TAM_CELDA;
+    
                 Pieza pieza = sector.obtenerValor();
                 String simbolo = pieza != null ? pieza.obtenerNombre() : "_";
-                // gris claro para sectores vacios
-                int r = 200, g = 200, b = 200;
-                // Dibuja el borde de cada celda
+                int r = 200, g = 200, b = 200; // gris claro para celdas vacías
+    
+                // Dibuja la celda con bordes
                 for (int i = 0; i < TAM_CELDA; i++) {
                     for (int j = 0; j < TAM_CELDA; j++) {
                         boolean hayBorde = (i < MARGEN_CELDA || j < MARGEN_CELDA ||
                                 i == TAM_CELDA - MARGEN_CELDA || j == TAM_CELDA - MARGEN_CELDA);
                         if (hayBorde) {
-                            bmp.setPixel(x * TAM_CELDA + i, saltoPorZ + yInvertido * TAM_CELDA + j, 100, 100, 100); // borde gris oscuro
+                            bmp.setPixel(xFinal + i, yFinal + j, 100, 100, 100); // borde gris oscuro
                         } else {
-                            bmp.setPixel(x * TAM_CELDA + i, saltoPorZ + yInvertido * TAM_CELDA + j, r, g, b); // interior gris claro
+                            bmp.setPixel(xFinal + i, yFinal + j, r, g, b); // interior gris claro
                         }
                     }
                 }
-                // Si hay una nave, se dibuja su ícono pisando la capa de color de abajo
+    
+                // Si hay una nave o base, se dibuja su imagen
                 if (simbolo.equals("N")) {
-                    bmp.dibujarImagen("imagenes/nave.png", x * TAM_CELDA + 2, saltoPorZ + yInvertido * TAM_CELDA + 2, TAM_CELDA - 10, TAM_CELDA - 10);
+                    bmp.dibujarImagen("imagenes/nave.png", xFinal + 2, yFinal + 2, TAM_CELDA - 10, TAM_CELDA - 10);
+                } else if (simbolo.equals("B")) {
+                    bmp.dibujarImagen("imagenes/base.png", xFinal + 2, yFinal + 2, TAM_CELDA - 10, TAM_CELDA - 10);
                 }
-
-                if (simbolo.equals("B")) {
-                    bmp.dibujarImagen("imagenes/base.png", x * TAM_CELDA + 2, saltoPorZ + yInvertido * TAM_CELDA + 2, TAM_CELDA - 10, TAM_CELDA - 10);
-                }
+    
                 iter.siguiente();
             }
         }
-
-        // Guarda el resultado
+    
         bmp.guardarArchivo("tablero.bmp");
     }
+    
 
     /**
      * Dibuja manualmente la letra "N" en una celda del bitmap.
