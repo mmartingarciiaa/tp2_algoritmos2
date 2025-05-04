@@ -1,5 +1,9 @@
 import tdas.lista.IteradorLista;
 import tdas.lista.ListaEnlazada;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
 
 public class Tablero {
     private final int TAMANIO;
@@ -9,6 +13,10 @@ public class Tablero {
 	public Tablero(int dimension) {
 		this.TAMANIO = dimension;
 		this.tablero = (ListaEnlazada<Sector>[]) new ListaEnlazada[TAMANIO];
+	}
+
+	public int obtenerDimension() {
+		return TAMANIO;
 	}
 
     // Método inicializarTablero crea un tablero de tamaño ancho x alto
@@ -38,6 +46,10 @@ public class Tablero {
 			}
 			iter.siguiente();
 		}
+	}
+
+	public ListaEnlazada<Sector> obtenerSector(int x) {
+		return tablero[x];
 	}
 
 	public Sector obtenerSector(int x, int y, int z) {
