@@ -1,9 +1,5 @@
 import tdas.lista.IteradorLista;
 import tdas.lista.ListaEnlazada;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import javax.imageio.ImageIO;
 
 public class Tablero {
     private final int TAMANIO;
