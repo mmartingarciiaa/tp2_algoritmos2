@@ -44,7 +44,7 @@ public class Tablero {
 		}
 	}
 
-	public ListaEnlazada<Sector> obtenerSector(int x) {
+	public ListaEnlazada<Sector> obtenerSectores(int x) {
 		return tablero[x];
 	}
 

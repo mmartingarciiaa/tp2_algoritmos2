@@ -103,7 +103,7 @@ public class Bitmap {
         Bitmap bmp = new Bitmap(anchoImagen, altoImagen);
     
         for (int x = 0; x < dimension; x++) {
-            ListaEnlazada<Sector> sectoresEnX = tablero.obtenerSector(x);
+            ListaEnlazada<Sector> sectoresEnX = tablero.obtenerSectores(x);
             IteradorLista<Sector> iter = sectoresEnX.iterador();
             while (iter.haySiguiente()) {
                 Sector sector = iter.verActual();
@@ -135,9 +135,9 @@ public class Bitmap {
     
                 // Si hay una nave o base, se dibuja su imagen
                 if (simbolo.equals("N")) {
-                    bmp.dibujarImagen("imagenes/nave.png", xFinal + 2, yFinal + 2, TAM_CELDA - 10, TAM_CELDA - 10);
+                    bmp.dibujarImagen("imagenes/nave.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
                 } else if (simbolo.equals("B")) {
-                    bmp.dibujarImagen("imagenes/base.png", xFinal + 2, yFinal + 2, TAM_CELDA - 10, TAM_CELDA - 10);
+                    bmp.dibujarImagen("imagenes/base.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
                 }
     
                 iter.siguiente();
