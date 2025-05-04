@@ -1,10 +1,10 @@
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import tdas.lista.ListaEnlazada;
+import javax.imageio.ImageIO;
 import tdas.lista.IteradorLista;
+import tdas.lista.ListaEnlazada;
 
 /**
  * Clase que permite crear y manipular una imagen BMP píxel por píxel,
@@ -95,10 +95,10 @@ public class Bitmap {
      */
     public void generarBMPCompleto(Tablero tablero) throws IOException {
         int dimension = tablero.obtenerDimension();
-        int ancho = dimension * TAM_CELDA;
-        int alto = dimension * (dimension * TAM_CELDA + ESPACIADO_CAPAS) - ESPACIADO_CAPAS;
+        int anchoImagen = dimension * TAM_CELDA;
+        int altoImagen = dimension * (dimension * TAM_CELDA + ESPACIADO_CAPAS) - ESPACIADO_CAPAS;
 
-        Bitmap bmp = new Bitmap(ancho, alto);
+        Bitmap bmp = new Bitmap(anchoImagen, altoImagen);
 
         for (int x = 0; x < dimension; x++) {
             ListaEnlazada<Sector> sectoresEnX = tablero.obtenerSector(x);
