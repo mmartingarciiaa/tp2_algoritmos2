@@ -73,6 +73,79 @@ public class ListaEnlazada<T> implements Lista<T> {
         largo++;
     }
 
+    /**
+     * Inserta un elemento en la lista enlazada en una posición específica.
+     * Si la posición es menor a 1, se lanza una excepción. Si la posición es mayor al tamaño
+     * actual de la lista, el elemento se agrega al final. Si la posición es 1, el elemento
+     * se inserta al principio. En otros casos, el elemento se inserta en la posición indicada.
+     *
+     * @param dato el elemento a insertar
+     * @param posicion la posición en la lista donde se debe insertar el elemento (1-indexado)
+     * @throws RuntimeException si la posición indicada es menor a 1
+     */
+    public void insertarEnPosicion(T dato, int posicion) throws RuntimeException {
+        if (posicion < 1) {
+            throw new RuntimeException("La posicion debe ser mayor a 0");
+        }
+
+        if (posicion > this.largo) {
+            this.insertarUltimo(dato);
+            return;
+        }
+
+        if (posicion == 1) {
+            this.insertarPrimero(dato);
+            return;
+        }
+
+        Nodo<T> nuevo = new Nodo<>(dato);
+        Nodo<T> actual = this.primero;
+
+        for (int i = 1; i < posicion - 1; i++) {
+            actual = actual.siguiente;
+        }
+
+        nuevo.siguiente = actual.siguiente;
+        actual.siguiente = nuevo;
+        this.largo++;
+    }
+
+    /**
+     * Elimina un elemento de la lista enlazada en una posición específica y lo retorna.
+     * Si la posición es menor a 1, se lanza una excepción. Si la posición es mayor
+     * al tamaño actual de la lista, se eliminará el último elemento. Si la posición
+     * es 1, se eliminará el primer elemento. En otros casos, se eliminará el elemento
+     * en la posición indicada.
+     *
+     * @param posicion la posición del elemento a eliminar en la lista (1-indexado)
+     * @return el elemento eliminado de la lista
+     * @throws RuntimeException si la posición es menor a 1
+     */
+    public T borrarEnPosicion(int posicion) throws RuntimeException {
+        if (posicion < 1) {
+            throw new RuntimeException("La posicion debe ser mayor a 0");
+        }
+        if (posicion > this.largo) {
+            return this.borrarUltimo();
+        }
+        if (posicion == 1) {
+            return this.borrarPrimero();
+        }
+
+        Nodo<T> actual = this.primero;
+
+        for (int i = 1; i < posicion - 1; i++) {
+            actual = actual.siguiente;
+        }
+
+        T dato = actual.siguiente.dato;
+
+        actual.siguiente = actual.siguiente.siguiente;
+        this.largo--;
+
+        return dato;
+    }
+
     @Override
     public T borrarPrimero() {
         if (estaVacia()) throw new RuntimeException("La lista está vacía");
@@ -82,6 +155,38 @@ public class ListaEnlazada<T> implements Lista<T> {
         }
         primero = primero.siguiente;
         largo--;
+        return dato;
+    }
+
+    /**
+     * Borra el último elemento de la lista enlazada y lo devuelve.
+     * Si la lista está vacía, lanza una excepción de runtime.
+     *
+     * @return el dato almacenado en el último nodo eliminado de la lista
+     * @throws RuntimeException si la lista está vacía
+     */
+    public T borrarUltimo() throws RuntimeException {
+        if (this.estaVacia()) {
+            throw new RuntimeException("La lista esta vacia");
+        }
+
+        T dato = this.ultimo.dato;
+
+        if (this.primero == this.ultimo) {
+            this.primero = null;
+        }
+
+        Nodo<T> nodoAux = this.primero;
+
+        while (nodoAux.siguiente != this.ultimo) {
+            nodoAux = nodoAux.siguiente;
+        }
+
+        nodoAux.siguiente = null;
+
+        this.ultimo = nodoAux;
+        this.largo--;
+
         return dato;
     }
 
