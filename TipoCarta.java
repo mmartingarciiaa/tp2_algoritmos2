@@ -1,4 +1,4 @@
-package objetosAuxiliares;/* por Patricio */
+/* por Patricio */
 /**
  * Enumeración que representa los diferentes tipos de cartas que pueden existir en el juego.
  *
