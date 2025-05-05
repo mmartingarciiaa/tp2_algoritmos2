@@ -1,3 +1,4 @@
+package objetosAuxiliares;
 
 public class Pieza {
 

@@ -1,3 +1,5 @@
+package objetosAuxiliares;
+
 import tdas.cola.ColaEnlazada;
 import tdas.lista.IteradorLista;
 import tdas.lista.ListaEnlazada;

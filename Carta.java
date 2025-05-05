@@ -1,4 +1,4 @@
-/* por Patricio */
+package objetosAuxiliares;/* por Patricio */
 /**
  * Clase que representa una carta dentro del juego.
  *
@@ -12,7 +12,7 @@ public class Carta {
     private TipoCarta tipo = null;
 
     /**
-     * Constructor que inicializa una instancia de la clase Carta con un nombre, una descripción y un tipo específico.
+     * Constructor que inicializa una instancia de la clase objetosAuxiliares.Carta con un nombre, una descripción y un tipo específico.
      *
      * @param nombre      el nombre de la carta como una cadena de texto.
      * @param descripcion la descripción de la carta como una cadena de texto.
@@ -86,6 +86,6 @@ public class Carta {
      */
     @Override
     public String toString() {
-        return "Carta: " + this.nombre + " - " + this.descripcion + " - " + this.tipo;
+        return "objetosAuxiliares.Carta: " + this.nombre + " - " + this.descripcion + " - " + this.tipo;
     }
 }

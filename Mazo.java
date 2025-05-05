@@ -1,4 +1,4 @@
-/* por Patricio */
+package objetosAuxiliares;/* por Patricio */
 import java.util.Random;
 import tdas.lista.IteradorLista;
 import tdas.lista.ListaEnlazada;
@@ -11,7 +11,7 @@ public class Mazo<T> {
      * Constructor de la clase Mazo. Inicializa un mazo de cartas a partir de la lista de cartas proporcionada.
      * La lista de cartas se mezcla de forma aleatoria y se almacena internamente para su gestión.
      *
-     * @param cartas una lista enlazada de objetos de tipo Carta que será utilizada para inicializar el mazo.
+     * @param cartas una lista enlazada de objetos de tipo objetosAuxiliares.Carta que será utilizada para inicializar el mazo.
      *               No debe ser nula; si es nula, se lanzará una excepción.
      * @throws RuntimeException si la lista de cartas proporcionada es nula.
      */
