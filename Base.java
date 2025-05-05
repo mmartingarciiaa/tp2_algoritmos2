@@ -1,4 +1,8 @@
-//Clase hija de Pieza 
+package objetosAuxiliares;//Clase hija de Pieza
+
+import objetosAuxiliares.Jugador;
+import objetosAuxiliares.Pieza;
+import objetosAuxiliares.TipoPieza;
 
 public class Base extends Pieza {
 	
@@ -6,7 +10,7 @@ public class Base extends Pieza {
 
 	private int escudo;
 
-	public Base(TipoPieza tipo, Jugador duenio, int x, int y, int z, String nombre, int vida) {	
+	public Base(TipoPieza tipo, Jugador duenio, int x, int y, int z, String nombre, int vida) {
 		super(tipo, duenio, x, y, z, nombre, vida);
 		this.escudo = VALOR_INICIAL_ESCUDO;
 	}

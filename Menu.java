@@ -1,7 +1,7 @@
+package objetosAuxiliares;
+
 import java.util.Scanner;
 import tdas.lista.ListaEnlazada;
-import objetosAuxiliares.Carta;
-import objetosAuxiliares.CartaUtils;
 
 public class Menu {
     // Enumeración para las acciones posibles en el menú
