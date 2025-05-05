@@ -1,4 +1,4 @@
-package objetosAuxiliares;// Class Sector es la clase en la cual se almacena la información de cada sector
+// Class Sector es la clase en la cual se almacena la información de cada sector
 // del tablero de juego, sea nave o base, y su escudo
 
 public class Sector {

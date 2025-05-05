@@ -1,8 +1,4 @@
-package objetosAuxiliares;//Clase hija de Pieza
-
-import objetosAuxiliares.Jugador;
-import objetosAuxiliares.Pieza;
-import objetosAuxiliares.TipoPieza;
+//Clase hija de Pieza
 
 public class Base extends Pieza {
 	

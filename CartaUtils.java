@@ -1,5 +1,3 @@
-package objetosAuxiliares;
-
 import tdas.lista.ListaEnlazada;
 /* por Patricio */
 /**

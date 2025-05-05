@@ -1,5 +1,3 @@
-package objetosAuxiliares;
-
 public class Pieza {
 
 	private TipoPieza tipo;

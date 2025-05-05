@@ -1,4 +1,4 @@
-package objetosAuxiliares;/* por Patricio */
+/* por Patricio */
 /**
  * Clase que representa una carta dentro del juego.
  *

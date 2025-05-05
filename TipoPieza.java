@@ -1,5 +1,3 @@
-package objetosAuxiliares;
-
 /**
  * Tipos de pieza que pueden presentarse usando enumeración
  * 

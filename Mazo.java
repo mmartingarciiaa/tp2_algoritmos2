@@ -1,4 +1,4 @@
-package objetosAuxiliares;/* por Patricio */
+/* por Patricio */
 import java.util.Random;
 import tdas.lista.IteradorLista;
 import tdas.lista.ListaEnlazada;

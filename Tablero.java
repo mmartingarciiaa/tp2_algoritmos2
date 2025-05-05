@@ -1,5 +1,3 @@
-package objetosAuxiliares;
-
 import tdas.lista.IteradorLista;
 import tdas.lista.ListaEnlazada;
 
