@@ -1,6 +1,5 @@
 /* por Patricio */
 import java.util.Random;
-import tdas.lista.IteradorLista;
 import tdas.lista.ListaEnlazada;
 import tdas.pila.PilaDinamica;
 
@@ -31,17 +30,10 @@ public class Mazo<T> {
      */
     private void mezclarMazo(ListaEnlazada<T> cartas) throws RuntimeException {
         while(cartas.largo() > 0) {
-            IteradorLista<T> iteradorDeCarta = cartas.iterador();
             Random random = new Random();
             int indiceAleatorio = random.nextInt(cartas.largo());
-            int i = 0;
 
-            while (i < indiceAleatorio) {
-                iteradorDeCarta.siguiente();
-                i++;
-            }
-
-            cartasDelMazo.apilar(iteradorDeCarta.borrar());
+            cartasDelMazo.apilar(cartas.borrarEnPosicion(indiceAleatorio + 1));
         }
     }
 
