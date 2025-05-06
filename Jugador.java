@@ -7,14 +7,18 @@ import tdas.lista.ListaEnlazada;
 // en cualquier momento del juego
 
 public class Jugador {
-    private ListaEnlazada<Pieza> bases;
-    private ListaEnlazada<Pieza> naves;
-    private ListaEnlazada<Pieza> satelites;
-    private ColaEnlazada<Carta> cartas;
+    private ListaEnlazada<Pieza> bases = null;
+    private ListaEnlazada<Pieza> naves = null;
+    private ListaEnlazada<Pieza> satelites = null;
+    private ColaEnlazada<Carta> cartas = null;
     private final String nombre;
 
     public Jugador(String nombre) {
         this.nombre = nombre;
+        this.bases = new ListaEnlazada<>();
+        this.naves = new ListaEnlazada<>();
+        this.satelites = new ListaEnlazada<>();
+        this.cartas = new ColaEnlazada<>();
     }
 
     public String obtenerNombre() {
