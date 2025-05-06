@@ -20,10 +20,13 @@ public class Carta {
      * @param tipo        el tipo de la carta como una instancia de {@link TipoCarta}.
      */
     public Carta(String nombre, String descripcion, TipoCarta tipo) throws RuntimeException {
-        this.validarParametros(nombre, descripcion, tipo);
+        String nombreAux = nombre.trim();
+        String descripcionAux = descripcion.trim();
 
-        this.setNombre(nombre);
-        this.setDescripcion(descripcion);
+        this.validarParametros(nombreAux, descripcionAux, tipo);
+
+        this.setNombre(nombreAux);
+        this.setDescripcion(descripcionAux);
         this.setTipo(tipo);
     }
 
