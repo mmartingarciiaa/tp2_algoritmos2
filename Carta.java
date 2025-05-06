@@ -18,7 +18,9 @@ public class Carta {
      * @param descripcion la descripción de la carta como una cadena de texto.
      * @param tipo        el tipo de la carta como una instancia de {@link TipoCarta}.
      */
-    public Carta(String nombre, String descripcion, TipoCarta tipo) {
+    public Carta(String nombre, String descripcion, TipoCarta tipo) throws RuntimeException {
+        this.validarParametros(nombre, descripcion, tipo);
+
         this.setNombre(nombre);
         this.setDescripcion(descripcion);
         this.setTipo(tipo);
@@ -78,14 +80,11 @@ public class Carta {
         this.tipo = tipo;
     }
 
-    /**
-     * Devuelve una representación en forma de cadena de texto de la carta,
-     * que incluye su nombre, descripción y tipo.
-     *
-     * @return una cadena que describe la carta con su nombre, descripción y tipo.
-     */
-    @Override
-    public String toString() {
-        return "objetosAuxiliares.Carta: " + this.nombre + " - " + this.descripcion + " - " + this.tipo;
+    private void validarParametros(String nombre, String descripcion, TipoCarta tipo) throws RuntimeException {
+        ValidacionesUtils.noNulo(nombre, "Nombre");
+        ValidacionesUtils.noNulo(descripcion, "Descripcion");
+        ValidacionesUtils.noNulo(tipo, "Tipo de carta");
+        ValidacionesUtils.validarMinimoDeCaracteres(nombre, 3, "Nombre");
+        ValidacionesUtils.validarMinimoDeCaracteres(descripcion, 3, "Descripcion");
     }
 }
