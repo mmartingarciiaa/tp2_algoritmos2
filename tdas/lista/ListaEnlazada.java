@@ -82,6 +82,7 @@ public class ListaEnlazada<T> implements Lista<T> {
      * @param dato el elemento a insertar
      * @param posicion la posición en la lista donde se debe insertar el elemento (1-indexado)
      * @throws RuntimeException si la posición indicada es menor a 1
+     * @author Patricio Alaniz
      */
     public void insertarEnPosicion(T dato, int posicion) throws RuntimeException {
         if (posicion < 1) {
@@ -120,6 +121,7 @@ public class ListaEnlazada<T> implements Lista<T> {
      * @param posicion la posición del elemento a eliminar en la lista (1-indexado)
      * @return el elemento eliminado de la lista
      * @throws RuntimeException si la posición es menor a 1
+     * @author Patricio Alaniz
      */
     public T borrarEnPosicion(int posicion) throws RuntimeException {
         if (posicion < 1) {
@@ -164,6 +166,7 @@ public class ListaEnlazada<T> implements Lista<T> {
      *
      * @return el dato almacenado en el último nodo eliminado de la lista
      * @throws RuntimeException si la lista está vacía
+     * @author Patricio Alaniz
      */
     public T borrarUltimo() throws RuntimeException {
         if (this.estaVacia()) {
