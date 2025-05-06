@@ -1,7 +1,12 @@
 import tdas.lista.ListaEnlazada;
-/* por Patricio */
+
 /**
- * Clase que permite crear una lista de cartas base.
+ * Utilidad para la creación y gestión de cartas en el juego.
+ *
+ * La clase proporciona funciones para generar listas predefinidas de cartas con sus
+ * respectivas descripciones, nombres y tipos. Facilita la creación de un conjunto base
+ * de cartas que puede utilizarse en el contexto del juego.
+ * @author Patricio Alaniz
  */
 public class CartaUtils {
     /**

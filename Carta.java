@@ -5,6 +5,7 @@
  * Una carta tiene un nombre, una descripción y un tipo específico representado
  * por la enumeración {@link TipoCarta}. Las cartas pueden ser utilizadas para
  * realizar acciones o aplicar efectos dentro del juego.
+ * @author Patricio Alaniz
  */
 public class Carta {
     private String nombre = null;

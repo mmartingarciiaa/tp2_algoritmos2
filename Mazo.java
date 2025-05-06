@@ -1,8 +1,14 @@
-/* por Patricio */
 import java.util.Random;
 import tdas.lista.ListaEnlazada;
 import tdas.pila.PilaDinamica;
 
+/**
+ * Clase que representa un mazo de cartas genérico. Este mazo permite inicializarse con una lista
+ * de cartas, mezclarlas de forma aleatoria y gestionarlas para extraer cartas una a una.
+ *
+ * @param <T> el tipo de los elementos que se almacenarán en el mazo.
+ * @author Patricio Alaniz
+ */
 public class Mazo<T> {
     private PilaDinamica<T> cartasDelMazo = null;
 
@@ -15,9 +21,7 @@ public class Mazo<T> {
      * @throws RuntimeException si la lista de cartas proporcionada es nula.
      */
     public Mazo(ListaEnlazada<T> cartas) throws RuntimeException {
-        if(cartas == null) {
-            throw new RuntimeException("La lista de cartas no puede ser nula.");
-        }
+        ValidacionesUtils.noNulo(cartas, "Lista de cartas");
 
         this.cartasDelMazo = new PilaDinamica<>();
         this.mezclarMazo(cartas);

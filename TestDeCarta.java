@@ -1,6 +1,17 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Clase de pruebas unitarias para validar el comportamiento de la clase {@link Carta}.
+ *
+ * Esta clase utiliza el framework de pruebas JUnit para realizar una serie de tests
+ * sobre la funcionalidad de creación y validación de objetos {@link Carta}.
+ *
+ * Las pruebas incluyen casos de éxito y diversos escenarios de error, verificando
+ * que se cumplan correctamente las restricciones impuestas sobre los parámetros de los
+ * métodos de {@link Carta}.
+ * @author Patricio Alaniz
+ */
 public class TestDeCarta {
 
   @Test
