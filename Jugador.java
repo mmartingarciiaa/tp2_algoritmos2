@@ -7,9 +7,9 @@ import tdas.lista.ListaEnlazada;
 // en cualquier momento del juego
 
 public class Jugador {
-    private ListaEnlazada<Pieza> bases = null;
-    private ListaEnlazada<Pieza> naves = null;
-    private ListaEnlazada<Pieza> satelites = null;
+    private ListaEnlazada<Base> bases = null;
+    private ListaEnlazada<Nave> naves = null;
+    private ListaEnlazada<Satelite> satelites = null;
     private ColaEnlazada<Carta> cartas = null;
     private final String nombre;
 
@@ -30,31 +30,31 @@ public class Jugador {
     }
 
     // Método obtenerBase obtiene el valor de la base
-    public ListaEnlazada<Pieza> obtenerBases() {
+    public ListaEnlazada<Base> obtenerBases() {
         return bases;
     }
     
     // Método asignarBase asigna un valor a la base
-    public void agregarBase(Pieza base) {
+    public void agregarBase(Base base) {
         this.bases.insertarUltimo(base);
     }
 
     
     // Método obtenerNave obtiene el valor de la nave
-    public ListaEnlazada<Pieza> obtenerNaves() {
+    public ListaEnlazada<Nave> obtenerNaves() {
         return naves;
     }
     
     // Método asignarNave asigna un valor a la nave
-    public void agregarNave(Pieza nave) {
+    public void agregarNave(Nave nave) {
         this.naves.insertarUltimo(nave);
     }
     
     
     public void eliminarNave(int x, int y, int z) {
-        IteradorLista<Pieza> iter = naves.iterador();
+        IteradorLista<Nave> iter = naves.iterador();
         while (iter.haySiguiente()) {
-            Pieza nave = iter.verActual();
+            Nave nave = iter.verActual();
             int[] coords = nave.obtenerCoordenadas();
             if (coords[0] == x && coords[1] == y && coords[2] == z) {
                 iter.borrar();
@@ -69,27 +69,9 @@ public class Jugador {
 
     public Carta sacarCarta() {
         return cartas.desencolar();
-    } 
-    
-    public String toStringBases() {
-        StringBuilder sb = new StringBuilder("Bases del jugador:\n");
-        bases.iterar(pieza -> {
-            sb.append("  - ").append(pieza).append("\n");
-            return true;
-        });
-        return sb.toString();
     }
 
-    public String toStringNaves() {
-        StringBuilder sb = new StringBuilder("Naves del jugador:\n");
-        naves.iterar(pieza -> {
-            sb.append("  - ").append(pieza).append("\n");
-            return true;
-        });
-        return sb.toString();
-    }
-
-    public void agregarSatelite(Pieza satelite) {
+    public void agregarSatelite(Satelite satelite) {
         this.satelites.insertarUltimo(satelite);
     }
 }

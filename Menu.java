@@ -1,6 +1,6 @@
-package objetosAuxiliares;
-
+import java.io.IOException;
 import java.util.Scanner;
+import tdas.lista.IteradorLista;
 import tdas.lista.ListaEnlazada;
 
 public class Menu {
@@ -36,12 +36,12 @@ public class Menu {
     }
 
     private final int LIMITE_DISTANCIA = 5;  // Distancia máxima entre la base y la nave
-    private final int VIDA_BASE = 5;  // Vida inicial de la base
+    private final int VIDA_BASE = 10;  // Vida inicial de la base
     private final int VIDA_NAVE = 1;  // Vida inicial de la nave
     private final int VIDA_SATELITE = 1;  // Vida inicial del satélite
 
-    private final String NAVE = "N";  // Caracter para representar una nave
-    private final String BASE = "B";  // Caracter para representar una base
+    final String NAVE = "N";  // Caracter para representar una nave
+    final String BASE = "B";  // Caracter para representar una base
     private final String SATELITE = "S";  // Caracter para representar un satélite
     
     private Tablero tablero; // Instancia de la clase Tablero
@@ -87,10 +87,10 @@ public class Menu {
                 int x = leerPosicion("X: ", dimension);
                 int y = leerPosicion("Y: ", dimension);
                 int z = leerPosicion("Z: ", dimension);
-                Pieza pieza = tablero.obtenerSector(x, y, z).obtenerValor();
+                Pieza pieza = tablero.obtenerSector(x - 1, y - 1, z - 1).obtenerValor();
                 if (pieza.obtenerTipo().equals(TipoPieza.VACIO)) {
-                    Pieza base = new Base(TipoPieza.BASE, jugadores[i], x, y, z, BASE + (i + 1), VIDA_BASE); 
-                    tablero.asignarValor(x, y, z, base);
+                    Base base = new Base(TipoPieza.BASE, jugadores[i], x - 1, y - 1, z - 1, BASE, VIDA_BASE);
+                    tablero.asignarValor(x - 1, y - 1, z - 1, base);
                     jugadores[i].agregarBase(base);
                     baseCreada = true;
                 } else {
@@ -103,9 +103,10 @@ public class Menu {
 
     // Método para mostrar el menú de opciones y realizar las acciones
     public void menu() {
+        this.crearBases();
         Accion accion;
         ListaEnlazada<Carta> listaCartas = CartaUtils.crearListaDeCartasBase(jugadores.length);
-        mazo = new Mazo(listaCartas); // Crear el mazo de cartas base
+        mazo = new Mazo<>(listaCartas); // Crear el mazo de cartas base
         while(jugadores.length > 1) {
             System.err.println("Turno de jugador " + jugadores[jugadorActual - 1].obtenerNombre());
             System.out.println("Opciones:");
@@ -134,28 +135,48 @@ public class Menu {
                     }
                     break;
                 case MOVER_NAVE:
-                    
+                    moverNave();
+                    jugadorActual = (jugadorActual % numJugadores) + 1; // Cambiar jugador
                     break;
                 case AGREGAR_SATELITE:
                     System.out.println("Agregar satélite no implementado.");
                     break;
                 case ATACAR_SECTOR:
-                    if (!jugadores[jugadorActual - 1].puedeAtacar()) {
-                        System.out.println(jugadores[jugadorActual - 1].obtenerNombre() + " no tiene naves disponibles para atacar.");
-                        continue;  // No permitir atacar si no tiene naves
+                    Jugador jugador = jugadores[jugadorActual - 1];
+                    ListaEnlazada<Nave> navesDisponibles = jugador.obtenerNaves();
+                
+                    if (!jugador.puedeAtacar()) {
+                        System.out.println(jugador.obtenerNombre() + " no tiene naves disponibles para atacar.");
+                        break;
                     }
-                    posicionX = leerPosicion("Ingrese la posición en X: ", dimension);
-                    posicionY = leerPosicion("Ingrese la posición en Y: ", dimension);
-                    posicionZ = leerPosicion("Ingrese la posición en Z: ", dimension);
-                    ListaEnlazada<Pieza> naves = jugadores[jugadorActual - 1].obtenerNaves();
-                    naves.iterar(nave -> {
-                        if (!atacarSector(posicionX, posicionY, posicionZ, nave)) {
-                            return true;
-                        }
-                        jugadorActual = (jugadorActual % numJugadores) + 1; // Cambiar jugador
-                        return false;
+                
+                    System.out.println("Tus naves:");
+                    // Enumero y muestro las naves disponibles
+                    final int[] contador = {1};
+                    navesDisponibles.iterar(nave -> {
+                        int[] coords = nave.obtenerCoordenadas();
+                        System.out.println(contador[0] + ". Nave en X: " + (coords[0] + 1) + " Y: " + (coords[1] + 1) + " Z: " + (coords[2] + 1));
+                        contador[0]++;
+                        return true;
                     });
+                
+                    int seleccion = leerEntero("Elegí el número de la nave para atacar: ");
+                    if (seleccion < 1 || seleccion >= contador[0]) {
+                        System.out.println("Selección inválida.");
+                        break;
+                    }
+                
+                    Nave naveSeleccionada = navesDisponibles.obtenerEnPosicion(seleccion - 1);
+                
+                    int x = leerPosicion("Ingrese la posición en X del objetivo: ", dimension);
+                    int y = leerPosicion("Ingrese la posición en Y del objetivo: ", dimension);
+                    int z = leerPosicion("Ingrese la posición en Z del objetivo: ", dimension);
+                
+                    if (atacarSector(x, y, z, naveSeleccionada)) {
+                        jugadorActual = (jugadorActual % numJugadores) + 1;
+                    }
                     break;
+                
                 case ROBAR_CARTA:
                     jugadores[jugadorActual - 1].agregarCarta((Carta) mazo.sacarCarta());
                     break;
@@ -173,8 +194,18 @@ public class Menu {
                     System.out.println("Opción no válida. Intente nuevamente.");
                     break;
             }
+            int anchoImagen = dimension * (dimension * Bitmap.TAM_CELDA + Bitmap.ESPACIADO_CAPAS) - Bitmap.ESPACIADO_CAPAS;
+            int altoImagen = dimension * Bitmap.TAM_CELDA;
+
+            Bitmap bmp = new Bitmap(anchoImagen, altoImagen);
+
+            try {
+                bmp.generarBMPCompleto(tablero, jugadores[jugadorActual - 1]);
+                bmp.guardarArchivo("tablero.bmp");
+            } catch (IOException e) {
+                System.out.println("Error al dibujar el tablero: " + e.getMessage());
+            }
         }
-        finDelJuego(jugadorActual);
     }
 
     // Método para agregar una nave en el tablero
@@ -199,72 +230,83 @@ public class Menu {
             return false;
         }
 
-        Pieza nave = new Nave(TipoPieza.NAVE, x, y, z, NAVE + jugadorActual);
-        tablero.asignarValor(x, y, z, nave);
+        Nave nave = new Nave(TipoPieza.NAVE, jugadores[jugadorActual - 1], XAjustado, YAjustado, ZAjustado, NAVE, VIDA_NAVE, 1);
+        tablero.asignarValor(XAjustado, YAjustado, ZAjustado, nave);
         
         // Incrementar la cantidad de naves del jugador actual
         jugadores[jugadorActual - 1].agregarNave(nave);
 
-        tablero.imprimirTablero(tablero);
         return true;
     }
 
     // Método para atacar un sector del tablero
-    private boolean atacarSector(int x, int y, int z, Pieza nave) {
-        int XAjustado = x - 1; // Ajustar para ser cero-basado
-        int YAjustado = y - 1; // Ajustar para ser cero-basado
-        int ZAjustado = z - 1; // Z siempre es 0 para el ataque
-
+    private boolean atacarSector(int x, int y, int z, Nave naveAtacante) {
+        int XAjustado = x - 1;
+        int YAjustado = y - 1;
+        int ZAjustado = z - 1;
+    
         if (!coordenadasValidas(XAjustado, YAjustado, ZAjustado)) {
             System.out.println("Posición fuera de los límites.");
             return false;
         }
     
-        if (!verificarDistancia(x, y, z, nave.obtenerCoordenadas()[0], nave.obtenerCoordenadas()[1], nave.obtenerCoordenadas()[2])) {
-            System.out.println("El ataque debe ser a menos de 5 casilleros de la nave.");
-            return false;
-        }
-
+        //if (!verificarDistancia(x, y, z)) {
+        //    System.out.println("El ataque debe ser a menos de 5 casilleros de la nave.");
+        //    return false;
+        //}
+    
         Sector sector = tablero.obtenerSector(XAjustado, YAjustado, ZAjustado);
-        //en Pieza guardamos una variable que sea Dueño y aca solo preguntamos que sea igual a jugActual
-        if (esCasillaPropia(sector)) {
+        Pieza ficha = sector.obtenerValor();
+    
+        if (ficha == null || ficha.obtenerTipo() == TipoPieza.VACIO) {
+            System.out.println("¡Disparo a la nada!");
+            return true;
+        }
+    
+        if (esCasillaPropia(ficha)) {
             System.out.println("No podés atacar tus propias unidades.");
             return false;
         }
     
-        Pieza ficha = sector.obtenerValor();
-        TipoPieza tipo = ficha.obtenerTipo();
-        
-        if (tipo.equals(TipoPieza.RADIACION)) {
+        if (ficha.obtenerTipo() == TipoPieza.RADIACION) {
             System.out.println("No se puede atacar un sector con radiación.");
             return false;
         }
-
-
-        if (tipo.equals(TipoPieza.BASE)) {
-            ficha.reducirEscudo();
-
-            if (ficha.obtenerEscudo() <= 0) {
-                System.out.println("¡La base ha sido destruida!");
-                ficha.cambiarTipo(TipoPieza.RADIACION);
-                tablero.asignarValor(XAjustado, YAjustado, ZAjustado, ficha);
-                //aca le pasamos un "base.dueño" y ese es el que pierde
-                jugadores = jugadoresRestantes(jugadores, ficha.obtenerDuenio());
-                perdedor(ficha.obtenerDuenio());
-            } else {
-                System.out.println("¡La base ha sido atacada! Escudo restante: " + ficha.obtenerEscudo());
-            }
-        }
-
-        if (tipo.equals(TipoPieza.NAVE)) {
-            System.out.println("¡La nave enemiga ha sido destruida!");
-            ficha.cambiarTipo(TipoPieza.RADIACION);
-            tablero.asignarValor(XAjustado, YAjustado, ZAjustado, ficha);
-            jugadores[jugadorActual - 1].eliminarNave(XAjustado, YAjustado, ZAjustado);
+    
+        Jugador duenio = ficha.obtenerDuenio(); // Jugador dueño de la pieza atacada
+        int danio = naveAtacante.obtenerDanio(); // Daño infligido por la nave atacante
+    
+        switch (ficha.obtenerTipo()) {
+            case BASE:
+                if (ficha instanceof Base base) {
+                    base.reducirEscudo(danio);
+                    //if (base.obtenerEscudo() <= 0) {
+                    //    System.out.println("¡La base ha sido destruida!");
+                    //    tablero.asignarValor(XAjustado, YAjustado, ZAjustado, new Pieza(TipoPieza.RADIACION, 5));
+                    //    duenio.eliminarBase(XAjustado, YAjustado, ZAjustado);
+                    //    if (duenio.obtenerBases().estaVacia()) {
+                    //        System.out.println("¡El jugador " + duenio.obtenerNombre() + " ha sido eliminado!");
+                    //        jugadores = jugadoresRestantes(jugadores, duenio);
+                    //        perdedor(duenio);
+                    //    }
+                    //} else {
+                    //    System.out.println("¡La base ha sido atacada! Escudo restante: " + ficha.obtenerEscudo());
+                    //    tablero.asignarValor(XAjustado, YAjustado, ZAjustado, ficha); // Actualiza con escudo reducido
+                    //}
+                }
+                break;
+    
+            case NAVE:
+            case SATELITE:
+                System.out.println("¡" + ficha.obtenerTipo() + " enemigo ha sido destruido!");
+                tablero.asignarValor(XAjustado, YAjustado, ZAjustado, null);
+                duenio.eliminarNave(x, y, z);
+                break;
         }
     
         return true;
     }
+    
     
     private void usarCarta(Carta carta) {
         int posicionX, posicionY, posicionZ;
@@ -317,11 +359,11 @@ public class Menu {
                 // Lógica para hacer daño en área con la nave
                 break;
             case NAVE_OBTIENE_ESCUDO:
-                ListaEnlazada<Pieza> naves = jugadores[jugadorActual - 1].obtenerNaves();
+                /*ListaEnlazada<Pieza> naves = jugadores[jugadorActual - 1].obtenerNaves();
                 naves.iterar(nave -> {
                     nave.aumentarEscudo(1);
                     return true;
-                });
+                });*/
                 break;
             default:
                 System.out.println("Tipo de carta no reconocido.");
@@ -331,57 +373,104 @@ public class Menu {
     }
     
     // Método para mover naves
-    /**
-     * mostrar todas las naves, el usuario elige la nave y las coords nuevas
-     * 
-     * eliminamos del tablero esa nave en dichas coords y en su 
-     * 
-     */
-    private void moverNave(int x, int y, int z) {
-        ListaEnlazada<Pieza> naves = jugadores[jugadorActual - 1].obtenerNaves();
-        System.out.println("Elija la base:");
-        for (Pieza base : bases) {
-            int[] coords = base.obtenerCoordenadas();
-            System.out.println(base.obtenerValor() + "X: " + coords[0] + " Y: " + coords[1] + " Z: " + coords[2]);
+    private void moverNave() {
+        ListaEnlazada<Nave> naves = jugadores[jugadorActual - 1].obtenerNaves();
+    
+        if (naves.estaVacia()) {
+            System.out.println("No tenés naves para mover.");
+            return;
         }
-        int posicionX = leerPosicion("Ingrese la posición en X: ", dimension);
-        int posicionY = leerPosicion("Ingrese la posición en Y: ", dimension);
-        int posicionZ = leerPosicion("Ingrese la posición en Z: ", dimension);
+    
+        System.out.println("Tus naves:");
+        final int[] contador = {1};
+        naves.iterar(nave -> {
+            int[] coords = nave.obtenerCoordenadas();
+            System.out.println(contador[0] + ". Nave en X: " + (coords[0] + 1) + " Y: " + (coords[1] + 1) + " Z: " + (coords[2] + 1));
+            contador[0]++;
+            return true;
+        });
+    
+        int seleccion = leerEntero("Elegí el número de la nave a mover: ");
+        if (seleccion < 1 || seleccion >= contador[0]) {
+            System.out.println("Selección inválida.");
+            return;
+        }
+    
+        Nave naveAMover = naves.obtenerEnPosicion(seleccion - 1);
+        int[] coordsViejas = naveAMover.obtenerCoordenadas();
+    
+        int nuevaX = leerPosicion("Nueva posición en X: ", dimension);
+        int nuevaY = leerPosicion("Nueva posición en Y: ", dimension);
+        int nuevaZ = leerPosicion("Nueva posición en Z: ", dimension);
+    
+        if (!coordenadasValidas(nuevaX - 1, nuevaY - 1, nuevaZ - 1)) {
+            System.out.println("Posición fuera del tablero.");
+            return;
+        }
+    
+        if (!verificarDistancia(nuevaX, nuevaY, nuevaZ)) {
+            System.out.println("La nave debe mantenerse a 5 casilleros o menos de su base.");
+            return;
+        }
+    
+        if (hayPiezaEnPosicion(nuevaX - 1, nuevaY - 1, nuevaZ - 1)) {
+            System.out.println("Ya hay una pieza en esa posición.");
+            return;
+        }
+    
+        tablero.asignarValor(coordsViejas[0], coordsViejas[1], coordsViejas[2], new Pieza(TipoPieza.VACIO, null, coordsViejas[0], coordsViejas[1], coordsViejas[2], "_", 0));
+        naveAMover.cambiarCoordenadas(nuevaX - 1, nuevaY - 1, nuevaZ - 1);
+        tablero.asignarValor(nuevaX - 1, nuevaY - 1, nuevaZ - 1, naveAMover);
+    
+        System.out.println("Nave movida exitosamente.");
     }
-    // Método para finalizar el juego
-    private void finDelJuego(int jugador) {
-        System.out.println("¡El jugador " + ((jugador == 1) ? jugador1.nombre : jugador2.nombre) + " ha ganado!");
-        System.out.println("¡Gracias por jugar!");
-        System.exit(0);  // Salir del programa
-    }
+    
 
-    /* -------------- Metodos auxiliares -------------- */
+
+/* -------------- Metodos auxiliares -------------- */
+
     // Verificar si las coordenadas están dentro de los límites del tablero
     private boolean coordenadasValidas(int x, int y, int z) {
-        return x >= 0 && x < tablero.TAMANIO && y >= 0 && y < tablero.TAMANIO && z >= 0 && z < tablero.TAMANIO;
+        return x >= 0 && x < dimension &&
+               y >= 0 && y < dimension &&
+               z >= 0 && z < dimension;
     }
 
+    
     // Verificar si la casilla es propia
-    private boolean esCasillaPropia(int x, int y, int z) {
-        String valor = tablero.tablero[x][y].getValor();
-        return valor.equals(BASE + jugadorActual) || valor.equals(NAVE + jugadorActual);
+    private boolean esCasillaPropia(Pieza pieza) {
+    if (pieza == null || pieza.obtenerTipo() == TipoPieza.VACIO) {
+        return false;
+    }
+    Jugador duenio = pieza.obtenerDuenio();
+    return duenio != null && duenio.equals(jugadores[jugadorActual - 1]);
+}
+
+    // Verificar si hay una pieza en la posición especificada
+    private boolean hayPiezaEnPosicion(int x, int y, int z) {
+        Pieza pieza = tablero.obtenerSector(x, y, z).obtenerValor();
+        return !pieza.obtenerTipo().equals(TipoPieza.VACIO);
     }
 
     // Verificar si la distancia entre la base y la nave es menor o igual a 5
-    private boolean verificarDistancia(int x, int y, int z, int x0, int y0, int z0) {
-        // Obtener las coordenadas de la base del jugador actual (cero-basadas)
-        int baseX = x0 - 1; 
-        int baseY = y0 - 1; 
-        int baseZ = z0 - 1; 
-    
-        // Calcular las diferencias absolutas en cada dimensión
-        int difX = Math.abs(x - baseX);
-        int difY = Math.abs(y - baseY);
-        int difZ = Math.abs(z - baseZ);  // Diferencia en la dimensión Z
-    
-        // Verificar si la diferencia en las tres dimensiones es menor o igual al límite
-        return difX <= LIMITE_DISTANCIA && difY <= LIMITE_DISTANCIA && difZ <= LIMITE_DISTANCIA;
+    private boolean verificarDistancia(int x, int y, int z) {
+        Jugador jugador = jugadores[jugadorActual - 1];
+        IteradorLista<Base> iter = jugador.obtenerBases().iterador();
+        while (iter.haySiguiente()) {
+            Pieza base = iter.verActual();
+            int[] coords = base.obtenerCoordenadas();
+            int dx = coords[0] - (x - 1);
+            int dy = coords[1] - (y - 1);
+            int dz = coords[2] - (z - 1);
+            double distancia = Math.sqrt(dx * dx + dy * dy + dz * dz);
+            if (distancia <= LIMITE_DISTANCIA) {
+                return true; // La nave está dentro del rango de la base
+            }
+            iter.siguiente();
+        }
+        return false; // No se encontró ninguna base dentro del rango
     }
+    
 
     // Método para leer un número entero positivo
     private int leerEntero(String mensaje) {

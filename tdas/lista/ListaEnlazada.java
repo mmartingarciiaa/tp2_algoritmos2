@@ -73,6 +73,18 @@ public class ListaEnlazada<T> implements Lista<T> {
         largo++;
     }
 
+    public T obtenerEnPosicion(int posicion) {
+        if (posicion < 0 || posicion >= largo) {
+            throw new IndexOutOfBoundsException("Índice fuera de rango: " + posicion);
+        }
+    
+        Nodo<T> actual = primero;
+        for (int i = 0; i < posicion; i++) {
+            actual = actual.siguiente;
+        }
+        return actual.dato;
+    }
+
     /**
      * Inserta un elemento en la lista enlazada en una posición específica.
      * Si la posición es menor a 1, se lanza una excepción. Si la posición es mayor al tamaño
