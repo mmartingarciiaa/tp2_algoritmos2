@@ -11,9 +11,9 @@ import tdas.lista.ListaEnlazada;
  * dibujando elementos o superponiendo imágenes.
  */
 public class Bitmap {
-    final int TAM_CELDA = 50;
-    final int MARGEN_CELDA = 1;
-    final int ESPACIADO_CAPAS = 10;
+    static final int TAM_CELDA = 50;
+    static final int MARGEN_CELDA = 1;
+    static final int ESPACIADO_CAPAS = 10;
 
     private final BufferedImage imagen;
     private final int ancho;
@@ -93,14 +93,8 @@ public class Bitmap {
      * @param tablero tablero a representar gráficamente
      * @throws IOException si hay errores al cargar imágenes o guardar el resultado
      */
-    public void generarBMPCompleto(Tablero tablero) throws IOException {
+    public void generarBMPCompleto(Tablero tablero, Jugador jugador) throws IOException {
         int dimension = tablero.obtenerDimension();
-    
-        // Acomodar capas horizontalmente: ancho se multiplica por Z
-        int anchoImagen = dimension * (dimension * TAM_CELDA + ESPACIADO_CAPAS) - ESPACIADO_CAPAS;
-        int altoImagen = dimension * TAM_CELDA;
-    
-        Bitmap bmp = new Bitmap(anchoImagen, altoImagen);
     
         for (int x = 0; x < dimension; x++) {
             ListaEnlazada<Sector> sectoresEnX = tablero.obtenerSectores(x);
@@ -111,60 +105,39 @@ public class Bitmap {
                 int y = coords[1], z = coords[2];
                 int yInvertido = dimension - 1 - y;
     
-                // Desplazar horizontalmente por Z
                 int desplazamientoZ = z * (dimension * TAM_CELDA + ESPACIADO_CAPAS);
                 int xFinal = x * TAM_CELDA + desplazamientoZ;
                 int yFinal = yInvertido * TAM_CELDA;
     
                 Pieza pieza = sector.obtenerValor();
                 String simbolo = pieza != null ? pieza.obtenerNombre() : "_";
-                int r = 200, g = 200, b = 200; // gris claro para celdas vacías
     
-                // Dibuja la celda con bordes
+                int r = 200, g = 200, b = 200;
+    
                 for (int i = 0; i < TAM_CELDA; i++) {
                     for (int j = 0; j < TAM_CELDA; j++) {
                         boolean hayBorde = (i < MARGEN_CELDA || j < MARGEN_CELDA ||
                                 i == TAM_CELDA - MARGEN_CELDA || j == TAM_CELDA - MARGEN_CELDA);
                         if (hayBorde) {
-                            bmp.setPixel(xFinal + i, yFinal + j, 100, 100, 100); // borde gris oscuro
+                            setPixel(xFinal + i, yFinal + j, 100, 100, 100);
                         } else {
-                            bmp.setPixel(xFinal + i, yFinal + j, r, g, b); // interior gris claro
+                            setPixel(xFinal + i, yFinal + j, r, g, b);
                         }
                     }
                 }
     
-                // Si hay una nave o base, se dibuja su imagen
-                if (simbolo.equals("N")) {
-                    bmp.dibujarImagen("imagenes/nave.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
-                } else if (simbolo.equals("B")) {
-                    bmp.dibujarImagen("imagenes/base.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
+                if (pieza != null) {
+                    Jugador duenio = pieza.obtenerDuenio();
+                    if (simbolo.equals("N") && duenio.equals(jugador)) {
+                        dibujarImagen("imagenes/nave.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
+                    } else if (simbolo.equals("B") && duenio.equals(jugador)) {
+                        dibujarImagen("imagenes/base.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
+                    }
                 }
     
                 iter.siguiente();
             }
         }
-    
-        bmp.guardarArchivo("tablero.bmp");
     }
     
-
-    /**
-     * Dibuja manualmente la letra "N" en una celda del bitmap.
-     * (de momento si se puede con iconos, esta funcion queda inutilizada)
-     *
-     * @param bmp    bitmap donde se dibuja
-     * @param startX coordenada X inicial
-     * @param startY coordenada Y inicial
-     * @param tamCelda  tamaño de la celda
-     */
-    private static void dibujarLetraN(Bitmap bmp, int startX, int startY, int tamCelda) {
-        for (int i = 0; i < tamCelda; i++) {
-            for (int j = 0; j < tamCelda; j++) {
-                boolean esTrazoN = (j == 2 || j == 6 || i == j); // columnas laterales + diagonal
-                if (esTrazoN && i >= 2 && i <= 6) {
-                    bmp.setPixel(startX + j, startY + i, 255, 0, 140); // color rosa fuerte
-                }
-            }
-        }
-    }
 }
