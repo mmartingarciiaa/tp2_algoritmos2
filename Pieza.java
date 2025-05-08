@@ -5,6 +5,7 @@ public class Pieza {
 	private final int[] coordenadas;
 	private final Jugador duenio;
 	private int vida;
+	private int escudo = 0;
 	
 	public Pieza(TipoPieza tipo, Jugador duenio, int x, int y, int z, String nombre, int vida) {
 		this.tipo = tipo;
@@ -83,5 +84,47 @@ public class Pieza {
 
 	public void reducirVida(int danioInfligido) {
 		this.vida -= danioInfligido;
+	}
+
+	/**
+	 * Obtiene el valor del escudo de la pieza.
+	 *
+	 * @return el estado actual del escudo como un valor entero.
+	 * @author Patricio Alaniz
+	 */
+	public int obtenerEscudo() {
+		return this.escudo;
+	}
+
+	/**
+	 * Establece el valor del escudo de la pieza.
+	 * El valor especificado debe ser mayor a cero.
+	 * Si el valor proporcionado no cumple con esta condición, se lanza una excepción.
+	 *
+	 * @param escudo el valor del escudo que se establecerá. Debe ser mayor a cero.
+	 * @throws RuntimeException si el valor del escudo no es mayor a cero.
+	 * @author Patricio Alaniz
+	 */
+	public void aumentarEscudo(int escudo) {
+		ValidacionesUtils.validarMayorACero(escudo, "Escudo");
+		this.escudo = escudo;
+	}
+
+	/**
+	 * Reduce el valor del escudo en función de la cantidad de daño infligido. Si el daño excede el valor
+	 * actual del escudo, el exceso se resta de la vida restante de la pieza. En caso de que el escudo sea
+	 * menor a cero, este se establece en cero.
+	 *
+	 * @param danioInfligido el valor del daño que se infligirá al escudo. Debe ser mayor a cero.
+	 * @throws RuntimeException si el daño infligido no es mayor a cero.
+	 * @author Patricio Alaniz
+	 */
+	public void reducirEscudo(int danioInfligido) {
+		ValidacionesUtils.validarMayorACero(danioInfligido, "Danio infligido");
+		escudo-=danioInfligido;
+		if (escudo <= 0) {
+			this.reducirVida(Math.abs(escudo));
+			escudo = 0;
+		}
 	}
 }
