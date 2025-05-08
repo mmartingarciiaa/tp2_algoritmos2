@@ -20,13 +20,8 @@ public class Carta {
      * @param tipo        el tipo de la carta como una instancia de {@link TipoCarta}.
      */
     public Carta(String nombre, String descripcion, TipoCarta tipo) throws RuntimeException {
-        String nombreAux = nombre.trim();
-        String descripcionAux = descripcion.trim();
-
-        this.validarParametros(nombreAux, descripcionAux, tipo);
-
-        this.setNombre(nombreAux);
-        this.setDescripcion(descripcionAux);
+        this.setNombre(nombre);
+        this.setDescripcion(descripcion);
         this.setTipo(tipo);
     }
 
@@ -62,8 +57,12 @@ public class Carta {
      *
      * @param nombre el nuevo nombre de la carta como una cadena de texto.
      */
-    private void setNombre(String nombre) {
-        this.nombre = nombre;
+    private void setNombre(String nombre) throws RuntimeException {
+        ValidacionesUtils.noNulo(nombre, "Nombre");
+        ValidacionesUtils.validarMinimoDeCaracteres(nombre, 3, "Nombre");
+
+        String auxNombre = nombre.trim();
+        this.nombre = auxNombre;
     }
 
     /**
@@ -71,8 +70,12 @@ public class Carta {
      *
      * @param descripcion la nueva descripción de la carta como una cadena de texto.
      */
-    private void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    private void setDescripcion(String descripcion) throws RuntimeException {
+        ValidacionesUtils.noNulo(descripcion, "Descripcion");
+        ValidacionesUtils.validarMinimoDeCaracteres(descripcion, 3, "Descripcion");
+
+        String auxDescripcion = descripcion.trim();
+        this.descripcion = auxDescripcion;
     }
 
     /**
@@ -80,15 +83,8 @@ public class Carta {
      *
      * @param tipo el nuevo tipo de la carta como una instancia de {@link TipoCarta}.
      */
-    private void setTipo(TipoCarta tipo) {
-        this.tipo = tipo;
-    }
-
-    private void validarParametros(String nombre, String descripcion, TipoCarta tipo) throws RuntimeException {
-        ValidacionesUtils.noNulo(nombre, "Nombre");
-        ValidacionesUtils.noNulo(descripcion, "Descripcion");
+    private void setTipo(TipoCarta tipo) throws RuntimeException {
         ValidacionesUtils.noNulo(tipo, "Tipo de carta");
-        ValidacionesUtils.validarMinimoDeCaracteres(nombre, 3, "Nombre");
-        ValidacionesUtils.validarMinimoDeCaracteres(descripcion, 3, "Descripcion");
+        this.tipo = tipo;
     }
 }
