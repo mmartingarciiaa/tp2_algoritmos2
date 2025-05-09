@@ -1,39 +1,28 @@
-//Clase hija de Pieza
 
 public class Base extends Pieza {
 	
-	private static final int VALOR_INICIAL_ESCUDO = 0;
-
-	private int escudo;
-
-	public Base(TipoPieza tipo, Jugador duenio, int x, int y, int z, String nombre, int vida) {
-		super(tipo, duenio, x, y, z, nombre, vida);
-		this.escudo = VALOR_INICIAL_ESCUDO;
-	}
-	
-	public void aumentarEscudo(int escudo) {
-		this.escudo += escudo;
-	}
-
-	/**
-	 * Reduce el escudo de la base
-	 * 
-	 */
-    public void reducirEscudo(int danioInfligido) {
-    	escudo-=danioInfligido;
-		if (escudo < 0) {
-			this.reducirVida(Math.abs(escudo));
-			escudo = 0;
-		}
-    }
-    
     /**
-     * Devuelve el estado del escudo
-     * @return
+     * Constructor de la clase Pieza 
+     * @param duenio: jugador al que pertenece la base
+     * @param x: coordenada x de la base
+     * @param y: coordenada y de la base
+     * @param z: coordenada z de la base 
+     * @param nombre: nombre de la base
+     * @param vida: vida de la base 
      */
-    public int obtenerEscudo() {
-    	return escudo; 
-    }
+	public Base(Jugador duenio, int x, int y, int z, String nombre, int vida) {
+		super(TipoPieza.BASE, duenio, x, y, z, nombre, vida);
+	}
 	
+
+    /**
+     * Verifica si una nave puede conquistar la base lo cual pasa si la base no tiene
+     * escudo (el valor del escudo es 0) pero todavia tiene vida (la base esta debilitada) 
+     *  
+     * @return: devuelve true si se puede conquistar la base y false si no se puede 
+     */
+    public boolean esConquistable() {
+        return this.obtenerEscudo() == 0 && this.obtenerVida() > 0;
+    }
 	
 }
