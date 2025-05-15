@@ -29,6 +29,9 @@ public class TestDeCarta {
     });
   }
 
+
+
+
   @Test
   public void testCrearCartaDescripcionNula() {
     assertThrows(RuntimeException.class, () -> {
