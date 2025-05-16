@@ -74,4 +74,14 @@ public class Jugador {
     public void agregarSatelite(Satelite satelite) {
         this.satelites.insertarUltimo(satelite);
     }
+
+    /**
+     * Devuelve una lista enlazada de los satélites asociados al jugador.
+     *
+     * @return ListaEnlazada<Satelite> que contiene los satélites del jugador.
+     * @author Patricio Alaniz
+     */
+    public ListaEnlazada<Satelite> obtenerSatelites() {
+        return this.satelites;
+    }
 }
