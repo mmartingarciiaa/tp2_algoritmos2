@@ -39,6 +39,18 @@ public class Jugador {
         this.bases.insertarUltimo(base);
     }
 
+    public void eliminarBase(int x, int y, int z) {
+        IteradorLista<Base> iter = bases.iterador();
+        while (iter.haySiguiente()) {
+            Base base = iter.verActual();
+            int[] coords = base.obtenerCoordenadas();
+            if (coords[0] == x && coords[1] == y && coords[2] == z) {
+                iter.borrar();
+                break;
+            }
+            iter.siguiente();
+        }
+    }
     
     // Método obtenerNave obtiene el valor de la nave
     public ListaEnlazada<Nave> obtenerNaves() {
@@ -58,11 +70,16 @@ public class Jugador {
             int[] coords = nave.obtenerCoordenadas();
             if (coords[0] == x && coords[1] == y && coords[2] == z) {
                 iter.borrar();
+                break;
             }
             iter.siguiente();
         }
     }
     
+    public ColaEnlazada<Carta> obtenerCartas() {
+        return cartas;
+    }
+
     public void agregarCarta(Carta carta) {
         cartas.encolar(carta);
     }
@@ -83,5 +100,18 @@ public class Jugador {
      */
     public ListaEnlazada<Satelite> obtenerSatelites() {
         return this.satelites;
+    }
+
+    public void eliminarSatelite(int x, int y, int z) {
+        IteradorLista<Satelite> iter = satelites.iterador();
+        while (iter.haySiguiente()) {
+            Satelite satelite = iter.verActual();
+            int[] coords = satelite.obtenerCoordenadas();
+            if (coords[0] == x && coords[1] == y && coords[2] == z) {
+                iter.borrar();
+                break;
+            }
+            iter.siguiente();
+        }
     }
 }

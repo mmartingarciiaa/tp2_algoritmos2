@@ -1,7 +1,6 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import tdas.lista.IteradorLista;
 import tdas.lista.ListaEnlazada;
 
@@ -20,12 +19,12 @@ public class GuardadoDePartidaEnArchivo {
         }
 
         for (int n = 0; n < 3; n++) {
-          Nave nave = new Nave(TipoPieza.NAVE, jugador, i * 2, n * 3, i + n, "N", 100, 20);
+          Nave nave = new Nave(jugador, i * 2, n * 3, i + n, "N", 100, 20);
           jugador.agregarNave(nave);
         }
 
         for (int s = 0; s < 2; s++) {
-          Satelite satelite = new Satelite(TipoPieza.SATELITE, jugador, i * 2, s * 3, i + s, "S", 100, 20);
+          Satelite satelite = new Satelite(jugador, i * 2, s * 3, i + s, "S", 100, 20);
           jugador.agregarSatelite(satelite);
         }
 

@@ -12,8 +12,8 @@ public class Radiacion extends Pieza {
      * @param z: coordenada z de la pieza con radiacion activa
      * @param duracion: cuantos turnos la pieza va a tener radiacion activa
      */
-    public Radiacion(Jugador duenio, int x, int y, int z, int duracion) {
-		super(TipoPieza.RADIACION, duenio, x, y, z, NOMBRE_POR_DEFECTO, VIDA_POR_DEFECTO);
+    public Radiacion(int x, int y, int z, int duracion) {
+		super(TipoPieza.RADIACION, null, x, y, z, NOMBRE_POR_DEFECTO, VIDA_POR_DEFECTO, duracion);
         this.turnosActiva = duracion;
 	}
 
@@ -25,6 +25,10 @@ public class Radiacion extends Pieza {
         if (turnosActiva > 0) {
             turnosActiva--;
         }
+    }
+	
+    public int obtenerDuracion() {
+        return turnosActiva;
     }
     
     /**
@@ -43,5 +47,4 @@ public class Radiacion extends Pieza {
         return turnosActiva;
     }
 
-	
 }

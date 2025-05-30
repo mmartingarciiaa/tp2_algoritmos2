@@ -11,18 +11,6 @@ public class Base extends Pieza {
      * @param vida: vida de la base 
      */
 	public Base(Jugador duenio, int x, int y, int z, String nombre, int vida) {
-		super(TipoPieza.BASE, duenio, x, y, z, nombre, vida);
+		super(TipoPieza.BASE, duenio, x, y, z, nombre, vida, 0);
 	}
-	
-
-    /**
-     * Verifica si una nave puede conquistar la base lo cual pasa si la base no tiene
-     * escudo (el valor del escudo es 0) pero todavia tiene vida (la base esta debilitada) 
-     *  
-     * @return: devuelve true si se puede conquistar la base y false si no se puede 
-     */
-    public boolean esConquistable() {
-        return this.obtenerEscudo() == 0 && this.obtenerVida() > 0;
-    }
-	
 }

@@ -14,17 +14,6 @@ public class Vacio extends Pieza {
      * @param z Coordenada Z
      */
     public Vacio(int x, int y, int z) {
-        super(TipoPieza.VACIO, null, x,y,z, NOMBRE_POR_DEFECTO, VIDA_POR_DEFECTO);
+        super(TipoPieza.VACIO, null, x,y,z, NOMBRE_POR_DEFECTO, VIDA_POR_DEFECTO, 0);
     }
-
-    /**
-     * Mátodo para verificar si un sector está vacío
-     * @return true, ya que representa si un sector esta vacío
-    */
-    public boolean estaVacio() {
-        return true;
-    }
-
- 
-
 }

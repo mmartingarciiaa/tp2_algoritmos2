@@ -3,16 +3,17 @@ public class Pieza {
 	private TipoPieza tipo;
 	private String nombre;
 	private final int[] coordenadas;
-	private final Jugador duenio;
+	private Jugador duenio;
 	private int vida;
-	private int escudo = 0;
+	private int escudo;
 	
-	public Pieza(TipoPieza tipo, Jugador duenio, int x, int y, int z, String nombre, int vida) {
+	public Pieza(TipoPieza tipo, Jugador duenio, int x, int y, int z, String nombre, int vida, int escudo) {
 		this.tipo = tipo;
 		this.duenio = duenio;
 		this.coordenadas = new int[] {x, y, z};
 		this.nombre = nombre;
 		this.vida = vida;
+		this.escudo = escudo;
 	}
 	
 	/**
@@ -84,6 +85,12 @@ public class Pieza {
 
 	public void reducirVida(int danioInfligido) {
 		this.vida -= danioInfligido;
+	}
+
+	public void destruirPieza() {
+		this.duenio = null;
+		this.cambiarNombre(null);
+		this.cambiarTipo(TipoPieza.RADIACION);
 	}
 
 	/**
