@@ -58,6 +58,8 @@ public class Menu {
     private Jugador[] jugadores;    // Arreglo de jugadores
     private ColaEnlazada<Jugador> colaJugadores; // Cola para manejar el turno de los jugadores
 
+    private ListaEnlazada<Alianza> alianzas = new ListaEnlazada<>();
+
     private Mazo mazo; // Instancia de la clase Mazo
     Scanner sc = new Scanner(System.in);    // Creo un objeto Scanner
 
@@ -114,7 +116,6 @@ public class Menu {
             }
     }
     
-
     // Método para mostrar el menú de opciones y realizar las acciones
     public void menu() {
         this.crearBases();
@@ -230,7 +231,30 @@ public class Menu {
                     usarCarta(cartaAUsar, jugadores[jugadorActual - 1]);
                     cambioDeTurno = true;
                 }
-                case ALIANZA -> System.out.println("Alianza no implementado.");
+                case ALIANZA -> {
+                    String nombreAliado = "";
+                    while (nombreAliado == null || nombreAliado.isEmpty() || nombreAliado.equals(jugadores[jugadorActual - 1].obtenerNombre())) { 
+                        System.out.println("Ingrese el nombre del jugador con el que desea formar una alianza:");
+                        nombreAliado = sc.nextLine();
+                    }
+                    
+                    for (Jugador jugador : jugadores) {
+                        String nombreJugador = jugador.obtenerNombre();
+                        if (nombreJugador.equals(nombreAliado)) {
+                            String eleccion = "";
+                            while(!(eleccion.equals("SI") || eleccion.equals("NO"))) {
+                                System.out.println(nombreJugador + ", desea formar una alianza con " + jugadores[jugadorActual - 1].obtenerNombre() + "? (Si/No)");
+                                eleccion = sc.nextLine().trim().toUpperCase();
+                            }
+                            if (eleccion.equals("SI")) {
+                                alianzas.insertarUltimo(new Alianza(jugadores[jugadorActual - 1], jugador));
+                            } else if (eleccion.equals("NO")) {
+                                System.out.println("Alianza no formada.");
+                            }
+                            break;
+                        }
+                    }
+                }
                 case DEJAR_DE_JUGAR -> {
                     System.out.println("Gracias por jugar!");
                     return;
@@ -238,16 +262,7 @@ public class Menu {
                 default -> System.out.println("Opción no válida. Intente nuevamente.");
             }
             if(cambioDeTurno){
-                IteradorLista<Radiacion> iteradorRadiacion = listaRadiacion.iterador();
-                while (iteradorRadiacion.haySiguiente()) {
-                    Radiacion radiacion = iteradorRadiacion.verActual();
-                    radiacion.reducirDuracion();
-                    if (radiacion.obtenerDuracion() <= 0) {
-                        int[] coordenadasRadiacion = radiacion.obtenerCoordenadas();
-                        tablero.asignarValor(coordenadasRadiacion[0],coordenadasRadiacion[1], coordenadasRadiacion[2], new Vacio(coordenadasRadiacion[0], coordenadasRadiacion[1], coordenadasRadiacion[2]));
-                        iteradorRadiacion.borrar();
-                    }
-                }
+                bajarTurnoARadiacion();
                 jugadorActual = (jugadorActual % numJugadores) + 1; // Cambiar al siguiente jugador
             }
             //ListaEnlazada<Pieza> informacionSatelite = obtenerPiezasDetectadasPorSatelite(jugadores[jugadorActual - 1]);
@@ -284,7 +299,8 @@ public class Menu {
 
         return true;
     }
-
+    
+    // Método para agregar un satélite en el tablero
     private boolean agregarSatelite(int x, int y, int z) {
         // Ajustar las coordenadas para que sean cero-basadas
         int XAjustado = x - 1;
@@ -310,7 +326,6 @@ public class Menu {
         return true;
     }
     
-
     // Método para atacar un sector del tablero
     private boolean atacarSector(int x, int y, int z, Nave naveAtacante) {
         int XAjustado = x - 1;
@@ -382,7 +397,7 @@ public class Menu {
         return true;
     }
     
-    
+    // Método para usar una carta del jugador actual
     private void usarCarta(Carta carta, Jugador jugador) {
         int posicionX, posicionY, posicionZ;
         Sector sector;
@@ -623,7 +638,20 @@ public class Menu {
         return nuevosJugadores;
     }
 
-/* -------------- Metodos auxiliares -------------- */
+    public void bajarTurnoARadiacion() {
+        IteradorLista<Radiacion> iteradorRadiacion = listaRadiacion.iterador();
+                while (iteradorRadiacion.haySiguiente()) {
+                    Radiacion radiacion = iteradorRadiacion.verActual();
+                    radiacion.reducirDuracion();
+                    if (radiacion.obtenerDuracion() <= 0) {
+                        int[] coordenadasRadiacion = radiacion.obtenerCoordenadas();
+                        tablero.asignarValor(coordenadasRadiacion[0],coordenadasRadiacion[1], coordenadasRadiacion[2], new Vacio(coordenadasRadiacion[0], coordenadasRadiacion[1], coordenadasRadiacion[2]));
+                        iteradorRadiacion.borrar();
+                    }
+                }
+    }
+
+    /* -------------- Metodos auxiliares -------------- */
 
     // Verificar si las coordenadas están dentro de los límites del tablero
     private boolean coordenadasValidas(int x, int y, int z) {
@@ -631,7 +659,6 @@ public class Menu {
                y >= 0 && y < dimension &&
                z >= 0 && z < dimension;
     }
-
     
     // Verificar si la casilla es propia
     private boolean esCasillaPropia(Pieza pieza) {
@@ -667,7 +694,7 @@ public class Menu {
         return false; // No se encontró ninguna base dentro del rango
     }
     
-    //
+    // Verificar si la distancia entre un punto y la nave atacante esta en el rango permitido
     private boolean verificarDistancia(int x, int y, int z, Nave naveAtacante) {
         int[] coordsNave = naveAtacante.obtenerCoordenadas();
         int dx = coordsNave[0] - x;
