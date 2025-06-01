@@ -1,64 +1,105 @@
 package tdas.cola;
 
+import tdas.lista.Lista;
+import tdas.nodos.NodoSimplementeEnlazado;
+
 /**
  * Implementación de una cola enlazada genérica.
  *
  * @param <T> el tipo de datos en la cola
  */
-public class ColaEnlazada<T> implements Cola<T> {
+public class ColaEnlazada<T> {
+	//ATRIBUTOS -----------------------------------------------------------------------------------------------
 
-    private static class Nodo<T> {
-        T dato;
-        Nodo<T> siguiente;
+	private NodoSimplementeEnlazado<T> frente = null;
+	private NodoSimplementeEnlazado<T> ultimo = null;
+	private int tamanio = 0;
 
-        Nodo(T dato) {
-            this.dato = dato;
-            this.siguiente = null;
-        }
-    }
+	//CONSTRUCTOR -------------------------------------------------------------------------------------------
 
-    private Nodo<T> primero;
-    private Nodo<T> ultimo;
+	/**
+	 * pre:
+	 * post: inicializa la cola vacia para su uso
+	 */
+	public ColaEnlazada() {
+        this.frente = null;
+		this.ultimo = null;
+		this.tamanio = 0;
+	}
+    
+	//METODOS DE CLASE ----------------------------------------------------------------------------------------
 
-    public ColaEnlazada() {
-        this.primero = null;
-        this.ultimo = null;
-    }
-
-    @Override
+	/*
+    * post: indica si la cola tiene algún elemento.
+    */
     public boolean estaVacia() {
-        return primero == null && ultimo == null;
-    }
-
-    @Override
+        return (this.tamanio == 0);
+	}
+    
+    /*
+     * post: devuelve el elemento en el frente de la cola. Solo lectura
+     */
     public T verPrimero() {
-        if (estaVacia()) {
-            throw new IllegalStateException("La cola esta vacia");
+        T elemento = null;
+        if (!this.estaVacia()) {
+            elemento = this.frente.getDato();
         }
-        return primero.dato;
+        return elemento;
     }
 
-    @Override
-    public void encolar(T elemento) {
-        Nodo<T> nuevo = new Nodo<>(elemento);
-        if (estaVacia()) {
-            primero = nuevo;
-        } else {
-            ultimo.siguiente = nuevo;
-        }
-        ultimo = nuevo;
-    }
+	/*
+	 * pre: el elemento no debe ser null
+	 * post: agrega el elemento a la cola
+	 */
+	public void encolar(T elemento) throws IllegalArgumentException {
+		if (elemento == null) {
+			throw new IllegalArgumentException("El elemento no puede ser null");
+		}
+		NodoSimplementeEnlazado<T> nuevo = new NodoSimplementeEnlazado<>(elemento);
+		if (!this.estaVacia()) {
+			this.ultimo.setSiguiente(nuevo);
+			this.ultimo = nuevo;
+		} else {
+			this.frente = nuevo;
+			this.ultimo = nuevo;
+		}
+		this.tamanio++;
+	}
 
-    @Override
-    public T desencolar() {
-        if (estaVacia()) {
-            throw new IllegalStateException("La cola esta vacia");
+    /*
+	 * pre: la lista no debe ser null
+	 * post: agrega el elemento a la cola
+	 */
+	public void encolar(Lista<T> lista) throws IllegalArgumentException {
+		if (lista == null) {
+            throw new IllegalArgumentException("La lista no puede ser null");
         }
-        T dato = primero.dato;
-        primero = primero.siguiente;
-        if (primero == null) {
-            ultimo = null;
-        }
-        return dato;
-    }
+		lista.iniciarCursor();
+		while (!lista.avanzarCursor()) {
+			this.encolar(lista.obtenerCursor());
+		}
+	}
+
+	/*
+	 * post: devuelve el elemento en el frente de la cola quitandolo.
+	 */
+	public T desencolar() {
+		T elemento = null;
+		if (!this.estaVacia()) {
+			elemento = this.frente.getDato();
+			this.frente = this.frente.getSiguiente();
+			this.tamanio--;
+			if (estaVacia()) {
+				this.ultimo = null;
+			}
+		}
+		return elemento;
+	}
+
+	/*
+	 * post: devuelve la cantidad de elementos que tiene la cola.
+	 */
+	public int tamanio() {
+		return this.tamanio;
+	}
 }

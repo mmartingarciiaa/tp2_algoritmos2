@@ -1,6 +1,6 @@
 import java.util.Random;
 import tdas.lista.ListaEnlazada;
-import tdas.pila.PilaDinamica;
+import tdas.pila.PilaEnlazada;
 
 /**
  * Clase que representa un mazo de cartas genérico. Este mazo permite inicializarse con una lista
@@ -10,7 +10,7 @@ import tdas.pila.PilaDinamica;
  * @author Patricio Alaniz
  */
 public class Mazo<T> {
-    private PilaDinamica<T> cartasDelMazo = null;
+    private PilaEnlazada<T> cartasDelMazo = null;
 
     /**
      * Constructor de la clase Mazo. Inicializa un mazo de cartas a partir de la lista de cartas proporcionada.
@@ -23,7 +23,7 @@ public class Mazo<T> {
     public Mazo(ListaEnlazada<T> cartas) throws RuntimeException {
         ValidacionesUtils.noNulo(cartas, "Lista de cartas");
 
-        this.cartasDelMazo = new PilaDinamica<>();
+        this.cartasDelMazo = new PilaEnlazada<>();
         this.mezclarMazo(cartas);
     }
 
@@ -61,6 +61,6 @@ public class Mazo<T> {
      * @return el número total de cartas restantes en el mazo.
      */
     public int cantidadDeCartas() {
-        return this.cartasDelMazo.cantidad();
+        return this.cartasDelMazo.tamanio();
     }
 }
