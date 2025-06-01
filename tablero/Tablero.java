@@ -9,11 +9,13 @@ import piezas.Pieza;
 public class Tablero {
     private final int TAMANIO;
 	private final ListaEnlazada<Sector>[] tablero;
+	private final ListaEnlazada<Pieza> piezasNoVacias;
 
 	@SuppressWarnings("unchecked")
 	public Tablero(int dimension) {
 		this.TAMANIO = dimension;
 		this.tablero = (ListaEnlazada<Sector>[]) new ListaEnlazada[TAMANIO];
+		this.piezasNoVacias = new ListaEnlazada<>();
 	}
 
 	public int obtenerDimension() {
@@ -43,6 +45,9 @@ public class Tablero {
 			Sector sector = iter.verActual();
 			if (sector.obtenerCoordenadas()[1] == y && sector.obtenerCoordenadas()[2] == z) {
 				sector.asignarValor(valor);
+				if (valor.obtenerTipo() != TipoPieza.VACIO) {
+					piezasNoVacias.insertarUltimo(valor);
+				}
 				break;
 			}
 			iter.siguiente();
@@ -63,6 +68,10 @@ public class Tablero {
 			iter.siguiente();
 		}
 		return null;
+	}
+
+	public ListaEnlazada<Pieza> obtenerPiezasNoVacias() {
+		return piezasNoVacias;
 	}
 }
 

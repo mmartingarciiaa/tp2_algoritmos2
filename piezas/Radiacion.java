@@ -42,13 +42,5 @@ public class Radiacion extends Pieza {
     public boolean estaActiva() {
         return turnosActiva > 0;
     }
-
-    /**
-     * 
-     * @return: devuelve la cantidad de turnos en las que la pieza va a tener radiación activa
-     */
-    public int obtenerTurnosActiva() {
-        return turnosActiva;
-    }
-
+    
 }

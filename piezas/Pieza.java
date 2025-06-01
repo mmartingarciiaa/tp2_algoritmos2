@@ -135,7 +135,7 @@ public class Pieza {
 	public void reducirEscudo(int danioInfligido) {
 		ValidacionesUtils.validarMayorACero(danioInfligido, "Danio infligido");
 		escudo-=danioInfligido;
-		if (escudo <= 0) {
+		if (escudo < 0) {
 			this.reducirVida(Math.abs(escudo));
 			escudo = 0;
 		}
