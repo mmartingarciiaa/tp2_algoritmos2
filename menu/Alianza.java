@@ -1,19 +1,19 @@
 package menu;
 
 // Importaciones necesarias
-import estructuras.lista.ListaEnlazada;
+import estructuras.lista.ListaSimplementeEnlazada;
 
 public class Alianza {
-    private final ListaEnlazada<Jugador> jugadores;
+    private final ListaSimplementeEnlazada<Jugador> jugadores;
     private int duracion = 5;
 
     public Alianza(Jugador jugador1, Jugador jugador2) {
-        this.jugadores = new ListaEnlazada<>();
+        this.jugadores = new ListaSimplementeEnlazada<>();
         this.jugadores.insertarUltimo(jugador1);
         this.jugadores.insertarUltimo(jugador2);
     }
     
-    public ListaEnlazada<Jugador> getJugadores() {
+    public ListaSimplementeEnlazada<Jugador> getJugadores() {
         return jugadores;
     }  
 

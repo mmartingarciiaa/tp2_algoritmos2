@@ -26,6 +26,11 @@ public class NodoDoblementeEnlazado<T> extends NodoSimplementeEnlazado<T> {
 	public NodoDoblementeEnlazado<T> getAnterior() {
 		return anterior;
 	}
+
+	@Override
+	public NodoDoblementeEnlazado<T> getSiguiente() {
+	    return (NodoDoblementeEnlazado<T>) super.getSiguiente();
+	}
 	
 	//SETTERS SIMPLES -----------------------------------------------------------------------------------------	
 

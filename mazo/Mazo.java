@@ -1,7 +1,7 @@
 package mazo;
 
 // importaciones necesarias
-import estructuras.lista.ListaEnlazada;
+import estructuras.lista.ListaSimplementeEnlazada;
 import estructuras.pila.PilaEnlazada;
 import java.util.Random;
 import utils.ValidacionesUtils;
@@ -25,7 +25,7 @@ public class Mazo<T> {
      *               No debe ser nula; si es nula, se lanzará una excepción.
      * @throws RuntimeException si la lista de cartas proporcionada es nula.
      */
-    public Mazo(ListaEnlazada<T> cartas) throws RuntimeException {
+    public Mazo(ListaSimplementeEnlazada<T> cartas) throws RuntimeException {
         ValidacionesUtils.noNulo(cartas, "Lista de cartas");
 
         this.cartasDelMazo = new PilaEnlazada<>();
@@ -37,12 +37,16 @@ public class Mazo<T> {
      *
      * @param cartas una lista de cartas que será mezclada. No debe ser nula y debe contener elementos.
      */
-    private void mezclarMazo(ListaEnlazada<T> cartas) throws RuntimeException {
+    private void mezclarMazo(ListaSimplementeEnlazada<T> cartas) throws RuntimeException {
         while(cartas.largo() > 0) {
             Random random = new Random();
             int indiceAleatorio = random.nextInt(cartas.largo());
 
-            cartasDelMazo.apilar(cartas.borrarEnPosicion(indiceAleatorio + 1));
+            try {
+                cartasDelMazo.apilar(cartas.borrarEnPosicion(indiceAleatorio + 1));
+            } catch (Exception e) {
+                throw new RuntimeException("Error al borrar carta en posición aleatoria", e);
+            }
         }
     }
 

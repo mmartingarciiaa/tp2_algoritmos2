@@ -3,7 +3,7 @@ package menu;
 // Importaciones necesarias
 import estructuras.cola.ColaEnlazada;
 import estructuras.lista.IteradorLista;
-import estructuras.lista.ListaEnlazada;
+import estructuras.lista.ListaSimplementeEnlazada;
 import mazo.Carta;
 import piezas.Base;
 import piezas.Nave;
@@ -14,17 +14,17 @@ import piezas.Satelite;
 // en cualquier momento del juego
 
 public class Jugador {
-    private ListaEnlazada<Base> bases = null;
-    private ListaEnlazada<Nave> naves = null;
-    private ListaEnlazada<Satelite> satelites = null;
+    private ListaSimplementeEnlazada<Base> bases = null;
+    private ListaSimplementeEnlazada<Nave> naves = null;
+    private ListaSimplementeEnlazada<Satelite> satelites = null;
     private ColaEnlazada<Carta> cartas = null;
     private final String nombre;
 
     public Jugador(String nombre) {
         this.nombre = nombre;
-        this.bases = new ListaEnlazada<>();
-        this.naves = new ListaEnlazada<>();
-        this.satelites = new ListaEnlazada<>();
+        this.bases = new ListaSimplementeEnlazada<>();
+        this.naves = new ListaSimplementeEnlazada<>();
+        this.satelites = new ListaSimplementeEnlazada<>();
         this.cartas = new ColaEnlazada<>();
     }
 
@@ -37,7 +37,7 @@ public class Jugador {
     }
 
     // Método obtenerBase obtiene el valor de la base
-    public ListaEnlazada<Base> obtenerBases() {
+    public ListaSimplementeEnlazada<Base> obtenerBases() {
         return bases;
     }
     
@@ -60,7 +60,7 @@ public class Jugador {
     }
     
     // Método obtenerNave obtiene el valor de la nave
-    public ListaEnlazada<Nave> obtenerNaves() {
+    public ListaSimplementeEnlazada<Nave> obtenerNaves() {
         return naves;
     }
     
@@ -105,7 +105,7 @@ public class Jugador {
      * @return ListaEnlazada<Satelite> que contiene los satélites del jugador.
      * @author Patricio Alaniz
      */
-    public ListaEnlazada<Satelite> obtenerSatelites() {
+    public ListaSimplementeEnlazada<Satelite> obtenerSatelites() {
         return this.satelites;
     }
 

@@ -2,7 +2,7 @@ package mazo;
 
 // importaciones necesarias
 import enums.TipoCarta;
-import estructuras.lista.ListaEnlazada;
+import estructuras.lista.ListaSimplementeEnlazada;
 
 /**
  * Utilidad para la creación y gestión de cartas en el juego.
@@ -26,8 +26,8 @@ public class CartaUtils {
      * @return una lista de cartas base con la cantidad especificada de copias de cada tipo de carta.
      * @throws RuntimeException si la cantidad de copias de cada carta es menor a 1.
      */
-    public static ListaEnlazada<Carta> crearListaDeCartasBase(int cantidadDeCopiasDeCadaCarta) throws RuntimeException {
-        ListaEnlazada<Carta> cartas = new ListaEnlazada<>();
+    public static ListaSimplementeEnlazada<Carta> crearListaDeCartasBase(int cantidadDeCopiasDeCadaCarta) throws RuntimeException {
+        ListaSimplementeEnlazada<Carta> cartas = new ListaSimplementeEnlazada<>();
 
         if(cantidadDeCopiasDeCadaCarta < 1) {
             throw new RuntimeException("La cantidad de copias de cartas debe ser mayor a 0.");

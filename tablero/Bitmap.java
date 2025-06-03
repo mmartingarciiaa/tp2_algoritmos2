@@ -2,7 +2,7 @@ package tablero;
 
 // Importaciones necesarias
 import estructuras.lista.IteradorLista;
-import estructuras.lista.ListaEnlazada;
+import estructuras.lista.ListaSimplementeEnlazada;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -103,7 +103,7 @@ public class Bitmap {
         int dimension = tablero.obtenerDimension();
     
         for (int x = 0; x < dimension; x++) {
-            ListaEnlazada<Sector> sectoresEnX = tablero.obtenerSectores(x);
+            ListaSimplementeEnlazada<Sector> sectoresEnX = tablero.obtenerSectores(x);
             IteradorLista<Sector> iter = sectoresEnX.iterador();
             while (iter.haySiguiente()) {
                 Sector sector = iter.verActual();

@@ -4,7 +4,7 @@ package menu;
 import enums.*;
 import estructuras.cola.ColaEnlazada;
 import estructuras.lista.IteradorLista;
-import estructuras.lista.ListaEnlazada;
+import estructuras.lista.ListaSimplementeEnlazada;
 import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
@@ -33,7 +33,7 @@ public class Menu {
     private Jugador[] jugadores;    // Arreglo de jugadores
     private ColaEnlazada<Jugador> colaJugadores; // Cola para manejar el turno de los jugadores
 
-    private final ListaEnlazada<Alianza> alianzas = new ListaEnlazada<>();
+    private final ListaSimplementeEnlazada<Alianza> alianzas = new ListaSimplementeEnlazada<>();
 
     private Mazo mazo; // Instancia de la clase Mazo
     Scanner sc = new Scanner(System.in);    // Creo un objeto Scanner
@@ -95,7 +95,7 @@ public class Menu {
     public void menu() {
         this.crearBases();
         Accion accion;
-        ListaEnlazada<Carta> listaCartas = CartaUtils.crearListaDeCartasBase(jugadores.length);
+        ListaSimplementeEnlazada<Carta> listaCartas = CartaUtils.crearListaDeCartasBase(jugadores.length);
         mazo = new Mazo<>(listaCartas); // Crear el mazo de cartas base
         int cartasRobadas = 0; // Contador de cartas robadas
 
@@ -152,7 +152,7 @@ public class Menu {
                 }
                 case ATACAR_SECTOR -> {
                     Jugador jugador = jugadores[jugadorActual - 1];
-                    ListaEnlazada<Nave> navesDisponibles = jugador.obtenerNaves();
+                    ListaSimplementeEnlazada<Nave> navesDisponibles = jugador.obtenerNaves();
                 
                     if (!jugador.puedeAtacar()) {
                         System.out.println(jugador.obtenerNombre() + " no tiene naves disponibles para atacar.");
@@ -175,9 +175,8 @@ public class Menu {
                         System.out.println("Selección inválida.");
                         break;
                     }
-                
-                    Nave naveSeleccionada = navesDisponibles.obtenerEnPosicion(seleccion - 1);
-                
+
+                    Nave naveSeleccionada = navesDisponibles.obtenerEnPosicion(seleccion);
                     coordenadas = solicitarCoordenadas("Ingrese la posición en ");
                     if (atacarSector(coordenadas[0], coordenadas[1], coordenadas[2], naveSeleccionada)) {
                         cambioDeTurno = true;
@@ -242,7 +241,7 @@ public class Menu {
                 cartasRobadas = 0; // Reiniciar el contador de cartas robadas
                 jugadorActual = (jugadorActual % numJugadores) + 1; // Cambiar al siguiente jugador
                 //! reducir duracion de escudos y radiaciones
-                ListaEnlazada<Pieza> piezasNoVacias = tablero.obtenerPiezasNoVacias();
+                ListaSimplementeEnlazada<Pieza> piezasNoVacias = tablero.obtenerPiezasNoVacias();
                 IteradorLista<Pieza> iter = piezasNoVacias.iterador();
                 while (iter.haySiguiente()) {
                     Pieza pieza = iter.verActual();
@@ -272,7 +271,7 @@ public class Menu {
                     iterAlianzas.siguiente();
                 }
             }
-            //ListaEnlazada<Pieza> informacionSatelite = obtenerPiezasDetectadasPorSatelite(jugadores[jugadorActual - 1]);
+            //ListaSimplementeEnlazada<Pieza> informacionSatelite = obtenerPiezasDetectadasPorSatelite(jugadores[jugadorActual - 1]);
         }
     }
 
@@ -422,7 +421,7 @@ public class Menu {
         Pieza pieza;
         switch (carta.getTipo()) {
             case CAMPO_DE_FUERZA -> {
-                ListaEnlazada<Base> bases = jugador.obtenerBases();
+                ListaSimplementeEnlazada<Base> bases = jugador.obtenerBases();
                 System.out.println("Elija la base:");
                 final int[] contador = {1};
                 bases.iterar(base -> {
@@ -436,7 +435,7 @@ public class Menu {
                     System.out.println("Selección inválida.");
                     return;
                 }
-                Base baseSeleccionada = bases.obtenerEnPosicion(seleccion - 1);
+                Base baseSeleccionada = bases.obtenerEnPosicion(seleccion);
                 baseSeleccionada.aumentarEscudo(3);
             }
             case RASTREADOR_CUANTICO -> {
@@ -471,7 +470,7 @@ public class Menu {
                 crearBase(jugadorActual - 1); // Crea una base adicional para el jugador actual 
             }
             case SUMAR_VIDA_A_BASE -> {
-                ListaEnlazada<Base> bases = jugador.obtenerBases();
+                ListaSimplementeEnlazada<Base> bases = jugador.obtenerBases();
                 System.out.println("Elija la base:");
                 final int[] contador = {1};
                 bases.iterar(base -> {
@@ -485,7 +484,7 @@ public class Menu {
                     System.out.println("Selección inválida.");
                     return;
                 }
-                Base baseSeleccionada = bases.obtenerEnPosicion(seleccion - 1);
+                Base baseSeleccionada = bases.obtenerEnPosicion(seleccion);
                 baseSeleccionada.aumentarVida(3);
             }
             case NAVE_HACE_DAÑO_EXTRA -> {
@@ -505,7 +504,7 @@ public class Menu {
                 }
             }
             case NAVE_HACE_DAÑO_EN_AREA -> {
-                ListaEnlazada<Nave> naves = jugador.obtenerNaves();
+                ListaSimplementeEnlazada<Nave> naves = jugador.obtenerNaves();
                 System.out.println("Elija la nave:");
                 final int[] contador = {1};
                 naves.iterar(nave -> {
@@ -519,7 +518,7 @@ public class Menu {
                     System.out.println("Selección inválida.");
                     return;
                 }
-                Nave naveSeleccionada = naves.obtenerEnPosicion(seleccion - 1);
+                Nave naveSeleccionada = naves.obtenerEnPosicion(seleccion);
                 int radio = 1;
                 for (int dx = -radio; dx <= radio; dx++) {
                     for (int dy = -radio; dy <= radio; dy++) {
@@ -539,7 +538,7 @@ public class Menu {
                 }
             }
             case NAVE_OBTIENE_ESCUDO -> {
-                ListaEnlazada<Nave> naves = jugador.obtenerNaves();
+                ListaSimplementeEnlazada<Nave> naves = jugador.obtenerNaves();
                 System.out.println("Elija la nave:");
                 final int[] contador = {1};
                 naves.iterar(nave -> {
@@ -553,7 +552,7 @@ public class Menu {
                     System.out.println("Selección inválida.");
                     return;
                 }
-                Nave naveSeleccionada = naves.obtenerEnPosicion(seleccion - 1);
+                Nave naveSeleccionada = naves.obtenerEnPosicion(seleccion);
                 naveSeleccionada.aumentarEscudo(3);
             }
             default -> {
@@ -565,7 +564,7 @@ public class Menu {
     
     // Método para mover naves
     private boolean moverNave() {
-        ListaEnlazada<Nave> naves = jugadores[jugadorActual - 1].obtenerNaves();
+        ListaSimplementeEnlazada<Nave> naves = jugadores[jugadorActual - 1].obtenerNaves();
     
         if (naves.estaVacia()) {
             System.out.println("No tenés naves para mover.");
@@ -586,8 +585,7 @@ public class Menu {
             System.out.println("Selección inválida.");
             return false;
         }
-    
-        Nave naveAMover = naves.obtenerEnPosicion(seleccion - 1);
+        Nave naveAMover = naves.obtenerEnPosicion(seleccion);
         int[] coordsViejas = naveAMover.obtenerCoordenadas();
     
         int[] nuevaCoordenadas = solicitarCoordenadas("Ingrese la nueva posición en ");
@@ -617,23 +615,27 @@ public class Menu {
     // Método para manejar la eliminación de un jugador
     private void perdedor(Jugador jugador) {
         System.out.println("El jugador " + jugador.obtenerNombre() + " ha sido eliminado.");
-        ListaEnlazada<Nave> naves = jugador.obtenerNaves();
+        ListaSimplementeEnlazada<Nave> naves = jugador.obtenerNaves();
         naves.iterar((nave) -> {
             int[] coords = nave.obtenerCoordenadas();
             tablero.asignarValor(coords[0], coords[1], coords[2], new Radiacion(coords[0], coords[1], coords[2], 3));
             return true;
         });
-        ListaEnlazada<Satelite> satelites = jugador.obtenerSatelites();
+        ListaSimplementeEnlazada<Satelite> satelites = jugador.obtenerSatelites();
         satelites.iterar((satelite) -> {
             int[] coords = satelite.obtenerCoordenadas();
             tablero.asignarValor(coords[0], coords[1], coords[2], new Radiacion(coords[0], coords[1], coords[2], 3));
             return true;
         });
-        while(naves.largo() > 0) {
-            naves.borrarPrimero();
+        IteradorLista<Nave> iterNaves = naves.iterador();
+        while (iterNaves.haySiguiente()) {
+            iterNaves.borrar();
+            iterNaves.siguiente();
         }
-        while(satelites.largo() > 0) {
-            satelites.borrarPrimero();
+        IteradorLista<Satelite> iterSatelites = satelites.iterador();
+        while (iterSatelites.haySiguiente()) {
+            iterSatelites.borrar();
+            iterSatelites.siguiente();
         }
     }
 

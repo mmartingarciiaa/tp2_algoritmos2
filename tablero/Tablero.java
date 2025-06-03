@@ -3,19 +3,19 @@ package tablero;
 // Importaciones necesarias
 import enums.TipoPieza;
 import estructuras.lista.IteradorLista;
-import estructuras.lista.ListaEnlazada;
+import estructuras.lista.ListaSimplementeEnlazada;
 import piezas.Pieza;
 
 public class Tablero {
     private final int TAMANIO;
-	private final ListaEnlazada<Sector>[] tablero;
-	private final ListaEnlazada<Pieza> piezasNoVacias;
+	private final ListaSimplementeEnlazada<Sector>[] tablero;
+	private final ListaSimplementeEnlazada<Pieza> piezasNoVacias;
 
 	@SuppressWarnings("unchecked")
 	public Tablero(int dimension) {
 		this.TAMANIO = dimension;
-		this.tablero = (ListaEnlazada<Sector>[]) new ListaEnlazada[TAMANIO];
-		this.piezasNoVacias = new ListaEnlazada<>();
+		this.tablero = (ListaSimplementeEnlazada<Sector>[]) new ListaSimplementeEnlazada[TAMANIO];
+		this.piezasNoVacias = new ListaSimplementeEnlazada<>();
 	}
 
 	public int obtenerDimension() {
@@ -26,7 +26,7 @@ public class Tablero {
     // y carga a cada sector con el valor "_"
     public void inicializarTablero() {
 		for (int x = 0; x < TAMANIO; x++) {
-			tablero[x] = new ListaEnlazada<>();
+			tablero[x] = new ListaSimplementeEnlazada<>();
 
 			for (int y = 0; y < TAMANIO; y++) {
 				for (int z = 0; z < TAMANIO; z++) {
@@ -54,7 +54,7 @@ public class Tablero {
 		}
 	}
 
-	public ListaEnlazada<Sector> obtenerSectores(int x) {
+	public ListaSimplementeEnlazada<Sector> obtenerSectores(int x) {
 		return tablero[x];
 	}
 
@@ -70,7 +70,7 @@ public class Tablero {
 		return null;
 	}
 
-	public ListaEnlazada<Pieza> obtenerPiezasNoVacias() {
+	public ListaSimplementeEnlazada<Pieza> obtenerPiezasNoVacias() {
 		return piezasNoVacias;
 	}
 }

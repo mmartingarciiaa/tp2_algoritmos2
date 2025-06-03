@@ -2,7 +2,7 @@ package menu;
 
 // Importaciones necesarias
 import estructuras.lista.IteradorLista;
-import estructuras.lista.ListaEnlazada;
+import estructuras.lista.ListaSimplementeEnlazada;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,7 +15,7 @@ public class GuardadoDePartidaEnArchivo {
   public static void main(String[] args) {
     try {
       Tablero tablero = new Tablero(10);
-      ListaEnlazada<Jugador> jugadores = new ListaEnlazada<>();
+      ListaSimplementeEnlazada<Jugador> jugadores = new ListaSimplementeEnlazada<>();
 
       for (int i = 1; i <= 3; i++) {
         Jugador jugador = new Jugador("Jugador" + i);
@@ -45,7 +45,7 @@ public class GuardadoDePartidaEnArchivo {
     }
   }
 
-  public static void guardarPartida(Tablero tablero, ListaEnlazada<Jugador> jugadores) throws IOException {
+  public static void guardarPartida(Tablero tablero, ListaSimplementeEnlazada<Jugador> jugadores) throws IOException {
     try (PrintWriter writer = new PrintWriter(new FileWriter("juego.txt"))) {
       writer.println("dimension:");
       writer.println(tablero.obtenerDimension());

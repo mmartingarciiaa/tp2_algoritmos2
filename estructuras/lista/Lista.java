@@ -4,9 +4,9 @@ import estructuras.nodos.NodoSimplementeEnlazado;
 public abstract class Lista<T> {
 	//ATRIBUTOS -----------------------------------------------------------------------------------------------
 
-	private NodoSimplementeEnlazado<T> primero = null;
-	private int largo = 0;
-	private NodoSimplementeEnlazado<T> cursor = null;
+	protected NodoSimplementeEnlazado<T> primero = null;
+	protected int largo = 0;
+	protected NodoSimplementeEnlazado<T> cursor = null;
 
 	//CONSTRUCTOR -------------------------------------------------------------------------------------------
 
@@ -57,7 +57,7 @@ public abstract class Lista<T> {
 		if (this.cursor == null) {
 			this.cursor = this.primero;
 		} else {
-			this.cursor = this.cursor.getSiguiente();
+			this.cursor.setSiguiente(cursor.getSiguiente());
 		}
 
 		/* pudo avanzar si el cursor ahora apunta a un nodo */
@@ -109,13 +109,13 @@ public abstract class Lista<T> {
      * post: borra el primer elemento de la Lista. Si la Lista está vacía, lanza una excepción.
      * @throws Exception si la lista está vacía
      */
-    public abstract void borrarPrimero() throws Exception;
+    public abstract T borrarPrimero() throws Exception;
 
     /**
      * post: borra el último elemento de la Lista. Si la Lista está vacía, lanza una excepción.
      * @throws Exception si la lista está vacía
      */
-    public abstract void borrarUltimo() throws Exception;
+    public abstract T borrarUltimo() throws Exception;
 
     /**
      * obtener el elemento en la posición indicada.
@@ -125,7 +125,7 @@ public abstract class Lista<T> {
      * @return el elemento en la posición indicada
      * @throws Exception si la posición es menor a 1 o mayor al tamaño actual de la lista
      */
-    public abstract T obtenerEnPosicion(int posicion) throws Exception;
+    public abstract T obtenerEnPosicion(int posicion);
 
     /**
      * Inserta un elemento en la lista enlazada en una posición específica.
@@ -154,12 +154,11 @@ public abstract class Lista<T> {
 
     // ITERADORES EXTERNOS E INTERNOS -----------------------------------------------------------
 
-    public void visitar(Visitador<T> visitador) {
-        this.iniciarCursor();
-        while (this.avanzarCursor()) {
-            if (!visitador.visitar(this.obtenerCursor())) {
-                break; // Si el visitador devuelve false, se detiene el recorrido
-            }
+    public void iterar(Visitador<T> visitador) {
+        NodoSimplementeEnlazado<T> actual = this.primero;
+        while (actual != null) {
+            visitador.visitar(actual.getDato());
+            actual = actual.getSiguiente();
         }
     }
 
