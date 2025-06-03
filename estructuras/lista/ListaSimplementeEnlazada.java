@@ -16,6 +16,27 @@ public class ListaSimplementeEnlazada<T> extends Lista<T> {
     }
 
     /**
+     * post: devuelve true si el elemento está en la Lista, false en caso contrario.
+     * en caso de que el elemento sea null, devuelve false.
+     * @return
+     */
+    @Override
+    public boolean contains(T elemento) {
+        if (elemento == null) {
+            return false;
+        }
+
+        NodoSimplementeEnlazado<T> actual = primero;
+        while (actual != null) {
+            if (actual.getDato().equals(elemento)) {
+                return true;
+            }
+            actual = actual.getSiguiente();
+        }
+        return false;
+    }
+
+    /**
      * post: devuelve el último elemento de la Lista.
      */
     @Override
@@ -120,7 +141,7 @@ public class ListaSimplementeEnlazada<T> extends Lista<T> {
         }
 
         NodoSimplementeEnlazado<T> actual = primero;
-        for (int i = 0; i < posicion; i++) {
+        for (int i = 1; i < posicion; i++) {
             actual = actual.getSiguiente();
         }
         return actual.getDato();

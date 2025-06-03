@@ -34,6 +34,7 @@ public class Menu {
     private ColaEnlazada<Jugador> colaJugadores; // Cola para manejar el turno de los jugadores
 
     private final ListaSimplementeEnlazada<Alianza> alianzas = new ListaSimplementeEnlazada<>();
+    private ListaSimplementeEnlazada<Pieza> piezasDetectadas = new ListaSimplementeEnlazada<>(); // Lista para almacenar piezas detectadas por satélites
 
     private Mazo mazo; // Instancia de la clase Mazo
     Scanner sc = new Scanner(System.in);    // Creo un objeto Scanner
@@ -100,19 +101,19 @@ public class Menu {
         int cartasRobadas = 0; // Contador de cartas robadas
 
         while(jugadores.length > 1) {
+            piezasDetectadas = obtenerPiezasDetectadasPorSatelite(jugadores[jugadorActual - 1]);
             int anchoImagen = dimension * (dimension * Bitmap.TAM_CELDA + Bitmap.ESPACIADO_CAPAS) - Bitmap.ESPACIADO_CAPAS;
             int altoImagen = dimension * Bitmap.TAM_CELDA;
 
             Bitmap bmp = new Bitmap(anchoImagen, altoImagen);
 
             try {
-                bmp.generarBMPCompleto(tablero, jugadores[jugadorActual - 1]);
+                bmp.generarBMPCompleto(tablero, jugadores[jugadorActual - 1], piezasDetectadas);
                 bmp.guardarArchivo("tablero.bmp");
             } catch (IOException e) {
                 System.out.println("Error al dibujar el tablero: " + e.getMessage());
             }
             //Jugador jugadorActual = colaJugadores.desencolar(); // Obtener el jugador actual de la cola
-            
             System.err.println("\nTurno de jugador " + jugadores[jugadorActual - 1].obtenerNombre());
             System.out.println("Opciones:");
             System.out.println("1. Agregar nave");
@@ -206,6 +207,7 @@ public class Menu {
                     cambioDeTurno = true;
                 }
                 case ALIANZA -> {
+                    sc.nextLine(); // justo antes de este bloque
                     String nombreAliado = "";
                     while (nombreAliado == null || nombreAliado.isEmpty() || nombreAliado.equals(jugadores[jugadorActual - 1].obtenerNombre())) { 
                         System.out.println("Ingrese el nombre del jugador con el que desea formar una alianza:");
@@ -216,18 +218,26 @@ public class Menu {
                         String nombreJugador = jugador.obtenerNombre();
                         if (nombreJugador.equals(nombreAliado)) {
                             String eleccion = "";
-                            while(!(eleccion.equals("SI") || eleccion.equals("NO"))) {
+                            while (!(eleccion.equals("SI") || eleccion.equals("NO"))) {
                                 System.out.println(nombreJugador + ", desea formar una alianza con " + jugadores[jugadorActual - 1].obtenerNombre() + "? (Si/No)");
                                 eleccion = sc.nextLine().trim().toUpperCase();
+                                System.out.println("DEBUG: Eleccion ingresada -> [" + eleccion + "]");
                             }
                             if (eleccion.equals("SI")) {
-                                alianzas.insertarUltimo(new Alianza(jugadores[jugadorActual - 1], jugador));
-                            } else if (eleccion.equals("NO")) {
+                                Alianza nuevaAlianza = new Alianza(jugadores[jugadorActual - 1], jugador);
+                                alianzas.insertarUltimo(nuevaAlianza);
+                                jugadores[jugadorActual - 1].agregarAlianza(nuevaAlianza);
+                                jugador.agregarAlianza(nuevaAlianza);
+                                System.out.println("Alianza formada entre " + jugadores[jugadorActual - 1].obtenerNombre() + " y " + jugador.obtenerNombre() + ".");
+                            } else {
                                 System.out.println("Alianza no formada.");
                             }
-                            break;
+                            System.out.println("Presione Enter para continuar...");
+                            sc.nextLine(); // ¡Clave! leer Enter para no "colgarse"
+                            break; // <- salir del for
                         }
                     }
+                    System.out.println("Alianzas disponibles:");
                 }
                 case DEJAR_DE_JUGAR -> {
                     System.out.println("Gracias por jugar!");
@@ -255,6 +265,7 @@ public class Menu {
                         if (!radiacion.estaActiva()) {
                             tablero.asignarValor(pieza.obtenerCoordenadas()[0], pieza.obtenerCoordenadas()[1], pieza.obtenerCoordenadas()[2], new Vacio(pieza.obtenerCoordenadas()[0], pieza.obtenerCoordenadas()[1], pieza.obtenerCoordenadas()[2]));
                             iter.borrar();
+                            
                         }
                     }
                     iter.siguiente();
@@ -266,7 +277,11 @@ public class Menu {
                     Alianza alianza = iterAlianzas.verActual();
                     alianza.reducirDuracion();
                     if (!alianza.estaActiva()) {
-                        iterAlianzas.borrar();
+                        Jugador[] aliados = alianza.obtenerJugadores();
+                        for (Jugador aliado : aliados) {
+                            aliado.eliminarAlianza(alianza);
+                        }
+                        iterAlianzas.borrar(); // Eliminar la alianza si ya no está activa
                     }
                     iterAlianzas.siguiente();
                 }
@@ -315,7 +330,7 @@ public class Menu {
             return false;
         }
 
-        Satelite satelite = new Satelite(jugadores[jugadorActual - 1], x, y, z, SATELITE, VIDA_SATELITE, 3);
+        Satelite satelite = new Satelite(jugadores[jugadorActual - 1], x, y, z, SATELITE, VIDA_SATELITE, dimension / 4);
         tablero.asignarValor(x, y, z, satelite);
 
         // Incrementar la cantidad de satélites del jugador actual
@@ -357,7 +372,7 @@ public class Menu {
     
         Jugador duenio = ficha.obtenerDuenio(); // Jugador dueño de la pieza atacada
         int danio = naveAtacante.obtenerDanio(); // Daño infligido por la nave atacante
-        Radiacion radiacion = new Radiacion(x, y, z, 4); // Variable para almacenar la radiación si es necesario
+        Radiacion radiacion = new Radiacion(x, y, z, 5); // Variable para almacenar la radiación si es necesario
         boolean piezaDestruida = false; // Variable para verificar si la base fue destruida
         switch (ficha.obtenerTipo()) {
             case BASE -> {
@@ -392,6 +407,7 @@ public class Menu {
             case NAVE -> {
                 if (ficha.obtenerEscudo() > 0) {
                     ficha.reducirEscudo(danio);
+                    System.out.println("¡Escudo reducido a la nave!");
                 }
                 if (ficha.obtenerVida() < 1) {
                     System.out.println("¡Una nave enemiga ha sido destruida!");
@@ -650,6 +666,36 @@ public class Menu {
             }
         }
         return nuevosJugadores;
+    }
+
+    public ListaSimplementeEnlazada<Pieza> obtenerPiezasDetectadasPorSatelite(Jugador jugador) {
+        ListaSimplementeEnlazada<Pieza> detectadas = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Satelite> satelites = jugador.obtenerSatelites();
+        IteradorLista<Satelite> iter = satelites.iterador();
+        
+        while (iter.haySiguiente()) {
+            Satelite satelite = iter.verActual();
+            int[] coords = satelite.obtenerCoordenadas();
+            int radio = satelite.obtenerRadioDeteccion();
+            for (int dx = -radio; dx <= radio; dx++) {
+                for (int dy = -radio; dy <= radio; dy++) {
+                    for (int dz = -radio; dz <= radio; dz++) {
+                        int nuevaX = coords[0] + dx;
+                        int nuevaY = coords[1] + dy;
+                        int nuevaZ = coords[2] + dz;
+                        if (coordenadasValidas(nuevaX, nuevaY, nuevaZ)) {
+                            Sector sector = tablero.obtenerSector(nuevaX, nuevaY, nuevaZ);
+                            Pieza pieza = sector.obtenerValor();
+                            if (pieza.obtenerTipo() != TipoPieza.VACIO && !esCasillaPropia(pieza) && !jugador.esAliado(pieza.obtenerDuenio())) {
+                                detectadas.insertarUltimo(pieza);
+                            }
+                        }
+                    }
+                }
+            }
+            iter.siguiente();
+        }
+        return detectadas;
     }
 
     /* -------------- Metodos auxiliares -------------- */

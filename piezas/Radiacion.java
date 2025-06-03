@@ -7,6 +7,7 @@ public class Radiacion extends Pieza {
     private static final int VIDA_POR_DEFECTO = 0;
     private static final String NOMBRE_POR_DEFECTO = "R";
     private int turnosActiva;
+    private boolean recienCreada;
 
     /**
      * Constructor de la clase Radiacion
@@ -19,6 +20,7 @@ public class Radiacion extends Pieza {
     public Radiacion(int x, int y, int z, int duracion) {
 		super(TipoPieza.RADIACION, null, x, y, z, NOMBRE_POR_DEFECTO, VIDA_POR_DEFECTO, duracion);
         this.turnosActiva = duracion;
+        this.recienCreada = true;
 	}
 
     /**
@@ -26,9 +28,11 @@ public class Radiacion extends Pieza {
      * 
      */
     public void reducirDuracion() {
-        if (turnosActiva > 0) {
-            turnosActiva--;
+        if (recienCreada) {
+            recienCreada = false;
+            return; // No se reduce la duración en el primer turno
         }
+        turnosActiva--;
     }
 	
     public int obtenerDuracion() {

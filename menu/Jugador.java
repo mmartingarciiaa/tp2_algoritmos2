@@ -18,6 +18,7 @@ public class Jugador {
     private ListaSimplementeEnlazada<Nave> naves = null;
     private ListaSimplementeEnlazada<Satelite> satelites = null;
     private ColaEnlazada<Carta> cartas = null;
+    private ListaSimplementeEnlazada<Alianza> alianzas = null;
     private final String nombre;
 
     public Jugador(String nombre) {
@@ -26,6 +27,7 @@ public class Jugador {
         this.naves = new ListaSimplementeEnlazada<>();
         this.satelites = new ListaSimplementeEnlazada<>();
         this.cartas = new ColaEnlazada<>();
+        this.alianzas = new ListaSimplementeEnlazada<>();
     }
 
     public String obtenerNombre() {
@@ -120,5 +122,54 @@ public class Jugador {
             }
             iter.siguiente();
         }
+    }
+
+    public void agregarAlianza(Alianza nuevaAlianza) {
+        alianzas.insertarUltimo(nuevaAlianza);
+    }
+
+    public void eliminarAlianza(Alianza alianza) {
+        IteradorLista<Alianza> iter = alianzas.iterador();
+        while (iter.haySiguiente()) {
+            if (iter.verActual().equals(alianza)) {
+                iter.borrar();
+                break;
+            }
+            iter.siguiente();
+        }
+    }
+
+    public ListaSimplementeEnlazada<Alianza> obtenerAlianzas() {
+        return alianzas;
+    }
+
+    public ListaSimplementeEnlazada<Jugador> obtenerJugadoresAliados() {
+        ListaSimplementeEnlazada<Jugador> jugadoresAliados = new ListaSimplementeEnlazada<>();
+        IteradorLista<Alianza> iter = alianzas.iterador();
+        while (iter.haySiguiente()) {
+            Alianza alianza = iter.verActual();
+            Jugador aliado = alianza.obtenerOtroJugador(this);
+            if (aliado != null) {
+                jugadoresAliados.insertarUltimo(aliado);
+            }
+            iter.siguiente();
+        }
+        return jugadoresAliados;
+    }
+
+    public boolean esAliado(Jugador otroJugador) {
+        IteradorLista<Alianza> iter = alianzas.iterador();
+        while (iter.haySiguiente()) {
+            Alianza alianza = iter.verActual();
+            if (alianza.contieneJugador(otroJugador)) {
+                return true;
+            }
+            iter.siguiente();
+        }
+        return false;
+    }
+    
+    public boolean tieneAlianzas() {
+        return !alianzas.estaVacia();
     }
 }

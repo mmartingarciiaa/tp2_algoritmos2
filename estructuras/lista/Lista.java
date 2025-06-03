@@ -91,6 +91,12 @@ public abstract class Lista<T> {
     // METODOS ABSTRACTOS QUE IMPLEMENTA LA CLASE HIJA ----------------------------------------------------
 
     /**
+     * post: devuelve true si el elemento está en la Lista, false en caso contrario.
+     * @return
+     */
+    public abstract boolean contains(T elemento);
+
+    /**
      * post: devuelve el último elemento de la Lista.
      */
     public abstract T verUltimo() throws Exception;
