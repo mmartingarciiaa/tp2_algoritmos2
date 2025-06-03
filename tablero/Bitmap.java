@@ -135,9 +135,9 @@ public class Bitmap {
                 if (pieza != null) {
                     Jugador duenio = pieza.obtenerDuenio();
                     if (simbolo.equals("N") && duenio.equals(jugador)) {
-                        dibujarImagen("imagenes/nave.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
+                        dibujarImagen("tablero/imagenes/nave.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
                     } else if (simbolo.equals("B") && duenio.equals(jugador)) {
-                        dibujarImagen("imagenes/base.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
+                        dibujarImagen("tablero/imagenes/base.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
                     }
                 }
     
