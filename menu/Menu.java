@@ -31,8 +31,9 @@ public class Menu {
     private int numJugadores;  // Número de jugadores
     private int jugadorActual = 1; // Jugador actual (1 a número de jugadores) [Usar una cola para el turno]
     private Jugador[] jugadores;    // Arreglo de jugadores
-    private ColaEnlazada<Jugador> colaJugadores; // Cola para manejar el turno de los jugadores
+    private ColaEnlazada<Jugador> colaJugadores = new ColaEnlazada<>(); // Cola para manejar el turno de los jugadores
 
+    private final ListaSimplementeEnlazada<Jugador> jugadoresLista = new ListaSimplementeEnlazada<>();
     private final ListaSimplementeEnlazada<Alianza> alianzas = new ListaSimplementeEnlazada<>();
     private ListaSimplementeEnlazada<Pieza> piezasDetectadas = new ListaSimplementeEnlazada<>(); // Lista para almacenar piezas detectadas por satélites
 
@@ -43,27 +44,42 @@ public class Menu {
     public void mensajeInicial() {
         System.out.println("Bienvenidos a la Invasión Galáctica!");
         System.out.println("Este es un juego para máximo 6 jugadores.");
-        numJugadores = leerEnteroEntreLimites("Ingrese el número de jugadores (2-6): ", 2, 6); // Leer el número de jugadores
 
-        // Crear el arreglo de jugadores ahora que sabemos cuántos son
-        jugadores = new Jugador[numJugadores];
-        colaJugadores = new ColaEnlazada<>(); // Inicializar la cola de jugadores
+        int eleccion = leerEnteroEntreLimites("¿Desea (1) cargar una partida o (2) empezar una nueva?: ", 1, 2);
+        switch (eleccion) {
+            case 1 -> {
+                String ruta = obtenerRutaValida("Ingrese la ruta al archivo txt: ");
+                try {
+                    this.tablero = CargadoDePartida.cargarPartida(ruta, colaJugadores);
+                } catch (Exception e) {
+                    System.out.println("Error al cargar la partida: " + e.getMessage());
+                }
+            }
+            case 2 -> {
+                numJugadores = leerEnteroEntreLimites("Ingrese el número de jugadores (2-6): ", 2, 6); // Leer el número de jugadores
+                
+                // Crear el arreglo de jugadores ahora que sabemos cuántos son
+                jugadores = new Jugador[numJugadores];
 
-        // Pedir los nombres de todos los jugadores
-        sc.nextLine();
-        for (int i = 0; i < numJugadores; i++) {
-            String nombre = obtenerNombreValido("Jugador " + (i + 1) + ", ingrese su nombre: ");
-            jugadores[i] = new Jugador(nombre);
-            colaJugadores.encolar(jugadores[i]); // Agregar jugador a la cola
+                // Pedir los nombres de todos los jugadores
+                sc.nextLine();
+                for (int i = 0; i < numJugadores; i++) {
+                    String nombre = obtenerNombreValido("Jugador " + (i + 1) + ", ingrese su nombre: ");
+                    jugadores[i] = new Jugador(nombre);
+                    colaJugadores.encolar(jugadores[i]); // Agregar jugador a la cola
+                    jugadoresLista.insertarUltimo(jugadores[i]);
+                }
+                
+                System.out.println("El tablero es un cubo del tamaño que establezca");
+                dimension = leerEnteroEntreLimites("Tamaño (4-10): ", 4, 10); // Leer el tamaño del tablero
+                
+                tablero = new Tablero(dimension); // Crear el tablero con el tamaño especificado
+
+                // Inicializar el tablero solo una vez
+                tablero.inicializarTablero();
+                this.crearBases();
+            }
         }
-        
-        System.out.println("El tablero es un cubo del tamaño que establezca");
-        dimension = leerEnteroEntreLimites("Tamaño (2-10): ", 2, 10); // Leer el tamaño del tablero
-        
-        tablero = new Tablero(dimension); // Crear el tablero con el tamaño especificado
-
-        // Inicializar el tablero solo una vez
-        tablero.inicializarTablero();
     }
     
     // Método para crear la base de un jugador
@@ -82,7 +98,7 @@ public class Menu {
                 int z = leerPosicion("Z: ", dimension);
                 Pieza pieza = tablero.obtenerSector(x - 1, y - 1, z - 1).obtenerValor();
                 if (pieza.obtenerTipo().equals(TipoPieza.VACIO)) {
-                    Base base = new Base(jugadores[i], x - 1, y - 1, z - 1, BASE, VIDA_BASE);
+                    Base base = new Base(jugadores[i], x - 1, y - 1, z - 1, BASE, VIDA_BASE, 0);
                     tablero.asignarValor(x - 1, y - 1, z - 1, base);
                     jugadores[i].agregarBase(base);
                     baseCreada = true;
@@ -94,7 +110,6 @@ public class Menu {
     
     // Método para mostrar el menú de opciones y realizar las acciones
     public void menu() {
-        this.crearBases();
         Accion accion;
         ListaSimplementeEnlazada<Carta> listaCartas = CartaUtils.crearListaDeCartasBase(jugadores.length);
         mazo = new Mazo<>(listaCartas); // Crear el mazo de cartas base
@@ -160,24 +175,12 @@ public class Menu {
                         break;
                     }
                 
-                    System.out.println("Tus naves:");
-                    // Enumero y muestro las naves disponibles
-                    //! hacer una funcion auxiliar para mostrar las naves
-                    final int[] contador = {1};
-                    navesDisponibles.iterar(nave -> {
-                        int[] coords = nave.obtenerCoordenadas();
-                        System.out.println(contador[0] + ". Nave en X: " + (coords[0] + 1) + " Y: " + (coords[1] + 1) + " Z: " + (coords[2] + 1));
-                        contador[0]++;
-                        return true;
-                    });
-                
-                    int seleccion = leerEntero("Elegí el número de la nave para atacar: ");
-                    if (seleccion < 1 || seleccion >= contador[0]) {
+                    Nave naveSeleccionada = seleccionarPieza(navesDisponibles);
+                    if (naveSeleccionada == null) {
                         System.out.println("Selección inválida.");
                         break;
                     }
-
-                    Nave naveSeleccionada = navesDisponibles.obtenerEnPosicion(seleccion);
+                    
                     coordenadas = solicitarCoordenadas("Ingrese la posición en ");
                     if (atacarSector(coordenadas[0], coordenadas[1], coordenadas[2], naveSeleccionada)) {
                         cambioDeTurno = true;
@@ -213,10 +216,11 @@ public class Menu {
                         System.out.println("Ingrese el nombre del jugador con el que desea formar una alianza:");
                         nombreAliado = sc.nextLine();
                     }
-                    
+                    boolean encontrado = false;
                     for (Jugador jugador : jugadores) {
                         String nombreJugador = jugador.obtenerNombre();
                         if (nombreJugador.equals(nombreAliado)) {
+                            encontrado = true;
                             String eleccion = "";
                             while (!(eleccion.equals("SI") || eleccion.equals("NO"))) {
                                 System.out.println(nombreJugador + ", desea formar una alianza con " + jugadores[jugadorActual - 1].obtenerNombre() + "? (Si/No)");
@@ -232,14 +236,28 @@ public class Menu {
                             } else {
                                 System.out.println("Alianza no formada.");
                             }
-                            System.out.println("Presione Enter para continuar...");
-                            sc.nextLine(); // ¡Clave! leer Enter para no "colgarse"
-                            break; // <- salir del for
+                            break; // sale del for
                         }
                     }
-                    System.out.println("Alianzas disponibles:");
+                    if (!encontrado) {
+                        System.out.println("Jugador no encontrado. Asegúrese de que el nombre sea correcto.");
+                    }
                 }
                 case DEJAR_DE_JUGAR -> {
+                    sc.nextLine();                    
+                    String eleccion = "";
+                    while (!(eleccion.equals("SI") || eleccion.equals("NO"))) {
+                        System.out.println("¿Desea guardar la partida? (SI/NO)");
+                        eleccion = sc.nextLine().trim().toUpperCase();
+                        System.out.println("DEBUG: Eleccion ingresada -> [" + eleccion + "]");
+                    }
+                    if (eleccion.equals("SI")) {
+                        try {
+                            GuardadoDePartidaEnArchivo.guardarPartida(tablero, jugadoresLista);
+                        } catch (IOException e) {
+                            System.out.println("Error al guardar la partida: " + e.getMessage());
+                        }
+                    }
                     System.out.println("Gracias por jugar!");
                     return;
                 }
@@ -437,21 +455,7 @@ public class Menu {
         Pieza pieza;
         switch (carta.getTipo()) {
             case CAMPO_DE_FUERZA -> {
-                ListaSimplementeEnlazada<Base> bases = jugador.obtenerBases();
-                System.out.println("Elija la base:");
-                final int[] contador = {1};
-                bases.iterar(base -> {
-                    int[] coords = base.obtenerCoordenadas();
-                    System.out.println(contador[0] + ". Base en X: " + (coords[0] + 1) + " Y: " + (coords[1] + 1) + " Z: " + (coords[2] + 1));
-                    contador[0]++;
-                    return true;
-                });
-                int seleccion = leerEntero("Elija la base a aumentar escudo: ");
-                if (seleccion < 1 || seleccion >= contador[0]) {
-                    System.out.println("Selección inválida.");
-                    return;
-                }
-                Base baseSeleccionada = bases.obtenerEnPosicion(seleccion);
+                Base baseSeleccionada = seleccionarPieza(jugador.obtenerBases());
                 baseSeleccionada.aumentarEscudo(3);
             }
             case RASTREADOR_CUANTICO -> {
@@ -486,21 +490,11 @@ public class Menu {
                 crearBase(jugadorActual - 1); // Crea una base adicional para el jugador actual 
             }
             case SUMAR_VIDA_A_BASE -> {
-                ListaSimplementeEnlazada<Base> bases = jugador.obtenerBases();
-                System.out.println("Elija la base:");
-                final int[] contador = {1};
-                bases.iterar(base -> {
-                    int[] coords = base.obtenerCoordenadas();
-                    System.out.println(contador[0] + ". Base en X: " + (coords[0] + 1) + " Y: " + (coords[1] + 1) + " Z: " + (coords[2] + 1));
-                    contador[0]++;
-                    return true;
-                });
-                int seleccion = leerEntero("Elija la base a aumentar escudo: ");
-                if (seleccion < 1 || seleccion >= contador[0]) {
+                Base baseSeleccionada = seleccionarPieza(jugador.obtenerBases());
+                if (baseSeleccionada == null) {
                     System.out.println("Selección inválida.");
                     return;
                 }
-                Base baseSeleccionada = bases.obtenerEnPosicion(seleccion);
                 baseSeleccionada.aumentarVida(3);
             }
             case NAVE_HACE_DAÑO_EXTRA -> {
@@ -520,21 +514,11 @@ public class Menu {
                 }
             }
             case NAVE_HACE_DAÑO_EN_AREA -> {
-                ListaSimplementeEnlazada<Nave> naves = jugador.obtenerNaves();
-                System.out.println("Elija la nave:");
-                final int[] contador = {1};
-                naves.iterar(nave -> {
-                    int[] coords = nave.obtenerCoordenadas();
-                    System.out.println(contador[0] + ". Nave en X: " + (coords[0] + 1) + " Y: " + (coords[1] + 1) + " Z: " + (coords[2] + 1));
-                    contador[0]++;
-                    return true;
-                });
-                int seleccion = leerEntero("Elija la nave a aumentar escudo: ");
-                if (seleccion < 1 || seleccion >= contador[0]) {
+                Nave naveSeleccionada = seleccionarPieza(jugador.obtenerNaves());
+                if (naveSeleccionada == null) {
                     System.out.println("Selección inválida.");
                     return;
                 }
-                Nave naveSeleccionada = naves.obtenerEnPosicion(seleccion);
                 int radio = 1;
                 for (int dx = -radio; dx <= radio; dx++) {
                     for (int dy = -radio; dy <= radio; dy++) {
@@ -554,21 +538,11 @@ public class Menu {
                 }
             }
             case NAVE_OBTIENE_ESCUDO -> {
-                ListaSimplementeEnlazada<Nave> naves = jugador.obtenerNaves();
-                System.out.println("Elija la nave:");
-                final int[] contador = {1};
-                naves.iterar(nave -> {
-                    int[] coords = nave.obtenerCoordenadas();
-                    System.out.println(contador[0] + ". Nave en X: " + (coords[0] + 1) + " Y: " + (coords[1] + 1) + " Z: " + (coords[2] + 1));
-                    contador[0]++;
-                    return true;
-                });
-                int seleccion = leerEntero("Elija la nave a aumentar escudo: ");
-                if (seleccion < 1 || seleccion >= contador[0]) {
+                Nave naveSeleccionada = seleccionarPieza(jugador.obtenerNaves());
+                if (naveSeleccionada == null) {
                     System.out.println("Selección inválida.");
                     return;
                 }
-                Nave naveSeleccionada = naves.obtenerEnPosicion(seleccion);
                 naveSeleccionada.aumentarEscudo(3);
             }
             default -> {
@@ -587,23 +561,13 @@ public class Menu {
             return false;
         }
     
-        System.out.println("Tus naves:");
-        final int[] contador = {1};
-        naves.iterar(nave -> {
-            int[] coords = nave.obtenerCoordenadas();
-            System.out.println(contador[0] + ". Nave en X: " + (coords[0] + 1) + " Y: " + (coords[1] + 1) + " Z: " + (coords[2] + 1));
-            contador[0]++;
-            return true;
-        });
-    
-        int seleccion = leerEntero("Elegí el número de la nave a mover: ");
-        if (seleccion < 1 || seleccion >= contador[0]) {
+        Nave naveAMover = seleccionarPieza(naves);
+        if (naveAMover == null) {
             System.out.println("Selección inválida.");
             return false;
         }
-        Nave naveAMover = naves.obtenerEnPosicion(seleccion);
+
         int[] coordsViejas = naveAMover.obtenerCoordenadas();
-    
         int[] nuevaCoordenadas = solicitarCoordenadas("Ingrese la nueva posición en ");
     
         if (!coordenadasValidas(nuevaCoordenadas[0], nuevaCoordenadas[1], nuevaCoordenadas[2])) {
@@ -699,6 +663,25 @@ public class Menu {
     }
 
     /* -------------- Metodos auxiliares -------------- */
+
+    public <T extends Pieza> T seleccionarPieza(ListaSimplementeEnlazada<T> piezas) {
+        System.out.println("Tus naves:");
+        final int[] contador = {1};
+        piezas.iterar(pieza -> {
+            int[] coords = pieza.obtenerCoordenadas();
+            System.out.println(contador[0] + ". Nave en X: " + (coords[0] + 1) + " Y: " + (coords[1] + 1) + " Z: " + (coords[2] + 1));
+            contador[0]++;
+            return true;
+        });
+
+        int seleccion = leerEntero("Elegí el número de la nave a mover: ");
+        if (seleccion < 1 || seleccion >= contador[0]) {
+            System.out.println("Selección inválida.");
+            return null;
+        }
+
+        return piezas.obtenerEnPosicion(seleccion); // devuelve T (Pieza o subclase)
+    }
 
     // Método para solicitar las coordenadas al usuario
     private int[] solicitarCoordenadas(String mensaje) {
@@ -821,6 +804,18 @@ public class Menu {
             }
         }
         return nombre;
+    }
+    // Método para obtener una ruta valida
+    public String obtenerRutaValida(String mensaje) {
+        String path = "";
+        while (path.isEmpty() || !path.endsWith(".txt")) {
+            System.out.print(mensaje);
+            path = sc.nextLine().trim();
+            if (path.isEmpty() || !path.endsWith(".txt")) {
+                System.out.println("El nombre no puede estar vacío y debe terminar en .txt. Inténtalo de nuevo.");
+            }
+        }
+        return path;
     }
 
 }

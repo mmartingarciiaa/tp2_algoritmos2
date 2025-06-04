@@ -12,39 +12,7 @@ import piezas.Satelite;
 import tablero.Tablero;
 
 public class GuardadoDePartidaEnArchivo {
-  public static void main(String[] args) {
-    try {
-      Tablero tablero = new Tablero(10);
-      ListaSimplementeEnlazada<Jugador> jugadores = new ListaSimplementeEnlazada<>();
-
-      for (int i = 1; i <= 3; i++) {
-        Jugador jugador = new Jugador("Jugador" + i);
-
-        for (int b = 0; b < 2; b++) {
-          Base base = new Base(jugador, i * 2, b * 3, i+b,"B",100);
-          jugador.agregarBase(base);
-        }
-
-        for (int n = 0; n < 3; n++) {
-          Nave nave = new Nave(jugador, i * 2, n * 3, i + n, "N", 100, 20);
-          jugador.agregarNave(nave);
-        }
-
-        for (int s = 0; s < 2; s++) {
-          Satelite satelite = new Satelite(jugador, i * 2, s * 3, i + s, "S", 100, 20);
-          jugador.agregarSatelite(satelite);
-        }
-
-        jugadores.insertarUltimo(jugador);
-      }
-
-      guardarPartida(tablero, jugadores);
-
-    } catch (IOException e) {
-      System.out.println("Error guardando juego: " + e.getMessage());
-    }
-  }
-
+  
   public static void guardarPartida(Tablero tablero, ListaSimplementeEnlazada<Jugador> jugadores) throws IOException {
     try (PrintWriter writer = new PrintWriter(new FileWriter("juego.txt"))) {
       writer.println("dimension:");

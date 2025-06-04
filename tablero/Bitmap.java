@@ -157,6 +157,10 @@ public class Bitmap {
                             if (simbolo.equals("N") && duenio.esAliado(aliado)) {
                                 dibujarImagen("tablero/imagenes/nave_aliada.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
                             }
+                            if (simbolo.equals("S") && duenio.esAliado(aliado)) {
+                                dibujarImagen("tablero/imagenes/satelite_aliado.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
+                            }
+                            iterAliados.siguiente();
                         }
                     }
                 }
