@@ -51,12 +51,20 @@ public class Menu {
                 String ruta = obtenerRutaValida("Ingrese la ruta al archivo txt: ");
                 try {
                     this.tablero = CargadoDePartida.cargarPartida(ruta, colaJugadores);
-                    int i = 0;
-                    jugadores = new Jugador[colaJugadores.tamanio()];
-                    while(!colaJugadores.estaVacia()){
-                        jugadores[i] =  colaJugadores.desencolar();
-                        i++;
+                    if (colaJugadores.estaVacia()) {
+                        System.out.println("No se encontraron jugadores en el archivo.");
                     }
+                    int i = 0;
+                    this.jugadores = new Jugador[colaJugadores.tamanio()];
+                    if (this.jugadores.length == 0) {
+                        System.out.println("No se encontraron jugadores en el archivo.");
+                    }
+                    while(!colaJugadores.estaVacia()){
+                        this.jugadores[i] =  colaJugadores.desencolar();
+                        i++;
+                        System.out.println("Jugador " + this.jugadores[i - 1].obtenerNombre() + " cargado.");
+                    }
+                    this.dimension = tablero.obtenerDimension(); // Obtener la dimensión del tablero cargado
                 } catch (Exception e) {
                     System.out.println("Error al cargar la partida: " + e.getMessage());
                 }
@@ -65,13 +73,13 @@ public class Menu {
                 numJugadores = leerEnteroEntreLimites("Ingrese el número de jugadores (2-6): ", 2, 6); // Leer el número de jugadores
                 
                 // Crear el arreglo de jugadores ahora que sabemos cuántos son
-                jugadores = new Jugador[numJugadores];
+                this.jugadores = new Jugador[numJugadores];
 
                 // Pedir los nombres de todos los jugadores
                 sc.nextLine();
                 for (int i = 0; i < numJugadores; i++) {
                     String nombre = obtenerNombreValido("Jugador " + (i + 1) + ", ingrese su nombre: ");
-                    jugadores[i] = new Jugador(nombre);
+                    this.jugadores[i] = new Jugador(nombre);
                     colaJugadores.encolar(jugadores[i]); // Agregar jugador a la cola
                     jugadoresLista.insertarUltimo(jugadores[i]);
                 }
@@ -106,7 +114,7 @@ public class Menu {
                 if (pieza.obtenerTipo().equals(TipoPieza.VACIO)) {
                     Base base = new Base(jugadores[i], x - 1, y - 1, z - 1, BASE, VIDA_BASE, 0);
                     tablero.asignarValor(x - 1, y - 1, z - 1, base);
-                    jugadores[i].agregarBase(base);
+                    this.jugadores[i].agregarBase(base);
                     baseCreada = true;
                 } else {
                     System.out.println("¡Error! Ya existe una pieza en esa posición.");

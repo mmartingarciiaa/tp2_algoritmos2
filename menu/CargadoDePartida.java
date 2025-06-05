@@ -48,7 +48,6 @@ public class CargadoDePartida {
         int vida = Integer.parseInt(partes[2]);
         int escudo = Integer.parseInt(partes[3]);
         
-        
         switch (tipo) {
             case "b" -> {
                 Base base = new Base(jugador, x, y, z, "B", vida, escudo);
@@ -56,7 +55,8 @@ public class CargadoDePartida {
                 tablero.asignarValor(x, y, z, base);
             }
             case "n" -> {
-                Nave nave = new Nave(jugador, x, y, z, "N", vida, escudo);
+                int danio = Integer.parseInt(partes[4]);
+                Nave nave = new Nave(jugador, x, y, z, "N", vida, danio);
                 jugador.agregarNave(nave);
                 tablero.asignarValor(x, y, z, nave);
             }
