@@ -154,10 +154,10 @@ public class Bitmap {
                         IteradorLista<Jugador> iterAliados = aliados.iterador();
                         while (iterAliados.haySiguiente()) {
                             Jugador aliado = iterAliados.verActual();
-                            if (simbolo.equals("N") && duenio.esAliado(aliado)) {
+                            if (simbolo.equals("N") && duenio.esAliado(aliado) && !duenio.equals(jugador)) {
                                 dibujarImagen("tablero/imagenes/nave_aliada.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
                             }
-                            if (simbolo.equals("S") && duenio.esAliado(aliado)) {
+                            if (simbolo.equals("S") && duenio.esAliado(aliado) && !duenio.equals(jugador)) {
                                 dibujarImagen("tablero/imagenes/satelite_aliado.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
                             }
                             iterAliados.siguiente();

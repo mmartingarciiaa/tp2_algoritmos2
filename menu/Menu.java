@@ -31,7 +31,7 @@ public class Menu {
     private int numJugadores;  // Número de jugadores
     private int jugadorActual = 1; // Jugador actual (1 a número de jugadores) [Usar una cola para el turno]
     private Jugador[] jugadores;    // Arreglo de jugadores
-    private ColaEnlazada<Jugador> colaJugadores = new ColaEnlazada<>(); // Cola para manejar el turno de los jugadores
+    private final ColaEnlazada<Jugador> colaJugadores = new ColaEnlazada<>(); // Cola para manejar el turno de los jugadores
 
     private final ListaSimplementeEnlazada<Jugador> jugadoresLista = new ListaSimplementeEnlazada<>();
     private final ListaSimplementeEnlazada<Alianza> alianzas = new ListaSimplementeEnlazada<>();
@@ -51,6 +51,12 @@ public class Menu {
                 String ruta = obtenerRutaValida("Ingrese la ruta al archivo txt: ");
                 try {
                     this.tablero = CargadoDePartida.cargarPartida(ruta, colaJugadores);
+                    int i = 0;
+                    jugadores = new Jugador[colaJugadores.tamanio()];
+                    while(!colaJugadores.estaVacia()){
+                        jugadores[i] =  colaJugadores.desencolar();
+                        i++;
+                    }
                 } catch (Exception e) {
                     System.out.println("Error al cargar la partida: " + e.getMessage());
                 }
