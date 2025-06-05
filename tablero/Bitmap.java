@@ -3,12 +3,14 @@ package tablero;
 // Importaciones necesarias
 import estructuras.lista.IteradorLista;
 import estructuras.lista.ListaSimplementeEnlazada;
+import jugador.Jugador;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import menu.Jugador;
+
 import piezas.Pieza;
 
 /**

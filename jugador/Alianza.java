@@ -1,4 +1,4 @@
-package menu;
+package jugador;
 
 // Importaciones necesarias
 

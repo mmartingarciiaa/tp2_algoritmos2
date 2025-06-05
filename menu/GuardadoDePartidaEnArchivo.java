@@ -3,6 +3,8 @@ package menu;
 // Importaciones necesarias
 import estructuras.lista.IteradorLista;
 import estructuras.lista.ListaSimplementeEnlazada;
+import jugador.Jugador;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;

@@ -8,6 +8,7 @@ import estructuras.lista.ListaSimplementeEnlazada;
 import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
+import jugador.*;
 import mazo.*;
 import piezas.*;
 import tablero.*;
@@ -64,6 +65,7 @@ public class Menu {
                         i++;
                         System.out.println("Jugador " + this.jugadores[i - 1].obtenerNombre() + " cargado.");
                     }
+                    this.numJugadores = this.jugadores.length; // Actualizar el número de jugadores
                     this.dimension = tablero.obtenerDimension(); // Obtener la dimensión del tablero cargado
                 } catch (Exception e) {
                     System.out.println("Error al cargar la partida: " + e.getMessage());

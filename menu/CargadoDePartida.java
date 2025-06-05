@@ -1,6 +1,8 @@
 package menu;
 
 import estructuras.cola.ColaEnlazada;
+import jugador.Jugador;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -10,7 +12,7 @@ import tablero.Tablero;
 public class CargadoDePartida {
     public static Tablero cargarPartida(String ruta, ColaEnlazada<Jugador> jugadores) throws Exception {
         Tablero tablero = null;
-        String nombre = "";
+        String nombre;
         Jugador jugadorActual = null;
         try (BufferedReader lector = new BufferedReader(new FileReader(ruta))) {
             String linea;

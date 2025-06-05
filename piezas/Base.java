@@ -2,7 +2,7 @@ package piezas;
 
 // Importaciones necesarias
 import enums.TipoPieza;
-import menu.Jugador;
+import jugador.Jugador;
 
 public class Base extends Pieza {
     /**
