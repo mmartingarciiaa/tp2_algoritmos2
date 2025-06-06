@@ -25,7 +25,8 @@ public class Menu {
     final String NAVE = "N";  // Caracter para representar una nave
     final String BASE = "B";  // Caracter para representar una base
     private final String SATELITE = "S";  // Caracter para representar un satélite
-    
+    private final String RADIACION = "R";  //Caracter para representar un satelite
+
     private Tablero tablero; // Instancia de la clase Tablero
     private int dimension; // Dimensiones del tablero
 
@@ -126,6 +127,7 @@ public class Menu {
     
     // Método para mostrar el menú de opciones y realizar las acciones
     public void menu() {
+        this.mensajeInicial();
         Accion accion;
         ListaSimplementeEnlazada<Carta> listaCartas = CartaUtils.crearListaDeCartasBase(jugadores.length);
         mazo = new Mazo<>(listaCartas); // Crear el mazo de cartas base
@@ -158,7 +160,7 @@ public class Menu {
 
             int opcion = leerEntero("Ingrese una opción: ");
 
-            accion = Accion.desdeCodigo(opcion);
+            accion = Accion.desdeCodigo(opcion - 1);
 
             int[] coordenadas;
             
@@ -244,7 +246,7 @@ public class Menu {
                                 System.out.println("DEBUG: Eleccion ingresada -> [" + eleccion + "]");
                             }
                             if (eleccion.equals("SI")) {
-                                Alianza nuevaAlianza = new Alianza(jugadores[jugadorActual - 1], jugador);
+                                Alianza nuevaAlianza = new Alianza(jugadores[jugadorActual - 1], jugador, 5);
                                 alianzas.insertarUltimo(nuevaAlianza);
                                 jugadores[jugadorActual - 1].agregarAlianza(nuevaAlianza);
                                 jugador.agregarAlianza(nuevaAlianza);
@@ -315,6 +317,7 @@ public class Menu {
                         for (Jugador aliado : aliados) {
                             aliado.eliminarAlianza(alianza);
                         }
+                        alianza.desarmarAlianza();
                         iterAlianzas.borrar(); // Eliminar la alianza si ya no está activa
                     }
                     iterAlianzas.siguiente();
@@ -406,7 +409,7 @@ public class Menu {
     
         Jugador duenio = ficha.obtenerDuenio(); // Jugador dueño de la pieza atacada
         int danio = naveAtacante.obtenerDanio(); // Daño infligido por la nave atacante
-        Radiacion radiacion = new Radiacion(x, y, z, 5); // Variable para almacenar la radiación si es necesario
+        Radiacion radiacion = new Radiacion(x, y, z, 5, RADIACION); // Variable para almacenar la radiación si es necesario
         boolean piezaDestruida = false; // Variable para verificar si la base fue destruida
         switch (ficha.obtenerTipo()) {
             case BASE -> {
@@ -425,7 +428,6 @@ public class Menu {
                             System.out.println("¡La base ha sido destruida!");
                             piezaDestruida = true;
                             duenio.eliminarBase(x, y, z);
-                            base.destruirPieza();
                             if (duenio.obtenerBases().estaVacia()) {
                                 System.out.println("¡El jugador " + duenio.obtenerNombre() + " ha sido eliminado!");
                                 jugadores = jugadoresRestantes(jugadores, duenio);
@@ -614,13 +616,13 @@ public class Menu {
         ListaSimplementeEnlazada<Nave> naves = jugador.obtenerNaves();
         naves.iterar((nave) -> {
             int[] coords = nave.obtenerCoordenadas();
-            tablero.asignarValor(coords[0], coords[1], coords[2], new Radiacion(coords[0], coords[1], coords[2], 3));
+            tablero.asignarValor(coords[0], coords[1], coords[2], new Radiacion(coords[0], coords[1], coords[2], 3, RADIACION));
             return true;
         });
         ListaSimplementeEnlazada<Satelite> satelites = jugador.obtenerSatelites();
         satelites.iterar((satelite) -> {
             int[] coords = satelite.obtenerCoordenadas();
-            tablero.asignarValor(coords[0], coords[1], coords[2], new Radiacion(coords[0], coords[1], coords[2], 3));
+            tablero.asignarValor(coords[0], coords[1], coords[2], new Radiacion(coords[0], coords[1], coords[2], 3, RADIACION));
             return true;
         });
         IteradorLista<Nave> iterNaves = naves.iterador();

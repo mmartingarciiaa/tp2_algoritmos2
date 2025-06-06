@@ -1,6 +1,7 @@
 package estructuras.lista;
 
 import estructuras.nodos.NodoSimplementeEnlazado;
+import java.util.NoSuchElementException;
 
 /**
  * Implementación de una lista enlazada genérica.
@@ -18,7 +19,8 @@ public class ListaSimplementeEnlazada<T> extends Lista<T> {
     /**
      * post: devuelve true si el elemento está en la Lista, false en caso contrario.
      * en caso de que el elemento sea null, devuelve false.
-     * @return
+     * @return true si el elemento está en la lista, false en caso contrario
+     * @param elemento el elemento a buscar en la lista
      */
     @Override
     public boolean contains(T elemento) {
@@ -38,20 +40,29 @@ public class ListaSimplementeEnlazada<T> extends Lista<T> {
 
     /**
      * post: devuelve el último elemento de la Lista.
+     * 
+     * @return el último elemento de la lista
+     * @throws NoSuchElementException si la lista está vacía
      */
     @Override
-    public T verUltimo() throws Exception {
+    public T verUltimo() {
         if (estaVacia()) {
-            throw new Exception("La lista está vacía");
+            throw new NoSuchElementException("La lista está vacía");
         }
         return ultimo.getDato();
     }
 
     /**
      * post: agrega el elemento al principio de la Lista
+     * 
+     * @param elemento el elemento a insertar
+     * @throws IllegalArgumentException si el elemento es null
      */
     @Override
     public void insertarPrimero(T elemento) {
+        if (elemento == null) {
+            throw new IllegalArgumentException("El elemento no puede ser null");
+        }
         NodoSimplementeEnlazado<T> nuevo = new NodoSimplementeEnlazado<>(elemento);
         if (estaVacia()) {
             ultimo = nuevo;
@@ -64,9 +75,15 @@ public class ListaSimplementeEnlazada<T> extends Lista<T> {
 
     /**
      * post: agrega el elemento al final de la lista
+     * 
+     * @param elemento el elemento a insertar
+     * @throws IllegalArgumentException si el elemento es null
      */
     @Override
     public void insertarUltimo(T elemento) {
+        if (elemento == null) {
+            throw new IllegalArgumentException("El elemento no puede ser null");
+        }
         NodoSimplementeEnlazado<T> nuevo = new NodoSimplementeEnlazado<>(elemento);
         if (estaVacia()) {
             primero = nuevo;
@@ -79,12 +96,12 @@ public class ListaSimplementeEnlazada<T> extends Lista<T> {
 
     /**
      * post: borra el primer elemento de la Lista. Si la Lista está vacía, lanza una excepción.
-     * @throws Exception si la lista está vacía
+     * @throws NoSuchElementException si la lista está vacía
      */
     @Override
-    public T borrarPrimero() throws Exception {
+    public T borrarPrimero() {
         if (estaVacia()) {
-            throw new Exception("La lista está vacía");
+            throw new NoSuchElementException("La lista está vacía");
         }
         T dato = primero.getDato();
         if (primero == ultimo) {
@@ -97,12 +114,12 @@ public class ListaSimplementeEnlazada<T> extends Lista<T> {
 
     /**
      * post: borra el último elemento de la Lista. Si la Lista está vacía, lanza una excepción.
-     * @throws Exception si la lista está vacía
+     * @throws NoSuchElementException si la lista está vacía
      */
     @Override
-    public T borrarUltimo() throws Exception {
+    public T borrarUltimo() {
         if (this.estaVacia()) {
-            throw new RuntimeException("La lista esta vacia");
+            throw new NoSuchElementException("La lista está vacía");
         }
 
         T dato = this.ultimo.getDato();
@@ -123,21 +140,16 @@ public class ListaSimplementeEnlazada<T> extends Lista<T> {
     }
 
     /**
-     * obtener el elemento en la posición indicada.
-     * Si la posición es menor o igual a 1, devuelve el primer elemento.
-     * Si la posición es mayor al tamaño actual de la lista, devuelve el último elemento.
+     * Obtiene el elemento en la posición indicada (1-indexado).
      * 
-     * @param posicion la posición del elemento a obtener (1-indexado)
+     * @param posicion la posición del elemento a obtener
      * @return el elemento en la posición indicada
+     * @throws NoSuchElementException si la posición es menor a 1 o mayor al tamaño de la lista
      */
     @Override
     public T obtenerEnPosicion(int posicion) {
-        if (posicion <= 1) {
-            return primero.getDato();
-        }
-        
-        if (posicion > largo) {
-            return ultimo.getDato();
+        if (posicion < 1 || posicion > largo) {
+            throw new NoSuchElementException("Posición inválida: " + posicion);
         }
 
         NodoSimplementeEnlazado<T> actual = primero;
@@ -158,9 +170,9 @@ public class ListaSimplementeEnlazada<T> extends Lista<T> {
      * @throws RuntimeException si la posición indicada es menor a 1
      */
     @Override
-    public void insertarEnPosicion(T dato, int posicion) throws Exception {
+    public void insertarEnPosicion(T dato, int posicion){
         if (posicion < 1) {
-            throw new Exception("Posición inválida");
+            throw new RuntimeException("Posición inválida");
         }
 
         if (posicion > largo + 1) {
@@ -197,7 +209,7 @@ public class ListaSimplementeEnlazada<T> extends Lista<T> {
      * @throws RuntimeException si la posición es menor a 1
      */
     @Override
-    public T borrarEnPosicion(int posicion) throws Exception {
+    public T borrarEnPosicion(int posicion) {
         if (posicion < 1) {
             throw new RuntimeException("La posicion debe ser mayor a 0");
         }

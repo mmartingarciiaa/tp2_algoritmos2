@@ -21,5 +21,17 @@ public class Vacio extends Pieza {
      */
     public Vacio(int x, int y, int z) {
         super(TipoPieza.VACIO, null, x,y,z, NOMBRE_POR_DEFECTO, VIDA_POR_DEFECTO, 0);
+        if (!creacionValida()) {
+            throw new RuntimeException("Creación de pieza Vacio inválida: " + 
+                    "Nombre: " + NOMBRE_POR_DEFECTO + ", " +
+                    "Vida: " + VIDA_POR_DEFECTO + ", " +
+                    "Coordenadas: [" + x + ", " + y + ", " + z + "]");
+        }
+    }
+
+    @Override
+    protected boolean creacionValida() {
+        return this.obtenerCoordenadas() != null && 
+                this.obtenerCoordenadas().length == 3;
     }
 }
