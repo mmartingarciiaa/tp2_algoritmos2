@@ -37,7 +37,7 @@ public class GuardadoDePartidaEnArchivo {
 
         while (naves.haySiguiente()) {
           Nave nave = naves.verActual();
-          writer.println("n" + " - "  + nave.obtenerCoordenadas()[0] + "," + nave.obtenerCoordenadas()[1] + "," + nave.obtenerCoordenadas()[2] + " - " + nave.obtenerVida() + " - " + nave.obtenerEscudo());
+          writer.println("n" + " - "  + nave.obtenerCoordenadas()[0] + "," + nave.obtenerCoordenadas()[1] + "," + nave.obtenerCoordenadas()[2] + " - " + nave.obtenerVida() + " - " + nave.obtenerEscudo() + " - " + nave.obtenerDanio());
           naves.siguiente();
         }
 
