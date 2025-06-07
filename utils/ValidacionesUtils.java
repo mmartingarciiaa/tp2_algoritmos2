@@ -25,4 +25,10 @@ public class ValidacionesUtils {
       throw new RuntimeException("Cadena " + valorString + " debe tener al menos " + minimoCaracteres + " caracteres");
     }
   }
+
+  public static void validarTerminacionDeCadena(String cadena, String terminacion, String valorString) throws RuntimeException {
+    if (!cadena.endsWith(terminacion)) {
+      throw new RuntimeException("Cadena " + valorString + " debe terminar con " + terminacion);
+    }
+  }
 }

@@ -246,7 +246,7 @@ public class Menu {
                                 System.out.println("DEBUG: Eleccion ingresada -> [" + eleccion + "]");
                             }
                             if (eleccion.equals("SI")) {
-                                Alianza nuevaAlianza = new Alianza(jugadores[jugadorActual - 1], jugador, 5);
+                                Alianza nuevaAlianza = new Alianza(jugadores[jugadorActual - 1], jugador,  5);
                                 alianzas.insertarUltimo(nuevaAlianza);
                                 jugadores[jugadorActual - 1].agregarAlianza(nuevaAlianza);
                                 jugador.agregarAlianza(nuevaAlianza);
@@ -271,7 +271,7 @@ public class Menu {
                     }
                     if (eleccion.equals("SI")) {
                         try {
-                            GuardadoDePartidaEnArchivo.guardarPartida(tablero, jugadoresLista);
+                            GuardadoDePartidaEnArchivo.guardarPartida(tablero, jugadoresLista, "nombreDeLaPartida.txt");
                         } catch (IOException e) {
                             System.out.println("Error al guardar la partida: " + e.getMessage());
                         }
