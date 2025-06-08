@@ -1,11 +1,11 @@
 package menu;
 
 // Importaciones necesarias
-import estructuras.cola.ColaEnlazada;
-import jugador.Jugador;
+import estructuras.lista.ListaSimplementeEnlazada;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import jugador.Jugador;
 import piezas.*;
 import tablero.Tablero;
 
@@ -26,7 +26,7 @@ public class CargadoDePartida {
      * @return Un objeto Tablero con la configuración cargada desde el archivo.
      * @throws Exception Si ocurre un error al leer el archivo o si el formato es inválido.
      */
-    public static Tablero cargarPartida(String ruta, ColaEnlazada<Jugador> jugadores) throws Exception {
+    public static Tablero cargarPartida(String ruta, ListaSimplementeEnlazada<Jugador> jugadores) throws Exception {
         Tablero tablero = null;
         Jugador jugadorActual = null;
 
@@ -48,7 +48,7 @@ public class CargadoDePartida {
                     if (partes.length < 2) throw new IllegalArgumentException("Formato inválido para jugador: " + linea);
                     String nombre = partes[1].replace(":", "");
                     jugadorActual = new Jugador(nombre);
-                    jugadores.encolar(jugadorActual);
+                    jugadores.insertarUltimo(jugadorActual);
 
                 } else {
                     if (tablero == null) throw new IllegalStateException("El tablero debe ser inicializado antes de colocar piezas.");

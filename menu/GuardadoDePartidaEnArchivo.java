@@ -3,11 +3,10 @@ package menu;
 // Importaciones necesarias
 import estructuras.lista.IteradorLista;
 import estructuras.lista.ListaSimplementeEnlazada;
-import jugador.Jugador;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import jugador.Jugador;
 import piezas.Base;
 import piezas.Nave;
 import piezas.Satelite;
@@ -32,7 +31,7 @@ public class GuardadoDePartidaEnArchivo {
    * @author Patricio Alaniz
    */
   public static void guardarPartida(Tablero tablero, ListaSimplementeEnlazada<Jugador> jugadores, String nombreDelArchivo) throws IOException {
-    ValidacionesUtils.validarTerminacionDeCadena(nombreDelArchivo, ".txt", "El nombre del archivo debe terminar con \".txt\".");
+    ValidacionesUtils.validarFinDeCadena(nombreDelArchivo, ".txt", "El nombre del archivo debe terminar con \".txt\".");
 
     try (PrintWriter writer = new PrintWriter(new FileWriter(nombreDelArchivo))) {
 

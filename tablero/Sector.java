@@ -10,7 +10,21 @@ public class Sector {
     private final int[] coordenadas;
     private Pieza valor;
 
+    /**
+     * Constructor de la clase Sector.
+     * Inicializa un sector con coordenadas y un valor.
+     *
+     * @param x     coordenada x del sector
+     * @param y     coordenada y del sector
+     * @param z     coordenada z del sector
+     * @param valor valor del sector (puede ser una nave, base, etc.)
+     * 
+     * @throws RuntimeException si el valor del sector es nulo
+     */
     public Sector(int x, int y, int z, Pieza valor) {
+        if (valor == null) {
+            throw new RuntimeException("El valor del sector no puede ser nulo");
+        }
         this.coordenadas = new int[] {x, y, z};
         this.valor = valor;
     }

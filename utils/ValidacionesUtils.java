@@ -26,9 +26,9 @@ public class ValidacionesUtils {
     }
   }
 
-  public static void validarTerminacionDeCadena(String cadena, String terminacion, String valorString) throws RuntimeException {
-    if (!cadena.endsWith(terminacion)) {
-      throw new RuntimeException("Cadena " + valorString + " debe terminar con " + terminacion);
+  public static void validarFinDeCadena(String cadena, String extension, String valorString) throws RuntimeException {
+    if (!cadena.endsWith(extension)) {
+      throw new RuntimeException("Cadena " + valorString + " debe terminar con " + extension);
     }
   }
 }

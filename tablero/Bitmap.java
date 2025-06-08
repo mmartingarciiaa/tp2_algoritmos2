@@ -3,14 +3,12 @@ package tablero;
 // Importaciones necesarias
 import estructuras.lista.IteradorLista;
 import estructuras.lista.ListaSimplementeEnlazada;
-import jugador.Jugador;
-
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-
+import jugador.Jugador;
 import piezas.Pieza;
 
 /**
@@ -119,57 +117,90 @@ public class Bitmap {
     
                 Pieza pieza = sector.obtenerValor();
                 String simbolo = pieza != null ? pieza.obtenerNombre() : "_";
-    
                 int r = 200, g = 200, b = 200;
     
-                for (int i = 0; i < TAM_CELDA; i++) {
-                    for (int j = 0; j < TAM_CELDA; j++) {
-                        boolean hayBorde = (i < MARGEN_CELDA || j < MARGEN_CELDA ||
-                                i == TAM_CELDA - MARGEN_CELDA || j == TAM_CELDA - MARGEN_CELDA);
-                        if (hayBorde) {
-                            setPixel(xFinal + i, yFinal + j, 100, 100, 100);
-                        } else {
-                            setPixel(xFinal + i, yFinal + j, r, g, b);
-                        }
-                    }
-                }
+                dibujarBorde(xFinal, yFinal, r, g, b);
                 
                 if (pieza != null) {
                     Jugador duenio = pieza.obtenerDuenio();
-                    if (simbolo.equals("N") && duenio.equals(jugador)) {
-                        dibujarImagen("tablero/imagenes/nave.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
-                    } else if (simbolo.equals("B") && duenio.equals(jugador)) {
-                        dibujarImagen("tablero/imagenes/base.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
-                    } else if (simbolo.equals("S") && duenio.equals(jugador)) {
-                        dibujarImagen("tablero/imagenes/satelite.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
-                    } else if (simbolo.equals("R")) {
-                        dibujarImagen("tablero/imagenes/radiacion.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
-                    } else if (simbolo.equals("N") && piezasDetectadas.contains(pieza)) {
-                        dibujarImagen("tablero/imagenes/nave_enemiga.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
-                    } else if (simbolo.equals("B") && piezasDetectadas.contains(pieza)) {
-                        dibujarImagen("tablero/imagenes/base_enemiga.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
-                    } else if (simbolo.equals("S") && piezasDetectadas.contains(pieza)) {
-                        dibujarImagen("tablero/imagenes/satelite_enemigo.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
-                    }
-                    if (duenio != null) {
-                        ListaSimplementeEnlazada<Jugador> aliados = duenio.obtenerJugadoresAliados();
-                        IteradorLista<Jugador> iterAliados = aliados.iterador();
-                        while (iterAliados.haySiguiente()) {
-                            Jugador aliado = iterAliados.verActual();
-                            if (simbolo.equals("N") && duenio.esAliado(aliado) && !duenio.equals(jugador)) {
-                                dibujarImagen("tablero/imagenes/nave_aliada.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
-                            }
-                            if (simbolo.equals("S") && duenio.esAliado(aliado) && !duenio.equals(jugador)) {
-                                dibujarImagen("tablero/imagenes/satelite_aliado.png", xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
-                            }
-                            iterAliados.siguiente();
-                        }
+                    String spritePath = obtenerSprite(simbolo, duenio, jugador, piezasDetectadas.contains(pieza));
+                    if (spritePath != null) {
+                        dibujarImagen(spritePath, xFinal + 5, yFinal + 5, TAM_CELDA - 10, TAM_CELDA - 10);
                     }
                 }
-    
                 iter.siguiente();
             }
         }
     }
     
+    /**
+     * Obtiene la ruta del sprite correspondiente a un símbolo y su dueño.
+     * 
+     * @param simbolo el símbolo de la pieza (N, B, S, R)
+     * @param duenio el jugador dueño de la pieza
+     * @param jugadorActual el jugador que está visualizando el tablero
+     * @param esDetectada indica si la pieza ha sido detectada por el jugador actual
+     * 
+     * @return la ruta del sprite correspondiente o null si no se encuentra
+     */
+    private String obtenerSprite(String simbolo, Jugador duenio, Jugador jugadorActual, boolean esDetectada) {
+        String base = "tablero/imagenes/";
+
+        if (simbolo.equals("R")) {
+            return base + "radiacion.png"; // Radiación no tiene dueño
+        }
+        
+        if (duenio == null) {
+            return null; // Si no hay símbolo o dueño, no hay sprite
+        }
+
+
+        if (duenio.equals(jugadorActual)) {
+            return switch (simbolo) {
+                case "N" -> base + "nave.png";
+                case "B" -> base + "base.png";
+                case "S" -> base + "satelite.png";
+                default -> null;
+            };
+        }
+
+        if (duenio.esAliado(jugadorActual)) {
+            return switch (simbolo) {
+                case "N" -> base + "nave_aliada.png";
+                case "S" -> base + "satelite_aliado.png";
+                // Agregá más tipos si tenés otros sprites aliados
+                default -> null;
+            };
+        }
+
+        if (esDetectada) {
+            return switch (simbolo) {
+                case "N" -> base + "nave_enemiga.png";
+                case "B" -> base + "base_enemiga.png";
+                case "S" -> base + "satelite_enemigo.png";
+                default -> null;
+            };
+        }
+
+        return null;
+    }
+
+    /**
+     * Dibuja un borde alrededor de una celda en el tablero.
+     * El borde es de un color gris claro, y el interior de la celda
+     * se colorea con los valores RGB especificados.
+     */
+    private void dibujarBorde(int xFinal, int yFinal, int r, int g, int b) {
+        for (int i = 0; i < TAM_CELDA; i++) {
+            for (int j = 0; j < TAM_CELDA; j++) {
+                boolean hayBorde = (i < MARGEN_CELDA || j < MARGEN_CELDA ||
+                        i == TAM_CELDA - MARGEN_CELDA || j == TAM_CELDA - MARGEN_CELDA);
+                if (hayBorde) {
+                    setPixel(xFinal + i, yFinal + j, 100, 100, 100);
+                } else {
+                    setPixel(xFinal + i, yFinal + j, r, g, b);
+                }
+            }
+        }
+    }
 }

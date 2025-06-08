@@ -22,6 +22,7 @@ public class Radiacion extends Pieza {
      */
     public Radiacion(int x, int y, int z, int duracion, String nombre) {
         super(TipoPieza.RADIACION, null, x, y, z, nombre, VIDA_POR_DEFECTO, duracion);
+        this.turnosActiva = duracion;
         if (!creacionValida()) {
             throw new RuntimeException("Creación de pieza Radiación inválida: " + 
                     "Dueño: null, " +
@@ -29,7 +30,6 @@ public class Radiacion extends Pieza {
                     "Vida: " + VIDA_POR_DEFECTO + ", " +
                     "Coordenadas: [" + x + ", " + y + ", " + z + "]");
         }
-        this.turnosActiva = duracion;
         this.recienCreada = true;
     }
 
@@ -51,9 +51,12 @@ public class Radiacion extends Pieza {
             recienCreada = false;
             return; // No se reduce la duración en el primer turno
         }
-        turnosActiva--;
+        this.turnosActiva--;
     }
 	
+    /**
+     * Obtiene la duración restante de la radiación activa en la pieza.
+     */
     public int obtenerDuracion() {
         return turnosActiva;
     }
@@ -63,6 +66,6 @@ public class Radiacion extends Pieza {
      * @return: devuelve true si la pieza tiene radiación activa
      */
     public boolean estaActiva() {
-        return turnosActiva > 0;
+        return turnosActiva >= 0;
     }
 }

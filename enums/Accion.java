@@ -9,8 +9,7 @@ public enum Accion {
     ROBAR_CARTA,
     USAR_CARTA,
     ALIANZA,
-    DEJAR_DE_JUGAR,
-    NO_VALIDO;
+    DEJAR_DE_JUGAR;
 
     /**
      * Método para obtener la acción correspondiente al código proporcionado.
@@ -19,9 +18,9 @@ public enum Accion {
      * @return La acción correspondiente o NO_VALIDO si el código es inválido.
      */
     public static Accion desdeCodigo(int codigo) {
-        if (codigo >= 0 && codigo < values().length - 1) { // Excluye NO_VALIDO
+        if (codigo >= 0 && codigo < values().length) {
             return values()[codigo];
         }
-        return NO_VALIDO;
+        return null;
     }
 }

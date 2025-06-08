@@ -6,13 +6,3 @@ public class Main {
         menu.menu();
     }
 }
-
-
-/*
-cosas que faltan: 
--modularizar codigo de menu
--documentar codigo de todas las clases
--llevar validaciones del menu a utils
--intentar mostrar todo el tablero de cada jugador en solo bmp
--hacer informe
-*/

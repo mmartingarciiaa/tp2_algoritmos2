@@ -80,7 +80,6 @@ public class Pieza {
 	}
 	
 	/**
-	 * 
 	 * @return: Devuelve el tipo de pieza 
 	 */
 	public TipoPieza obtenerTipo() {
@@ -88,7 +87,6 @@ public class Pieza {
 	}
 	
 	/**
-	 * 
 	 * @return: Devuelve las coordenadas pasadas 
 	 */
 	public int[] obtenerCoordenadas() {
