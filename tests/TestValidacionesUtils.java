@@ -36,8 +36,8 @@ public class TestValidacionesUtils {
   }
 
   @Test
-  public void testValidarTerminacionDeCadena() {
-    assertDoesNotThrow(() -> ValidacionesUtils.validarTerminacionDeCadena("test.txt", ".txt", "test"));
-    assertThrows(RuntimeException.class, () -> ValidacionesUtils.validarTerminacionDeCadena("test.doc", ".txt", "test"));
+  public void testValidarFinDeCadena() {
+    assertDoesNotThrow(() -> ValidacionesUtils.validarFinDeCadena("test.txt", ".txt", "test"));
+    assertThrows(RuntimeException.class, () -> ValidacionesUtils.validarFinDeCadena("test.doc", ".txt", "test"));
   }
 }
