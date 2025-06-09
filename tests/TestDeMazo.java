@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import mazo.Mazo;
 
 import static org.junit.jupiter.api.Assertions.*;
-import estructuras.lista.ListaEnlazada;
+import estructuras.lista.ListaSimplementeEnlazada;
 
 /**
  * La clase TestDeMazo contiene un conjunto de pruebas unitarias para la clase Mazo.
@@ -15,12 +15,12 @@ import estructuras.lista.ListaEnlazada;
  * @author Patricio Alaniz
  */
 public class TestDeMazo {
-  private ListaEnlazada<String> cartas = null;
+  private ListaSimplementeEnlazada<String> cartas = null;
   private Mazo<String> mazo = null;
 
   @BeforeEach
   public void inicializarListaDeCartas() {
-    this.cartas = new ListaEnlazada<>();
+    this.cartas = new ListaSimplementeEnlazada<>();
 
     for (int i = 1; i <= 10; i++) {
       this.cartas.insertarUltimo("carta" + i);
