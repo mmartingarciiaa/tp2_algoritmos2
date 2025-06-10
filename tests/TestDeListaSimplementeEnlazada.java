@@ -809,4 +809,57 @@ public class TestDeListaSimplementeEnlazada {
         });
         assertEquals(49995000, suma[0]);
     }
+
+    @Test
+    public void testInsertarEnPosicion() {
+        ListaSimplementeEnlazada<String> lista = new ListaSimplementeEnlazada<>();
+
+        lista.insertarEnPosicion("a", 1);
+        assertEquals("a", lista.verPrimero());
+
+        lista.insertarEnPosicion("b", 1);
+        assertEquals("b", lista.verPrimero());
+
+        lista.insertarEnPosicion("c", 1);
+        assertEquals("c", lista.verPrimero());
+
+        assertEquals(3, lista.largo());
+    }
+
+    @Test
+    public void testBorrarEnPosicion() {
+        ListaSimplementeEnlazada<String> lista = new ListaSimplementeEnlazada<>();
+
+        lista.insertarUltimo("a");
+        lista.insertarUltimo("b");
+        lista.insertarUltimo("c");
+
+        assertEquals(3, lista.largo());
+
+        assertEquals("b", lista.borrarEnPosicion(2));
+
+        assertEquals(2, lista.largo());
+
+        assertEquals("c", lista.borrarEnPosicion(2));
+
+        assertEquals(1, lista.largo());
+
+        assertThrows(RuntimeException.class, () -> lista.borrarEnPosicion(-1));
+    }
+
+    @Test
+    public void testObtenerEnPosicion() {
+        ListaSimplementeEnlazada<String> lista = new ListaSimplementeEnlazada<>();
+
+        lista.insertarUltimo("a");
+        lista.insertarUltimo("b");
+        lista.insertarUltimo("c");
+
+        assertEquals(3, lista.largo());
+        assertEquals("a", lista.obtenerEnPosicion(1));
+        assertEquals("b", lista.obtenerEnPosicion(2));
+        assertEquals("c", lista.obtenerEnPosicion(3));
+
+        assertThrows(NoSuchElementException.class, () -> lista.obtenerEnPosicion(100));
+    }
 }

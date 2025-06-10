@@ -147,7 +147,7 @@ public class ListaSimplementeEnlazada<T> extends Lista<T> {
      * @throws NoSuchElementException si la posición es menor a 1 o mayor al tamaño de la lista
      */
     @Override
-    public T obtenerEnPosicion(int posicion) {
+    public T obtenerEnPosicion(int posicion) throws NoSuchElementException {
         if (posicion < 1 || posicion > largo) {
             throw new NoSuchElementException("Posición inválida: " + posicion);
         }
@@ -168,9 +168,10 @@ public class ListaSimplementeEnlazada<T> extends Lista<T> {
      * @param dato el elemento a insertar
      * @param posicion la posición en la lista donde se debe insertar el elemento (1-indexado)
      * @throws RuntimeException si la posición indicada es menor a 1
+     * @author Patricio Alaniz
      */
     @Override
-    public void insertarEnPosicion(T dato, int posicion){
+    public void insertarEnPosicion(T dato, int posicion) throws RuntimeException {
         if (posicion < 1) {
             throw new RuntimeException("Posición inválida");
         }
@@ -207,9 +208,10 @@ public class ListaSimplementeEnlazada<T> extends Lista<T> {
      * @param posicion la posición del elemento a eliminar en la lista (1-indexado)
      * @return el elemento eliminado de la lista
      * @throws RuntimeException si la posición es menor a 1
+     * @author Patricio Alaniz
      */
     @Override
-    public T borrarEnPosicion(int posicion) {
+    public T borrarEnPosicion(int posicion) throws RuntimeException {
         if (posicion < 1) {
             throw new RuntimeException("La posicion debe ser mayor a 0");
         }
