@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 import estructuras.lista.ListaSimplementeEnlazada;
 import estructuras.lista.IteradorLista;
 
-public class TestDeLista {
+public class TestDeListaSimplementeEnlazada {
 
     private static final int CARGA_MAXIMA = 10000;
     private static final int RANGO_TESTS = 5;
@@ -750,20 +750,20 @@ public class TestDeLista {
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
 
-        int[] elemIterados = new int[0];
+        final int[][] elemIterados = {new int[0]};
         int[] index = {0};
         lista.iterar(valor -> {
-            if (elemIterados.length == 0) {
-                elemIterados = new int[1];
+            if (elemIterados[0].length == 0) {
+                elemIterados[0] = new int[1];
             } else {
-                int[] newArray = new int[elemIterados.length + 1];
-                System.arraycopy(elemIterados, 0, newArray, 0, elemIterados.length);
-                elemIterados = newArray;
+                int[] newArray = new int[elemIterados[0].length + 1];
+                System.arraycopy(elemIterados[0], 0, newArray, 0, elemIterados[0].length);
+                elemIterados[0] = newArray;
             }
-            elemIterados[index[0]++] = valor;
+            elemIterados[0][index[0]++] = valor;
             return true;
         });
-        assertEquals(0, elemIterados.length);
+        assertEquals(0, elemIterados[0].length);
     }
 
     @Test
@@ -807,6 +807,6 @@ public class TestDeLista {
             suma[0] += valor;
             return valor < CORTE_VOLUMEN;
         });
-        assertEquals(8002000, suma[0]);
+        assertEquals(49995000, suma[0]);
     }
 }

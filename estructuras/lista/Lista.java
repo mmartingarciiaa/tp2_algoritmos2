@@ -1,6 +1,8 @@
 package estructuras.lista;
 import estructuras.nodos.NodoSimplementeEnlazado;
 
+import java.util.NoSuchElementException;
+
 public abstract class Lista<T> {
 	//ATRIBUTOS -----------------------------------------------------------------------------------------------
 
@@ -81,9 +83,9 @@ public abstract class Lista<T> {
     /**
      * post: devuelve el primer elemento de la Lista.
      */
-    public T verPrimero() throws Exception {
+    public T verPrimero() throws NoSuchElementException {
         if (this.estaVacia()) {
-            throw new Exception("La lista está vacía");
+            throw new NoSuchElementException("La lista está vacía");
         }
         return this.primero.getDato();
     }

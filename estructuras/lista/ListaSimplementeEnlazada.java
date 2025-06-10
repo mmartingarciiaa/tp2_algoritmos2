@@ -45,7 +45,7 @@ public class ListaSimplementeEnlazada<T> extends Lista<T> {
      * @throws NoSuchElementException si la lista está vacía
      */
     @Override
-    public T verUltimo() {
+    public T verUltimo() throws NoSuchElementException {
         if (estaVacia()) {
             throw new NoSuchElementException("La lista está vacía");
         }
@@ -99,7 +99,7 @@ public class ListaSimplementeEnlazada<T> extends Lista<T> {
      * @throws NoSuchElementException si la lista está vacía
      */
     @Override
-    public T borrarPrimero() {
+    public T borrarPrimero() throws NoSuchElementException {
         if (estaVacia()) {
             throw new NoSuchElementException("La lista está vacía");
         }
