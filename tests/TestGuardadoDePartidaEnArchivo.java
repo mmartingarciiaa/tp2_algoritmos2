@@ -1,6 +1,7 @@
 package tests;
 
 import estructuras.lista.ListaSimplementeEnlazada;
+import jugador.Alianza;
 import jugador.Jugador;
 import menu.GuardadoDePartidaEnArchivo;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ public class TestGuardadoDePartidaEnArchivo {
     ListaSimplementeEnlazada<Jugador> jugadores = new ListaSimplementeEnlazada<>();
 
     assertThrows(RuntimeException.class, () ->
-            GuardadoDePartidaEnArchivo.guardarPartida(tablero, jugadores, "archivo")
+            GuardadoDePartidaEnArchivo.guardarPartida(tablero, jugadores, "archivo", null, null)
     );
   }
 
@@ -35,7 +36,7 @@ public class TestGuardadoDePartidaEnArchivo {
     ListaSimplementeEnlazada<Jugador> jugadores = new ListaSimplementeEnlazada<>();
     String archivo = tempDir.resolve("partida.txt").toString();
 
-    GuardadoDePartidaEnArchivo.guardarPartida(tablero, jugadores, archivo);
+    GuardadoDePartidaEnArchivo.guardarPartida(tablero, jugadores, archivo, null, null);
 
     List<String> lineas = Files.readAllLines(Path.of(archivo));
     assertEquals("dimension:", lineas.get(0));
@@ -56,7 +57,7 @@ public class TestGuardadoDePartidaEnArchivo {
 
     String archivo = tempDir.resolve("partida.txt").toString();
 
-    GuardadoDePartidaEnArchivo.guardarPartida(tablero, jugadores, archivo);
+    GuardadoDePartidaEnArchivo.guardarPartida(tablero, jugadores, archivo, null, null);
 
     List<String> lineas = Files.readAllLines(Path.of(archivo));
     assertTrue(lineas.size() > 2);

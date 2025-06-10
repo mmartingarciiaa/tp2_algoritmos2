@@ -1,15 +1,16 @@
 package menu;
 
 // Importaciones necesarias
+import enums.TipoPieza;
 import estructuras.lista.IteradorLista;
 import estructuras.lista.ListaSimplementeEnlazada;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import jugador.Alianza;
 import jugador.Jugador;
-import piezas.Base;
-import piezas.Nave;
-import piezas.Satelite;
+import piezas.*;
 import tablero.Tablero;
 import utils.ValidacionesUtils;
 
@@ -20,7 +21,6 @@ import utils.ValidacionesUtils;
  * @author Patricio Alaniz
  */
 public class GuardadoDePartidaEnArchivo {
-
   /**
    * Guarda el estado de un tablero y lista de jugadores en un archivo de texto especificado.
    *
@@ -30,7 +30,10 @@ public class GuardadoDePartidaEnArchivo {
    * @throws IOException      Si ocurre un error de entrada/salida al intentar escribir en el archivo.
    * @author Patricio Alaniz
    */
-  public static void guardarPartida(Tablero tablero, ListaSimplementeEnlazada<Jugador> jugadores, String nombreDelArchivo) throws IOException {
+  public static void guardarPartida(Tablero tablero, ListaSimplementeEnlazada<Jugador> jugadores, String nombreDelArchivo, ListaSimplementeEnlazada<Alianza> alianzas, ListaSimplementeEnlazada<Pieza> piezas) throws IOException {
+    ValidacionesUtils.validarNoNulo(tablero, "El tablero no puede ser nulo.");
+    ValidacionesUtils.validarNoNulo(jugadores, "La lista de jugadores no puede ser nula.");
+    ValidacionesUtils.validarNoNulo(nombreDelArchivo, "El nombre del archivo no puede ser nulo.");
     ValidacionesUtils.validarFinDeCadena(nombreDelArchivo, ".txt", "El nombre del archivo debe terminar con \".txt\".");
 
     try (PrintWriter writer = new PrintWriter(new FileWriter(nombreDelArchivo))) {
@@ -48,6 +51,9 @@ public class GuardadoDePartidaEnArchivo {
 
         iter.siguiente();
       }
+
+      GuardadoDePartidaEnArchivo.guardarAlianza(alianzas, writer);
+      GuardadoDePartidaEnArchivo.guardarPiezasConRadiacion(piezas, writer);
     }
   }
 
@@ -122,6 +128,41 @@ public class GuardadoDePartidaEnArchivo {
       Satelite satelite = satelites.verActual();
       writer.println("s"+ " - "  + satelite.obtenerCoordenadas()[0] + "," + satelite.obtenerCoordenadas()[1] + "," + satelite.obtenerCoordenadas()[2] + " - " + satelite.obtenerVida() + " - " + satelite.obtenerEscudo() + " - " + satelite.obtenerRadioDeteccion());
       satelites.siguiente();
+    }
+  }
+
+  private static void guardarAlianza(ListaSimplementeEnlazada<Alianza> alianzas, PrintWriter writer) {
+    if (alianzas != null) {
+      writer.println("alianzas:");
+
+      IteradorLista<Alianza> iteradorAlianzas = alianzas.iterador();
+
+      while (iteradorAlianzas.haySiguiente()) {
+        Alianza alianza = iteradorAlianzas.verActual();
+        Jugador[] jugadores = alianza.obtenerJugadores();
+
+        writer.println("a" + " - " + jugadores[0].obtenerNombre() + "," + jugadores[1].obtenerNombre() + " - " + alianza.obtenerDuracion());
+        iteradorAlianzas.siguiente();
+      }
+
+    }
+  }
+
+  private static void guardarPiezasConRadiacion(ListaSimplementeEnlazada<Pieza> piezas, PrintWriter writer) {
+    if (piezas != null) {
+      writer.println("radiacion:");
+
+      IteradorLista<Pieza> iteradorPiezas = piezas.iterador();
+
+      while (iteradorPiezas.haySiguiente()) {
+        Pieza pieza = iteradorPiezas.verActual();
+
+        if (pieza.obtenerTipo() == TipoPieza.RADIACION) {
+          writer.println("r" + " - " + pieza.obtenerCoordenadas()[0] + "," + pieza.obtenerCoordenadas()[1] + "," + pieza.obtenerCoordenadas()[2] + " - " + ((Radiacion)pieza).obtenerDuracion());
+        }
+
+        iteradorPiezas.siguiente();
+      }
     }
   }
 }
