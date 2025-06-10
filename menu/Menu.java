@@ -876,7 +876,7 @@ public class Menu {
         if (eleccion.equals("SI")) {
             try {
                 String ruta = obtenerRutaValida("Ingrese el nombre del archivo (el nombre debe finalizar con .txt): ");
-                GuardadoDePartidaEnArchivo.guardarPartida(tablero, listaJugadores, ruta, null, null);
+                GuardadoDePartidaEnArchivo.guardarPartida(tablero, listaJugadores, ruta, alianzas, tablero.obtenerPiezasNoVacias());
             } catch (IOException e) {
                 System.out.println("Error al guardar la partida: " + e.getMessage());
             }
