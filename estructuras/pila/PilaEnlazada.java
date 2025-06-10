@@ -59,7 +59,7 @@ public class PilaEnlazada<T> {
 	 * pre: no se puede desapilar si la pila está vacía
 	 * post: devuelve el elemento en el tope de la pila y achica la pila en 1.
 	 */
-	public T desapilar() {
+	public T desapilar() throws IllegalStateException {
 		if (this.estaVacia()) {
 			throw new IllegalStateException("No se puede desapilar de una pila vacía");
 		}
@@ -73,7 +73,7 @@ public class PilaEnlazada<T> {
 	 * pre: no se puede ver el tope si la pila está vacía
 	 * post: devuelve el elemento en el tope de la pila (solo lectura)
 	 */
-	public T verTope() {
+	public T verTope() throws IllegalStateException {
 		if (this.estaVacia()) {
 			throw new IllegalStateException("No se puede ver el tope de una pila vacía");
 		}

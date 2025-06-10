@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestDeCola {
+public class TestDeColaEnlazada {
   private static final int CARGA_MAXIMA = 10000;
 
   @Test
@@ -16,8 +16,8 @@ public class TestDeCola {
     assertTrue(cola.estaVacia());
 
     // Verifico que no se puede ver el primero ni desencolar una cola vacía
-    assertThrows(RuntimeException.class, () -> cola.verPrimero());
-    assertThrows(RuntimeException.class, () -> cola.desencolar());
+    assertEquals(null, cola.verPrimero());
+    assertEquals(null,cola.desencolar());
 
     // Encolo un elemento, verifico que ya no está vacia y que se le puede ver el primero
     cola.encolar(1);
@@ -29,8 +29,8 @@ public class TestDeCola {
     assertTrue(cola.estaVacia());
 
     // Verifico que se comporta igual que una cola recién creada
-    assertThrows(RuntimeException.class, () -> cola.desencolar());
-    assertThrows(RuntimeException.class, () -> cola.verPrimero());
+    assertEquals(null, cola.desencolar());
+    assertEquals(null, cola.verPrimero());
   }
 
   @Test
@@ -50,8 +50,8 @@ public class TestDeCola {
     assertTrue(cola.estaVacia());
 
     // Verifico que se comporta igual que una cola recién creada
-    assertThrows(RuntimeException.class, () -> cola.desencolar());
-    assertThrows(RuntimeException.class, () -> cola.verPrimero());
+    assertEquals(null, cola.desencolar());
+    assertEquals(null, cola.verPrimero());
   }
 
   @Test
@@ -80,8 +80,8 @@ public class TestDeCola {
 
     // Verifico que se vació correctamente
     assertTrue(cola.estaVacia());
-    assertThrows(RuntimeException.class, () -> cola.desencolar());
-    assertThrows(RuntimeException.class, () -> cola.verPrimero());
+    assertEquals(null, cola.desencolar());
+    assertEquals(null, cola.verPrimero());
   }
 
   @Test
@@ -110,8 +110,8 @@ public class TestDeCola {
     assertTrue(cola.estaVacia());
 
     // Verifico que se comporta igual que una cola recién creada
-    assertThrows(RuntimeException.class, () -> cola.desencolar());
-    assertThrows(RuntimeException.class, () -> cola.verPrimero());
+    assertEquals(null, cola.desencolar());
+    assertEquals(null, cola.verPrimero());
   }
 
   @Test
@@ -140,8 +140,8 @@ public class TestDeCola {
     assertTrue(cola.estaVacia());
 
     // Verifico que se comporta igual que una cola recién creada
-    assertThrows(RuntimeException.class, () -> cola.desencolar());
-    assertThrows(RuntimeException.class, () -> cola.verPrimero());
+    assertEquals(null, cola.desencolar());
+    assertEquals(null, cola.verPrimero());
   }
 
   @Test
@@ -169,7 +169,7 @@ public class TestDeCola {
     assertTrue(cola.estaVacia());
 
     // Verifico que se comporta igual que una cola recién creada
-    assertThrows(RuntimeException.class, () -> cola.desencolar());
-    assertThrows(RuntimeException.class, () -> cola.verPrimero());
+    assertEquals(null, cola.desencolar());
+    assertEquals(null, cola.verPrimero());
   }
 }

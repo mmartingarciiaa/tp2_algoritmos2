@@ -7,7 +7,7 @@ import java.util.EmptyStackException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestDePila {
+public class TestDePilaEnlazada {
   private static final int CARGA_MAXIMA = 10000;
   private static final int CARGA_MINIMA = 10;
 
@@ -19,8 +19,8 @@ public class TestDePila {
     assertTrue(pila.estaVacia());
 
     // Verifico que no se le puede ver el tope ni desapilar una pila vacia.
-    assertThrows(EmptyStackException.class, () -> pila.verTope());
-    assertThrows(EmptyStackException.class, () -> pila.desapilar());
+    assertThrows(IllegalStateException.class, () -> pila.verTope());
+    assertThrows(IllegalStateException.class, () -> pila.desapilar());
 
     // Apilo un elemento, verifico que ya no está vacia y que se le puede ver tope.
     pila.apilar(1);
@@ -33,8 +33,8 @@ public class TestDePila {
 
     // Verifico que no se puede ver el tope ni desapilar una pila recientemente vaciada,
     // la cual se comporta de la misma manera que una pila recien creada.
-    assertThrows(EmptyStackException.class, () -> pila.desapilar());
-    assertThrows(EmptyStackException.class, () -> pila.verTope());
+    assertThrows(IllegalStateException.class, () -> pila.desapilar());
+    assertThrows(IllegalStateException.class, () -> pila.verTope());
   }
 
   @Test
@@ -54,8 +54,8 @@ public class TestDePila {
     assertTrue(pila.estaVacia());
 
     // Verifico que se comporta de igual forma que una pila recién creada.
-    assertThrows(EmptyStackException.class, () -> pila.desapilar());
-    assertThrows(EmptyStackException.class, () -> pila.verTope());
+    assertThrows(IllegalStateException.class, () -> pila.desapilar());
+    assertThrows(IllegalStateException.class, () -> pila.verTope());
   }
 
   @Test
@@ -83,8 +83,8 @@ public class TestDePila {
     assertTrue(pila.estaVacia());
 
     // Verifico que se comporta de igual forma que una pila recién creada.
-    assertThrows(EmptyStackException.class, () -> pila.desapilar());
-    assertThrows(EmptyStackException.class, () -> pila.verTope());
+    assertThrows(IllegalStateException.class, () -> pila.desapilar());
+    assertThrows(IllegalStateException.class, () -> pila.verTope());
   }
 
   @Test
@@ -113,8 +113,8 @@ public class TestDePila {
     assertTrue(pila.estaVacia());
 
     // Verifico que se comporta de igual forma que una pila recién creada.
-    assertThrows(EmptyStackException.class, () -> pila.desapilar());
-    assertThrows(EmptyStackException.class, () -> pila.verTope());
+    assertThrows(IllegalStateException.class, () -> pila.desapilar());
+    assertThrows(IllegalStateException.class, () -> pila.verTope());
   }
 
   @Test
@@ -143,8 +143,8 @@ public class TestDePila {
     assertTrue(pila.estaVacia());
 
     // Verifico que se comporta de igual forma que una pila recién creada.
-    assertThrows(EmptyStackException.class, () -> pila.desapilar());
-    assertThrows(EmptyStackException.class, () -> pila.verTope());
+    assertThrows(IllegalStateException.class, () -> pila.desapilar());
+    assertThrows(IllegalStateException.class, () -> pila.verTope());
   }
 
   @Test
@@ -172,7 +172,7 @@ public class TestDePila {
     assertTrue(pila.estaVacia());
 
     // Verifico que se comporta de igual forma que una pila recién creada.
-    assertThrows(EmptyStackException.class, () -> pila.desapilar());
-    assertThrows(EmptyStackException.class, () -> pila.verTope());
+    assertThrows(IllegalStateException.class, () -> pila.desapilar());
+    assertThrows(IllegalStateException.class, () -> pila.verTope());
   }
 }
