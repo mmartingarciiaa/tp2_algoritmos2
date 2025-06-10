@@ -31,4 +31,10 @@ public class ValidacionesUtils {
       throw new RuntimeException("Cadena " + valorString + " debe terminar con " + extension);
     }
   }
+
+  public static void validarNoNulo(Object valor, String valorString) throws RuntimeException {
+    if (valor == null) {
+      throw new RuntimeException("Valor " + valorString + " no puede ser nulo");
+    }
+  }
 }
