@@ -14,7 +14,7 @@ public class Pieza {
 	private final TipoPieza tipo;
 	private final String nombre;
 	private final int[] coordenadas;
-	private final Jugador duenio;
+	private Jugador duenio;
 	private int vida;
 	private int escudo;
 	
@@ -113,6 +113,19 @@ public class Pieza {
 		this.coordenadas[0] = x;
 		this.coordenadas[1] = y;
 		this.coordenadas[2] = z;
+	}
+
+	/**
+	 * Cambia el dueño de la pieza.
+	 * 
+	 * @param nuevoDuenio: nuevo dueño de la pieza (no puede ser nulo)
+	 * @throws IllegalArgumentException si el nuevo dueño es nulo.
+	 */
+	public void cambiarDuenio(Jugador nuevoDuenio) {
+		if (nuevoDuenio == null) {
+			throw new IllegalArgumentException("El nuevo dueño no puede ser nulo.");
+		}
+		this.duenio = nuevoDuenio;
 	}
 	
 	/**

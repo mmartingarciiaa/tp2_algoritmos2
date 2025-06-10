@@ -615,6 +615,7 @@ public class Menu {
                     perdedor(pieza.obtenerDuenio());
                     jugadores = jugadoresRestantes(jugadores, pieza.obtenerDuenio());
                 }
+                pieza.cambiarDuenio(jugadores[jugadorActual - 1]);
                 System.out.println("¡La nave ha capturado una base!");
                 System.out.println("La nave no se movió");
                 return true;
@@ -640,6 +641,7 @@ public class Menu {
      * @param jugador Jugador que ha sido eliminado.
      */
     private void perdedor(Jugador jugador) {
+        this.numJugadores--;
         System.out.println("El jugador " + jugador.obtenerNombre() + " ha sido eliminado.");
         ListaSimplementeEnlazada<Nave> naves = jugador.obtenerNaves();
         naves.iterar((nave) -> {
