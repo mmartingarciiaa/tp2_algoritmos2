@@ -2,7 +2,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import java.util.NoSuchElementException;
 
-import estructuras.lista.Lista;
 import estructuras.lista.ListaSimplementeEnlazada;
 import estructuras.lista.IteradorLista;
 
@@ -12,7 +11,7 @@ public class TestDeLista {
     private static final int RANGO_TESTS = 5;
     private static final int CORTE_VOLUMEN = 4000;
 
-    private <T> void panicListaVacia(Lista<T> lista) {
+    private <T> void panicListaVacia(ListaSimplementeEnlazada<T> lista) {
         assertThrows(NoSuchElementException.class, () -> lista.verPrimero());
         assertThrows(NoSuchElementException.class, () -> lista.verUltimo());
         assertThrows(NoSuchElementException.class, () -> lista.borrarPrimero());
@@ -24,12 +23,12 @@ public class TestDeLista {
         assertThrows(RuntimeException.class, () -> iter.borrar());
     }
 
-    private <T> void verificarPrimeroYUltimo(Lista<T> lista, T primero, T ultimo) {
+    private <T> void verificarPrimeroYUltimo(ListaSimplementeEnlazada<T> lista, T primero, T ultimo) {
         assertEquals(primero, lista.verPrimero());
         assertEquals(ultimo, lista.verUltimo());
     }
 
-    private <T> void vaciarLista(Lista<T> lista) {
+    private <T> void vaciarLista(ListaSimplementeEnlazada<T> lista) {
         while (!lista.estaVacia()) {
             lista.borrarPrimero();
         }
@@ -37,9 +36,9 @@ public class TestDeLista {
 
     @Test
     public void testComportamientoListaVacia() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
-        // Lista recién creada debe estar vacía.
+        // ListaSimplementeEnlazada recién creada debe estar vacía.
         assertTrue(lista.estaVacia());
 
         // Verifico que no se puede ver el primero ni borrar un elemento de una lista vacía.
@@ -61,7 +60,7 @@ public class TestDeLista {
 
     @Test
     public void testInsertarYBorrarUnElemento() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -81,7 +80,7 @@ public class TestDeLista {
 
     @Test
     public void testInsertarYBorrarVariosElementosPorPrimero() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -106,7 +105,7 @@ public class TestDeLista {
 
     @Test
     public void testInsertarYBorrarVariosElementosPorUltimo() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -135,7 +134,7 @@ public class TestDeLista {
 
     @Test
     public void testInsertarYBorrarVariosElementosPorPrimeroYUltimo() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -178,7 +177,7 @@ public class TestDeLista {
 
     @Test
     public void testInsertarYBorrarVariosElementosFloats() {
-        Lista<Double> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Double> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -202,7 +201,7 @@ public class TestDeLista {
 
     @Test
     public void testInsertarYBorrarVariosStringsPorPrimeroYUltimo() {
-        Lista<String> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<String> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -245,7 +244,7 @@ public class TestDeLista {
 
     @Test
     public void testVolumenInsertarPrimero() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -270,7 +269,7 @@ public class TestDeLista {
 
     @Test
     public void testVolumenInsertarUltimo() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -295,7 +294,7 @@ public class TestDeLista {
 
     @Test
     public void testIteradorExternoConListaVacia() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -325,7 +324,7 @@ public class TestDeLista {
 
     @Test
     public void testIteradorExternoAgregarAlPrincipio() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -363,7 +362,7 @@ public class TestDeLista {
 
     @Test
     public void testIteradorExternoAgregarAlFinal() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -408,7 +407,7 @@ public class TestDeLista {
 
     @Test
     public void testIteradorExternoAgregarAlMedio() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -459,7 +458,7 @@ public class TestDeLista {
 
     @Test
     public void testIteradorExternoBorrarAlInicio() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -497,7 +496,7 @@ public class TestDeLista {
 
     @Test
     public void testIteradorExternoBorrarAlFinal() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -532,7 +531,7 @@ public class TestDeLista {
 
     @Test
     public void testIteradorExternoBorrarAlMedio() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -577,7 +576,7 @@ public class TestDeLista {
 
     @Test
     public void testIteradorExternoAgregarYBorrarVariosElementos() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -633,7 +632,7 @@ public class TestDeLista {
 
     @Test
     public void testVolumenIteradorExterno() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -662,7 +661,7 @@ public class TestDeLista {
 
     @Test
     public void testIteradorInternoSumaTodosLosElementos() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         for (int i = 0; i < RANGO_TESTS; i++) {
             lista.insertarPrimero(i);
@@ -678,7 +677,7 @@ public class TestDeLista {
 
     @Test
     public void testIteradorInternoSumasPares() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         for (int i = 0; i < RANGO_TESTS; i++) {
             lista.insertarPrimero(i);
@@ -696,7 +695,7 @@ public class TestDeLista {
 
     @Test
     public void testIteradorInternoCorteEnElMedio() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         lista.insertarUltimo(4);
         lista.insertarUltimo(4);
@@ -721,7 +720,7 @@ public class TestDeLista {
 
     @Test
     public void testIteradorInternoNoModificaLosElementosOriginales() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         for (int i = 0; i < RANGO_TESTS; i++) {
             lista.insertarPrimero(i);
@@ -744,7 +743,7 @@ public class TestDeLista {
 
     @Test
     public void testIteradosInternoConListaVacia() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -767,7 +766,7 @@ public class TestDeLista {
 
     @Test
     public void testVolumenIteradorInterno() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
@@ -789,7 +788,7 @@ public class TestDeLista {
 
     @Test
     public void testVolumenIteradorInternoConCorte() {
-        Lista<Integer> lista = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
         assertTrue(lista.estaVacia());
