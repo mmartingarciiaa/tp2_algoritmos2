@@ -25,7 +25,7 @@ public class TestDeLista {
         assertThrows(RuntimeException.class, () -> iter.borrar());
     }
 
-    private <T> void verificarPrimeroYUltimo(ListaSimplementeEnlazada<T> lista, T primero, T ultimo) {
+    private <T> void verificarPrimeroYUltimo(ListaSimplementeEnlazada<T> lista, T primero, T ultimo) throws Exception {
         assertEquals(primero, lista.verPrimero());
         assertEquals(ultimo, lista.verUltimo());
     }
@@ -37,7 +37,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testComportamientoListaVacia() {
+    public void testComportamientoListaVacia() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // ListaSimplementeEnlazada recién creada debe estar vacía.
@@ -61,7 +61,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testInsertarYBorrarUnElemento() {
+    public void testInsertarYBorrarUnElemento() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -81,7 +81,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testInsertarYBorrarVariosElementosPorPrimero() {
+    public void testInsertarYBorrarVariosElementosPorPrimero() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -106,7 +106,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testInsertarYBorrarVariosElementosPorUltimo() {
+    public void testInsertarYBorrarVariosElementosPorUltimo() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -135,7 +135,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testInsertarYBorrarVariosElementosPorPrimeroYUltimo() {
+    public void testInsertarYBorrarVariosElementosPorPrimeroYUltimo() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -178,7 +178,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testInsertarYBorrarVariosElementosFloats() {
+    public void testInsertarYBorrarVariosElementosFloats() throws Exception {
         ListaSimplementeEnlazada<Double> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -202,7 +202,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testInsertarYBorrarVariosStringsPorPrimeroYUltimo() {
+    public void testInsertarYBorrarVariosStringsPorPrimeroYUltimo() throws Exception {
         ListaSimplementeEnlazada<String> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -245,7 +245,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testVolumenInsertarPrimero() {
+    public void testVolumenInsertarPrimero() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -270,7 +270,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testVolumenInsertarUltimo() {
+    public void testVolumenInsertarUltimo() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -295,7 +295,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testIteradorExternoConListaVacia() {
+    public void testIteradorExternoConListaVacia() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -325,7 +325,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testIteradorExternoAgregarAlPrincipio() {
+    public void testIteradorExternoAgregarAlPrincipio() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -363,7 +363,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testIteradorExternoAgregarAlFinal() {
+    public void testIteradorExternoAgregarAlFinal() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -408,7 +408,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testIteradorExternoAgregarAlMedio() {
+    public void testIteradorExternoAgregarAlMedio() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -459,7 +459,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testIteradorExternoBorrarAlInicio() {
+    public void testIteradorExternoBorrarAlInicio() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -497,7 +497,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testIteradorExternoBorrarAlFinal() {
+    public void testIteradorExternoBorrarAlFinal() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -532,7 +532,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testIteradorExternoBorrarAlMedio() {
+    public void testIteradorExternoBorrarAlMedio() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -577,7 +577,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testIteradorExternoAgregarYBorrarVariosElementos() {
+    public void testIteradorExternoAgregarYBorrarVariosElementos() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -633,7 +633,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testVolumenIteradorExterno() {
+    public void testVolumenIteradorExterno() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -767,7 +767,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testVolumenIteradorInterno() {
+    public void testVolumenIteradorInterno() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
@@ -789,7 +789,7 @@ public class TestDeLista {
     }
 
     @Test
-    public void testVolumenIteradorInternoConCorte() {
+    public void testVolumenIteradorInternoConCorte() throws Exception {
         ListaSimplementeEnlazada<Integer> lista = new ListaSimplementeEnlazada<>();
 
         // Verifico que está vacía.
