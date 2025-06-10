@@ -40,4 +40,10 @@ public class TestValidacionesUtils {
     assertDoesNotThrow(() -> ValidacionesUtils.validarFinDeCadena("test.txt", ".txt", "test"));
     assertThrows(RuntimeException.class, () -> ValidacionesUtils.validarFinDeCadena("test.doc", ".txt", "test"));
   }
+
+  @Test
+  public void testValidarNoNulo() {
+    assertDoesNotThrow(() -> ValidacionesUtils.validarNoNulo("test", "test"));
+    assertThrows(RuntimeException.class, () -> ValidacionesUtils.validarNoNulo(null, "test"));
+  }
 }
