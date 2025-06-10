@@ -6,7 +6,7 @@ import utils.ValidacionesUtils;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class TestValidacionesUtils {
+public class TestDeValidacionesUtils {
 
   @Test
   public void testNoNulo() {

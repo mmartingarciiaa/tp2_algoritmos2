@@ -1,7 +1,6 @@
 package tests;
 
 import estructuras.lista.ListaSimplementeEnlazada;
-import jugador.Alianza;
 import jugador.Jugador;
 import menu.GuardadoDePartidaEnArchivo;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestGuardadoDePartidaEnArchivo {
+public class TestDeGuardadoDePartidaEnArchivo {
 
   @Test
   public void testGuardarPartidaArchivoInvalido() {
