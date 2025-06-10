@@ -759,7 +759,7 @@ public class Menu {
     private void cargarPartida() {
         String ruta = obtenerRutaValida("Ingrese la ruta al archivo txt: ");
         try {
-            this.tablero = CargadoDePartida.cargarPartida(ruta, listaJugadores);
+            this.tablero = CargadoDePartida.cargarPartida(ruta, listaJugadores, alianzas);
             int i = 0;
             this.jugadores = new Jugador[listaJugadores.largo()];
             IteradorLista<Jugador> iter = listaJugadores.iterador();

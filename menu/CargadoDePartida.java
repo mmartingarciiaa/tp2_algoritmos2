@@ -1,13 +1,14 @@
 package menu;
 
-// Importaciones necesarias
+import estructuras.lista.IteradorLista;
 import estructuras.lista.ListaSimplementeEnlazada;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import jugador.Jugador;
+import jugador.*;
 import piezas.*;
 import tablero.Tablero;
+
 
 /**
  * Clase que se encarga de cargar una partida desde un archivo.
@@ -26,7 +27,7 @@ public class CargadoDePartida {
      * @return Un objeto Tablero con la configuración cargada desde el archivo.
      * @throws Exception Si ocurre un error al leer el archivo o si el formato es inválido.
      */
-    public static Tablero cargarPartida(String ruta, ListaSimplementeEnlazada<Jugador> jugadores) throws Exception {
+    public static Tablero cargarPartida(String ruta, ListaSimplementeEnlazada<Jugador> jugadores, ListaSimplementeEnlazada<Alianza> alianzas) throws Exception {
         Tablero tablero = null;
         Jugador jugadorActual = null;
 
@@ -49,7 +50,12 @@ public class CargadoDePartida {
                     String nombre = partes[1].replace(":", "");
                     jugadorActual = new Jugador(nombre);
                     jugadores.insertarUltimo(jugadorActual);
-
+                } else if (linea.equals("alianzas:")) {
+                    linea = lector.readLine();
+                    alianzas.insertarUltimo(manejarAlianzas(linea, jugadores));
+                } else if (linea.equals("radiacion")) {
+                    linea = lector.readLine();
+                    
                 } else {
                     if (tablero == null) throw new IllegalStateException("El tablero debe ser inicializado antes de colocar piezas.");
                     if (jugadorActual == null) throw new IllegalStateException("Debe haber un jugador activo antes de asignar piezas.");
@@ -128,4 +134,54 @@ public class CargadoDePartida {
             throw new IllegalArgumentException("Error al parsear la línea: " + linea, e);
         }
     }
+
+    private static Alianza manejarAlianzas(String linea, ListaSimplementeEnlazada<Jugador> listaJugadores) {
+        try {
+            String[] partes = linea.split(" - ");
+            if (partes.length < 4) {
+                throw new IllegalArgumentException("Formato de linea inválido: " + linea);
+            }
+
+            String[] coordenadas = partes[1].split(",");
+            if (coordenadas.length != 3) {
+                throw new IllegalArgumentException("Coordenadas inválidas: " + partes[1]);
+            }
+            
+            String[] jugadoresAliados = partes[1].split(",");
+            int turnos = Integer.parseInt(partes[2]);
+            String j1 = jugadoresAliados[0].trim();
+            String j2 = jugadoresAliados[1].trim();
+
+            IteradorLista<Jugador> iter = listaJugadores.iterador();
+            Jugador jugador1 = null;
+            Jugador jugador2 = null;
+
+            while (iter.haySiguiente()) {
+                Jugador actual = iter.verActual();
+                if (actual.obtenerNombre().equals(j1)) {
+                    jugador1 = actual;
+                } else if (actual.obtenerNombre().equals(j2)) {
+                    jugador2 = actual;
+                }
+                
+                if (jugador1 != null && jugador2 != null) {
+                    break;
+                }
+                
+                iter.siguiente();
+            }
+
+            if (jugador1 == null || jugador2 == null) {
+                throw new RuntimeException("No se encontraron ambos jugadores para la alianza");
+            }
+
+            Alianza alianza = new Alianza(jugador1, jugador2, turnos);
+            jugador1.agregarAlianza(alianza);
+            jugador2.agregarAlianza(alianza);
+            return alianza;
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                throw new IllegalArgumentException("Error al parsear la línea: " + linea, e);
+        }
+    }
 }
+
