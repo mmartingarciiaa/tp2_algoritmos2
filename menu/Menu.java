@@ -791,6 +791,10 @@ public class Menu {
         sc.nextLine();
         for (int i = 0; i < numJugadores; i++) {
             String nombre = obtenerNombreValido("Jugador " + (i + 1) + ", ingrese su nombre: ");
+            while(nombreEnUso(nombre.toLowerCase(), jugadores)) {
+                System.out.println("El nombre " + nombre + " ya se encuentra en uso. Intente con otro.");
+                nombre = obtenerNombreValido("Jugador " + (i + 1) + ", ingrese su nombre: ");
+            }
             this.jugadores[i] = new Jugador(nombre);
             listaJugadores.insertarUltimo(jugadores[i]);
         }
@@ -1066,6 +1070,21 @@ public class Menu {
         return nombre;
     }
     
+    /**
+     * Verifica si el nombre de un jugador ya esta en uso
+     * @param nombre nombre del jugador a verificar en minusculas
+     * @param jugadores jugadores en la partida
+     * @return devuelve true si el nombre ya esta en uso y false si no 
+     */
+    private boolean nombreEnUso(String nombre, Jugador[] jugadores) {
+        for (int i = 0; i < jugadores.length; i++) {
+            if (jugadores[i] != null && jugadores[i].obtenerNombre().toLowerCase().equals(nombre)) {
+                return true;
+            }
+        }
+        return false;
+    }
+        
     /**
      * Obtiene una ruta válida para un archivo de texto.
      * 
