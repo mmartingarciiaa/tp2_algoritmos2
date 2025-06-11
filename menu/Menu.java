@@ -792,7 +792,7 @@ public class Menu {
         for (int i = 0; i < numJugadores; i++) {
             String nombre = obtenerNombreValido("Jugador " + (i + 1) + ", ingrese su nombre: ");
             while(nombreEnUso(nombre.toLowerCase(), jugadores)) {
-                System.out.println("El nombre " + nombre + " ya se encuentra en uso. Intente con otro.");
+                System.out.println("El nombre \"" + nombre + "\" ya se encuentra en uso. Intente con otro.");
                 nombre = obtenerNombreValido("Jugador " + (i + 1) + ", ingrese su nombre: ");
             }
             this.jugadores[i] = new Jugador(nombre);
