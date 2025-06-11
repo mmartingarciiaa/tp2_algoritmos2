@@ -38,7 +38,7 @@ public class Carta {
      * @return el nombre de la carta como una cadena de texto.
      */
     public String getNombre() {
-        return nombre;
+        return this.nombre;
     }
 
     /**
@@ -47,7 +47,7 @@ public class Carta {
      * @return la descripción de la carta como una cadena de texto.
      */
     public String getDescripcion() {
-        return descripcion;
+        return this.descripcion;
     }
 
     /**
@@ -56,7 +56,7 @@ public class Carta {
      * @return el tipo de la carta como una instancia de {@link TipoCarta}.
      */
     public TipoCarta getTipo() {
-        return tipo;
+        return this.tipo;
     }
 
     /**
