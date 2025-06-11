@@ -38,22 +38,34 @@ public class GuardadoDePartidaEnArchivo {
 
     try (PrintWriter writer = new PrintWriter(new FileWriter(nombreDelArchivo))) {
 
-      GuardadoDePartidaEnArchivo.guardarDimension(tablero, writer);
-
-      IteradorLista<Jugador> iter = jugadores.iterador();
-      while (iter.haySiguiente()) {
-        Jugador jugador = iter.verActual();
-
-        GuardadoDePartidaEnArchivo.guardarJugador(jugador, writer);
-        GuardadoDePartidaEnArchivo.guardarBase(jugador, writer);
-        GuardadoDePartidaEnArchivo.guardarNave(jugador, writer);
-        GuardadoDePartidaEnArchivo.guardarSatelite(jugador, writer);
-
-        iter.siguiente();
-      }
-
+      GuardadoDePartidaEnArchivo.guardarDimensionDelTablero(tablero, writer);
+      GuardadoDePartidaEnArchivo.guardarJugadores(jugadores, writer);
       GuardadoDePartidaEnArchivo.guardarAlianza(alianzas, writer);
       GuardadoDePartidaEnArchivo.guardarPiezasConRadiacion(piezas, writer);
+
+      writer.flush();
+    }
+  }
+
+  /**
+   * Guarda la información de cada jugador de la lista en un archivo utilizando un {@link PrintWriter}.
+   * Para cada jugador, se guardan los detalles del jugador, sus bases, naves y satélites.
+   *
+   * @param jugadores La lista simplemente enlazada que contiene los jugadores cuya información será escrita en el archivo.
+   * @param writer El objeto PrintWriter utilizado para escribir en el archivo.
+   * @author Patricio Alaniz
+   */
+  private static void guardarJugadores(ListaSimplementeEnlazada<Jugador> jugadores, PrintWriter writer) {
+    IteradorLista<Jugador> iter = jugadores.iterador();
+    while (iter.haySiguiente()) {
+      Jugador jugador = iter.verActual();
+
+      GuardadoDePartidaEnArchivo.guardarJugador(jugador, writer);
+      GuardadoDePartidaEnArchivo.guardarBase(jugador, writer);
+      GuardadoDePartidaEnArchivo.guardarNave(jugador, writer);
+      GuardadoDePartidaEnArchivo.guardarSatelite(jugador, writer);
+
+      iter.siguiente();
     }
   }
 
@@ -64,7 +76,7 @@ public class GuardadoDePartidaEnArchivo {
    * @param writer  El PrintWriter utilizado para escribir en el archivo.
    * @author Patricio Alaniz
    */
-  private static void guardarDimension(Tablero tablero, PrintWriter writer) {
+  private static void guardarDimensionDelTablero(Tablero tablero, PrintWriter writer) {
     writer.println("dimension:");
     writer.println(tablero.obtenerDimension());
   }
