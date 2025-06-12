@@ -50,12 +50,16 @@ public class CargadoDePartida {
                     String nombre = partes[1].replace(":", "");
                     jugadorActual = new Jugador(nombre);
                     jugadores.insertarUltimo(jugadorActual);
-                } else if (linea.equals("alianzas:")) {
-                    linea = lector.readLine();
-                    alianzas.insertarUltimo(manejarAlianzas(linea, jugadores));
-                } else if (linea.equals("radiacion")) {
-                    linea = lector.readLine();
-                    
+                } else if (linea.startsWith("alianzas")) {
+                    while ((linea = lector.readLine()) != null && linea.startsWith("a - ")) {
+                        Alianza alianza = manejarAlianzas(linea, jugadores);
+                        alianzas.insertarUltimo(alianza);
+                    }
+                } else if (linea.startsWith("r - ")) {
+                    if (tablero == null) {
+                        throw new IllegalStateException("El tablero debe ser inicializado antes de colocar radiación.");
+                    }
+                    procesarRadiacion(linea, tablero);
                 } else {
                     if (tablero == null) throw new IllegalStateException("El tablero debe ser inicializado antes de colocar piezas.");
                     if (jugadorActual == null) throw new IllegalStateException("Debe haber un jugador activo antes de asignar piezas.");
@@ -86,9 +90,6 @@ public class CargadoDePartida {
     private static void parsearPieza(String linea, Jugador jugador, Tablero tablero) {
         try {
             String[] partes = linea.split(" - ");
-            if (partes.length < 4) {
-                throw new IllegalArgumentException("Formato de linea inválido: " + linea);
-            }
 
             String tipo = partes[0].trim();
             String[] coordenadas = partes[1].split(",");
@@ -100,12 +101,15 @@ public class CargadoDePartida {
             int y = Integer.parseInt(coordenadas[1].trim());
             int z = Integer.parseInt(coordenadas[2].trim());
             int vida = Integer.parseInt(partes[2].trim());
-            int escudo = Integer.parseInt(partes[3].trim());
-
+            
             Pieza pieza;
-
+            
             switch (tipo) {
                 case "b" -> {
+                    if (partes.length < 4) {
+                        throw new IllegalArgumentException("Falta escudo para la base: " + linea);
+                    }
+                    int escudo = Integer.parseInt(partes[3].trim());
                     pieza = new Base(jugador, x, y, z, "B", vida, escudo);
                     jugador.agregarBase((Base) pieza);
                 }
@@ -125,9 +129,10 @@ public class CargadoDePartida {
                     pieza = new Satelite(jugador, x, y, z, "S", vida, radio);
                     jugador.agregarSatelite((Satelite) pieza);
                 }
-                default -> throw new IllegalArgumentException("Tipo de pieza desconocido: " + tipo);
+                default -> {
+                    return;
+                }
             }
-
             tablero.asignarValor(x, y, z, pieza);
 
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
@@ -135,53 +140,84 @@ public class CargadoDePartida {
         }
     }
 
-    private static Alianza manejarAlianzas(String linea, ListaSimplementeEnlazada<Jugador> listaJugadores) {
-        try {
-            String[] partes = linea.split(" - ");
-            if (partes.length < 4) {
-                throw new IllegalArgumentException("Formato de linea inválido: " + linea);
-            }
-
-            String[] coordenadas = partes[1].split(",");
-            if (coordenadas.length != 3) {
-                throw new IllegalArgumentException("Coordenadas inválidas: " + partes[1]);
-            }
-            
-            String[] jugadoresAliados = partes[1].split(",");
-            int turnos = Integer.parseInt(partes[2]);
-            String j1 = jugadoresAliados[0].trim();
-            String j2 = jugadoresAliados[1].trim();
-
-            IteradorLista<Jugador> iter = listaJugadores.iterador();
-            Jugador jugador1 = null;
-            Jugador jugador2 = null;
-
-            while (iter.haySiguiente()) {
-                Jugador actual = iter.verActual();
-                if (actual.obtenerNombre().equals(j1)) {
-                    jugador1 = actual;
-                } else if (actual.obtenerNombre().equals(j2)) {
-                    jugador2 = actual;
-                }
-                
-                if (jugador1 != null && jugador2 != null) {
-                    break;
-                }
-                
-                iter.siguiente();
-            }
-
-            if (jugador1 == null || jugador2 == null) {
-                throw new RuntimeException("No se encontraron ambos jugadores para la alianza");
-            }
-
-            Alianza alianza = new Alianza(jugador1, jugador2, turnos);
-            jugador1.agregarAlianza(alianza);
-            jugador2.agregarAlianza(alianza);
-            return alianza;
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                throw new IllegalArgumentException("Error al parsear la línea: " + linea, e);
+    /**
+     * Procesa una línea de radiación y la coloca en el tablero.
+     * 
+     * @param linea La línea del archivo que contiene la información de la radiación.
+     * @param tablero El tablero donde se colocará la radiación.
+     * @throws IllegalArgumentException si la línea no tiene el formato esperado.
+     */
+    private static void procesarRadiacion(String linea, Tablero tablero) {
+        String[] partes = linea.split(" - ");
+        if (partes.length != 3) {
+            throw new IllegalArgumentException("Formato inválido de línea de radiación: " + linea);
         }
+        String[] coordenadas = partes[1].split(",");
+        int x = Integer.parseInt(coordenadas[0].trim());
+        int y = Integer.parseInt(coordenadas[1].trim());
+        int z = Integer.parseInt(coordenadas[2].trim());
+        int duracion = Integer.parseInt(partes[2].trim());
+        
+        Pieza radiacion = new Radiacion(x, y, z, duracion, "R");
+        tablero.asignarValor(x, y, z, radiacion);
     }
+
+    /**
+     * Procesa una línea de alianza y la crea asignando los jugadores correspondientes.
+     *
+     * @param linea La línea del archivo que contiene la información de la alianza.
+     * @param listaJugadores La lista de jugadores donde se buscarán los jugadores de la alianza.
+     * @return Un objeto Alianza si se creó correctamente, o null si la alianza ya existía.
+     * @throws IllegalArgumentException si la línea no tiene el formato esperado.
+     * @throws RuntimeException si no se encuentran ambos jugadores para la alianza.
+     */
+    private static Alianza manejarAlianzas(String linea, ListaSimplementeEnlazada<Jugador> listaJugadores) {
+        String[] partes = linea.split(" - ");
+        if (partes.length != 3) {
+            throw new IllegalArgumentException("Formato inválido de línea de alianza: " + linea);
+        }
+
+        String[] nombresJugadores = partes[1].split(",");
+        if (nombresJugadores.length != 2) {
+            throw new IllegalArgumentException("Se esperaban exactamente 2 jugadores para una alianza: " + linea);
+        }
+
+        String nombre1 = nombresJugadores[0].trim();
+        String nombre2 = nombresJugadores[1].trim();
+        int turnos = Integer.parseInt(partes[2].trim());
+
+        if (turnos <= 0) {
+            throw new IllegalArgumentException("La duración de la alianza debe ser un número positivo: " + linea);
+        }
+
+        Jugador jugador1 = null;
+        Jugador jugador2 = null;
+
+        IteradorLista<Jugador> iter = listaJugadores.iterador();
+        while (iter.haySiguiente()) {
+            Jugador jugadorActual = iter.verActual();
+            if (jugadorActual.obtenerNombre().equals(nombre1)) {
+                jugador1 = jugadorActual;
+            } else if (jugadorActual.obtenerNombre().equals(nombre2)) {
+                jugador2 = jugadorActual;
+            }
+            iter.siguiente();
+        }
+
+        if (jugador1 == null || jugador2 == null) {
+            throw new RuntimeException("No se encontraron ambos jugadores para la alianza: " + linea);
+        }
+
+        if (jugador1.esAliado(jugador2)) {
+            System.out.println("Alianza ya existente entre " + nombre1 + " y " + nombre2 + ". Se omite.");
+            return null;
+        }
+
+        Alianza alianza = new Alianza(jugador1, jugador2, turnos);
+        jugador1.agregarAlianza(alianza);
+        jugador2.agregarAlianza(alianza);
+        return alianza;
+    }
+
 }
 

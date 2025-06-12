@@ -81,6 +81,17 @@ public class Alianza {
     }
 
     /**
+     * Verifica si la alianza involucra a dos jugadores específicos.
+     */
+    public boolean involucra(Jugador jugador1, Jugador jugador2) {
+        if (jugador1 == null || jugador2 == null) {
+            return false;
+        }
+        return (jugador1.equals(jugadores[0]) && jugador2.equals(jugadores[1])) ||
+               (jugador1.equals(jugadores[1]) && jugador2.equals(jugadores[0]));
+    }
+
+    /**
      * Reduce la duración de la alianza.
      */
     public void reducirDuracion() {

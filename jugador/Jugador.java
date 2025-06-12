@@ -260,14 +260,14 @@ public class Jugador {
         IteradorLista<Alianza> iter = alianzas.iterador();
         while (iter.haySiguiente()) {
             Alianza alianza = iter.verActual();
-            if (alianza.contieneJugador(otroJugador)) {
+            if (alianza.involucra(this, otroJugador)) {
                 return true;
             }
             iter.siguiente();
         }
         return false;
     }
-    
+
     /**
      * Verifica si el jugador tiene alianzas activas.
      * 

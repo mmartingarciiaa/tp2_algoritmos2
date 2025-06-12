@@ -7,7 +7,6 @@ import estructuras.lista.ListaSimplementeEnlazada;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import jugador.Alianza;
 import jugador.Jugador;
 import piezas.*;
@@ -59,12 +58,12 @@ public class GuardadoDePartidaEnArchivo {
     IteradorLista<Jugador> iter = jugadores.iterador();
     while (iter.haySiguiente()) {
       Jugador jugador = iter.verActual();
-
-      GuardadoDePartidaEnArchivo.guardarJugador(jugador, writer);
-      GuardadoDePartidaEnArchivo.guardarBase(jugador, writer);
-      GuardadoDePartidaEnArchivo.guardarNave(jugador, writer);
-      GuardadoDePartidaEnArchivo.guardarSatelite(jugador, writer);
-
+      if (jugador.obtenerBases().largo() > 0) {
+        GuardadoDePartidaEnArchivo.guardarJugador(jugador, writer);
+        GuardadoDePartidaEnArchivo.guardarBase(jugador, writer);
+        GuardadoDePartidaEnArchivo.guardarNave(jugador, writer);
+        GuardadoDePartidaEnArchivo.guardarSatelite(jugador, writer);
+      }
       iter.siguiente();
     }
   }

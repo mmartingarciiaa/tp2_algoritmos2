@@ -172,13 +172,23 @@ public class Menu {
                     }
                     sc.nextLine();
                     String nombreAliado = "";
-                    while (nombreAliado == null || nombreAliado.isEmpty() || nombreAliado.equals(jugadores[jugadorActual - 1].obtenerNombre())) { 
+                    while (nombreAliado == null || nombreAliado.isEmpty()) { 
                         System.out.println("Ingrese el nombre del jugador con el que desea formar una alianza:");
                         nombreAliado = sc.nextLine();
                     }
+                    if (nombreAliado.equals(jugadores[jugadorActual - 1].obtenerNombre())) {
+                        System.out.println("No puedes formar una alianza contigo mismo.");
+                        break;
+                    }
+
                     boolean encontrado = false;
                     for (Jugador jugador : jugadores) {
                         String nombreJugador = jugador.obtenerNombre();
+                        if (nombreJugador.equals(nombreAliado) && jugadores[jugadorActual - 1].esAliado(jugador)) {
+                            System.out.println("Ya existe una alianza con " + jugador.obtenerNombre() + ".");
+                            encontrado = true;
+                            break;
+                        }
                         if (nombreJugador.equals(nombreAliado)) {
                             encontrado = true;
                             String eleccion = "";
@@ -226,7 +236,7 @@ public class Menu {
      * Si elige cargar una partida, se llama al método cargarPartida().
      * Si elige iniciar una nueva partida, se llama al método iniciarPartidaNueva().
      */
-    public void mensajeInicial() {
+    private void mensajeInicial() {
         System.out.println("Bienvenidos a la Invasión Galáctica!");
         System.out.println("Este es un juego para máximo 6 jugadores.");
 
@@ -642,7 +652,39 @@ public class Menu {
      */
     private void perdedor(Jugador jugador) {
         this.numJugadores--;
+        // Eliminar al jugador de la lista de alianzas
+        IteradorLista<Alianza> iterAlianzas = alianzas.iterador();
+        while (iterAlianzas.haySiguiente()) {
+            Alianza alianza = iterAlianzas.verActual();
+            if (alianza.contieneJugador(jugador)) {
+                iterAlianzas.borrar();
+            } else {
+                iterAlianzas.siguiente();
+            }
+        }
+        // Eliminar al jugador de la lista de alianzas de los demás jugadores
+        IteradorLista<Alianza> iter = jugador.obtenerAlianzas().iterador();
+        while (iter.haySiguiente()) {
+            Alianza alianza = iter.verActual();
+            Jugador otro = alianza.obtenerOtroJugador(jugador);
+
+            if (otro != null) {
+                // Eliminar esta alianza del otro jugador también
+                IteradorLista<Alianza> iterOtro = otro.obtenerAlianzas().iterador();
+                while (iterOtro.haySiguiente()) {
+                    if (iterOtro.verActual() == alianza) {
+                        iterOtro.borrar();
+                        break;
+                    }
+                    iterOtro.siguiente();
+                }
+            }
+
+            // Eliminar del jugador actual
+            iter.borrar();
+        }
         System.out.println("El jugador " + jugador.obtenerNombre() + " ha sido eliminado.");
+        // Asignar radiación a las coordenadas de las naves y satélites del jugador eliminado
         ListaSimplementeEnlazada<Nave> naves = jugador.obtenerNaves();
         naves.iterar((nave) -> {
             int[] coords = nave.obtenerCoordenadas();
@@ -655,6 +697,7 @@ public class Menu {
             tablero.asignarValor(coords[0], coords[1], coords[2], new Radiacion(coords[0], coords[1], coords[2], DURACION_RADIACION, RADIACION));
             return true;
         });
+        // Eliminar las naves y satélites del jugador de las listas
         IteradorLista<Nave> iterNaves = naves.iterador();
         while (iterNaves.haySiguiente()) {
             iterNaves.borrar();
@@ -674,7 +717,7 @@ public class Menu {
      * 
      * @return Un nuevo arreglo de jugadores sin el jugador eliminado.
      */
-    public Jugador[] jugadoresRestantes(Jugador[] jugadores, Jugador perdedor) {
+    private Jugador[] jugadoresRestantes(Jugador[] jugadores, Jugador perdedor) {
         Jugador[] nuevosJugadores = new Jugador[jugadores.length - 1];
         int contador = 0;
         for (Jugador jugador : jugadores) {
@@ -695,7 +738,7 @@ public class Menu {
      * 
      * @return Una lista de piezas detectadas por los satélites del jugador.
      */
-    public ListaSimplementeEnlazada<Pieza> obtenerPiezasDetectadasPorSatelite(Jugador jugador) {
+    private ListaSimplementeEnlazada<Pieza> obtenerPiezasDetectadasPorSatelite(Jugador jugador) {
         ListaSimplementeEnlazada<Pieza> detectadas = new ListaSimplementeEnlazada<>();
         ListaSimplementeEnlazada<Satelite> satelites = jugador.obtenerSatelites();
         IteradorLista<Satelite> iter = satelites.iterador();
@@ -734,7 +777,7 @@ public class Menu {
      * 
      * @return La pieza seleccionada por el usuario, o null si la selección es inválida.
      */
-    public <T extends Pieza> T seleccionarPieza(ListaSimplementeEnlazada<T> piezas, String tipoPieza) {
+    private <T extends Pieza> T seleccionarPieza(ListaSimplementeEnlazada<T> piezas, String tipoPieza) {
         System.out.println();
         final int[] contador = {1};
         piezas.iterar(pieza -> {
@@ -1058,7 +1101,7 @@ public class Menu {
      * @return El nombre ingresado por el usuario, sin espacios al principio ni al final.
      *         Si el nombre está vacío, se solicita nuevamente.
      */
-    public String obtenerNombreValido(String mensaje) {
+    private String obtenerNombreValido(String mensaje) {
         String nombre = "";
         while (nombre.isEmpty()) {
             System.out.print(mensaje);
@@ -1072,13 +1115,14 @@ public class Menu {
     
     /**
      * Verifica si el nombre de un jugador ya esta en uso
+     * 
      * @param nombre nombre del jugador a verificar en minusculas
      * @param jugadores jugadores en la partida
      * @return devuelve true si el nombre ya esta en uso y false si no 
      */
     private boolean nombreEnUso(String nombre, Jugador[] jugadores) {
-        for (int i = 0; i < jugadores.length; i++) {
-            if (jugadores[i] != null && jugadores[i].obtenerNombre().toLowerCase().equals(nombre)) {
+        for (Jugador jugador : jugadores) {
+            if (jugador != null && jugador.obtenerNombre().toLowerCase().equals(nombre)) {
                 return true;
             }
         }
@@ -1092,7 +1136,7 @@ public class Menu {
      * @return La ruta ingresada por el usuario, asegurándose de que no esté vacía y termine con ".txt".
      *         Si la ruta no es válida, se solicita nuevamente.
      */
-    public String obtenerRutaValida(String mensaje) {
+    private String obtenerRutaValida(String mensaje) {
         String path = "";
         while (path.isEmpty() || !path.endsWith(".txt")) {
             System.out.print(mensaje);
