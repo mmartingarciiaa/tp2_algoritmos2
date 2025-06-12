@@ -237,18 +237,35 @@ public class Menu {
      * Si elige iniciar una nueva partida, se llama al método iniciarPartidaNueva().
      */
     private void mensajeInicial() {
-        System.out.println("Bienvenidos a la Invasión Galáctica!");
+        System.out.println("¡Bienvenidos a la Invasión Galáctica!");
         System.out.println("Este es un juego para máximo 6 jugadores.");
 
         int eleccion = leerEnteroEntreLimites("¿Desea (1) cargar una partida o (2) empezar una nueva?: ", 1, 2);
         switch (eleccion) {
             case 1 -> {
                 sc.nextLine();
-                cargarPartida();
+                boolean cargadoExitoso = false;
+                int intentos = 0;
+
+                while (!cargadoExitoso && intentos < 3) {
+                    cargadoExitoso = cargarPartida();
+                    if (!cargadoExitoso) {
+                        intentos++;
+                        if (intentos < 3) {
+                            System.out.println("Intente de vuelta (" + (3 - intentos) + " intento(s) restante(s)).");
+                        }
+                    }
+                }
+
+                if (cargadoExitoso) {
+                    System.out.println("Partida cargada exitosamente.");
+                } else {
+                    System.out.println("No se pudo cargar la partida después de 3 intentos.");
+                    System.out.println("Iniciando nueva partida...");
+                    iniciarPartidaNueva();
+                }
             }
-            case 2 -> {
-                iniciarPartidaNueva();
-            }
+            case 2 -> iniciarPartidaNueva();
         }
     }
     
@@ -817,7 +834,7 @@ public class Menu {
      * 
      * @throws IOException Si ocurre un error al leer el archivo.
      */
-    private void cargarPartida() {
+    private boolean cargarPartida() {
         String ruta = obtenerRutaValida("Ingrese la ruta al archivo txt: ");
         try {
             this.tablero = CargadoDePartida.cargarPartida(ruta, listaJugadores, alianzas);
@@ -833,7 +850,9 @@ public class Menu {
             this.dimension = tablero.obtenerDimension(); // Obtener la dimensión del tablero cargado
         } catch (Exception e) {
             System.out.println("Error al cargar la partida: " + e.getMessage());
+            return false;
         }
+        return true;
     }
 
     /**
