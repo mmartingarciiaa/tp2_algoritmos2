@@ -320,8 +320,7 @@ public class Menu {
     
     /**
      * Agrega un satélite al tablero en las coordenadas especificadas.
-     * Verifica que las coordenadas sean válidas, que no haya otra pieza en la misma posición,
-     * y que no haya una pieza en la misma posición.
+     * Verifica que las coordenadas sean válidas y que no haya otra pieza en la misma posición,
      * 
      * @param x Coordenada X del satélite.
      * @param y Coordenada Y del satélite.
@@ -337,26 +336,29 @@ public class Menu {
         }
         
         Pieza pieza = obtenerPiezaEnPosicion(x, y, z);
+
         if (pieza.obtenerTipo() != TipoPieza.VACIO) {
-            if(pieza.obtenerTipo() == TipoPieza.SATELITE) {
+
+            if (pieza.obtenerTipo() == TipoPieza.SATELITE) {
                 Jugador duenio = pieza.obtenerDuenio();
                 duenio.eliminarSatelite(x, y, z);
                 tablero.asignarValor(x, y, z, new Radiacion(x, y, z, DURACION_RADIACION, RADIACION));
                 System.out.println("Habia un satelite en esa posición, ambos fueron destruidos.");
-                return true;
+                return false;
             } else {
                 System.out.println("Error: No podes colocar un satélite en esta posición.");
                 return false;
             }
+
+        } else {
+            Satelite satelite = new Satelite(jugadores[jugadorActual - 1], x, y, z, SATELITE, VIDA_SATELITE, dimension / FACTOR_DETECCION_SATELITE);
+            tablero.asignarValor(x, y, z, satelite);
+
+            // Incrementar la cantidad de satélites del jugador actual
+            jugadores[jugadorActual - 1].agregarSatelite(satelite);
+
+            return true;
         }
-
-        Satelite satelite = new Satelite(jugadores[jugadorActual - 1], x, y, z, SATELITE, VIDA_SATELITE, dimension / FACTOR_DETECCION_SATELITE);
-        tablero.asignarValor(x, y, z, satelite);
-
-        // Incrementar la cantidad de satélites del jugador actual
-        jugadores[jugadorActual - 1].agregarSatelite(satelite);
-
-        return true;
     }
     
     /**
@@ -848,7 +850,7 @@ public class Menu {
         sc.nextLine();
         for (int i = 0; i < numJugadores; i++) {
             String nombre = obtenerNombreValido("Jugador " + (i + 1) + ", ingrese su nombre: ");
-            while(nombreEnUso(nombre.toLowerCase(), jugadores)) {
+            while(nombreEnUso(nombre, jugadores)) {
                 System.out.println("El nombre \"" + nombre + "\" ya se encuentra en uso. Intente con otro.");
                 nombre = obtenerNombreValido("Jugador " + (i + 1) + ", ingrese su nombre: ");
             }
@@ -1117,26 +1119,28 @@ public class Menu {
      */
     private String obtenerNombreValido(String mensaje) {
         String nombre = "";
-        while (nombre.isEmpty()) {
+        while (true) {
             System.out.print(mensaje);
             nombre = sc.nextLine().trim();
-            if (nombre.isEmpty()) {
-                System.out.println("El nombre no puede estar vacío. Inténtalo de nuevo.");
+            if (!nombre.isEmpty()) {
+                break;
             }
+            System.out.println("El nombre no puede estar vacío. Inténtalo de nuevo.");
         }
         return nombre;
     }
     
+    
     /**
      * Verifica si el nombre de un jugador ya esta en uso
      * 
-     * @param nombre nombre del jugador a verificar en minusculas
+     * @param nombre nombre del jugador a verificar 
      * @param jugadores jugadores en la partida
      * @return devuelve true si el nombre ya esta en uso y false si no 
      */
     private boolean nombreEnUso(String nombre, Jugador[] jugadores) {
         for (Jugador jugador : jugadores) {
-            if (jugador != null && jugador.obtenerNombre().toLowerCase().equals(nombre)) {
+            if (jugador != null && jugador.obtenerNombre().equals(nombre)) {
                 return true;
             }
         }
@@ -1152,12 +1156,13 @@ public class Menu {
      */
     private String obtenerRutaValida(String mensaje) {
         String path = "";
-        while (path.isEmpty() || !path.endsWith(".txt")) {
+        while (true) {
             System.out.print(mensaje);
             path = sc.nextLine().trim();
-            if (path.isEmpty() || !path.endsWith(".txt")) {
-                System.out.println("El nombre no puede estar vacío y debe terminar en .txt. Inténtalo de nuevo.");
+            if (!path.isEmpty() && path.endsWith(".txt")) {
+                break;
             }
+            System.out.println("La ruta no puede estar vacia y debe terminar en .txt. Inténtalo de nuevo.");
         }
         return path;
     }
