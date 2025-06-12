@@ -427,7 +427,7 @@ public class Menu {
                             if (duenio.obtenerBases().estaVacia()) {
                                 System.out.println("¡El jugador " + duenio.obtenerNombre() + " ha sido eliminado!");
                                 jugadores = jugadoresRestantes(jugadores, duenio);
-                                perdedor(duenio);
+                                procesarPerdedor(duenio);
                             }
                         } else {
                             System.out.println("¡Una base ha sido atacada! Vida restante: " + base.obtenerVida());
@@ -618,11 +618,11 @@ public class Menu {
         Pieza pieza = obtenerPiezaEnPosicion(nuevaCoordenadas[0], nuevaCoordenadas[1], nuevaCoordenadas[2]);
         
         if (pieza.obtenerTipo() != TipoPieza.VACIO) {
-            if (pieza.obtenerTipo() == TipoPieza.BASE && pieza.obtenerVida() <= 3) {
+            if (!(jugadores[jugadorActual - 1].esAliado(pieza.obtenerDuenio())) && pieza.obtenerTipo() == TipoPieza.BASE && pieza.obtenerVida() <= 3) {
                 pieza.obtenerDuenio().eliminarBase(nuevaCoordenadas[0], nuevaCoordenadas[1], nuevaCoordenadas[2]);
                 jugadores[jugadorActual - 1].agregarBase((Base) pieza);
                 if (pieza.obtenerDuenio().obtenerBases().largo() < 1) {
-                    perdedor(pieza.obtenerDuenio());
+                    procesarPerdedor(pieza.obtenerDuenio());
                     jugadores = jugadoresRestantes(jugadores, pieza.obtenerDuenio());
                 }
                 pieza.cambiarDuenio(jugadores[jugadorActual - 1]);
@@ -650,8 +650,20 @@ public class Menu {
      * 
      * @param jugador Jugador que ha sido eliminado.
      */
-    private void perdedor(Jugador jugador) {
+    private void procesarPerdedor(Jugador jugador) {
         this.numJugadores--;
+
+        // Eliminar al jugador de la lista de jugadores
+        IteradorLista<Jugador> iterador = listaJugadores.iterador();
+        while (iterador.haySiguiente()) {
+            Jugador j = iterador.verActual();
+            if (j.equals(jugador)) {
+                iterador.borrar();
+                break;
+            }
+            iterador.siguiente();
+        }
+
         // Eliminar al jugador de la lista de alianzas
         IteradorLista<Alianza> iterAlianzas = alianzas.iterador();
         while (iterAlianzas.haySiguiente()) {
@@ -662,12 +674,12 @@ public class Menu {
                 iterAlianzas.siguiente();
             }
         }
+
         // Eliminar al jugador de la lista de alianzas de los demás jugadores
         IteradorLista<Alianza> iter = jugador.obtenerAlianzas().iterador();
         while (iter.haySiguiente()) {
             Alianza alianza = iter.verActual();
             Jugador otro = alianza.obtenerOtroJugador(jugador);
-
             if (otro != null) {
                 // Eliminar esta alianza del otro jugador también
                 IteradorLista<Alianza> iterOtro = otro.obtenerAlianzas().iterador();
@@ -683,7 +695,7 @@ public class Menu {
             // Eliminar del jugador actual
             iter.borrar();
         }
-        System.out.println("El jugador " + jugador.obtenerNombre() + " ha sido eliminado.");
+        
         // Asignar radiación a las coordenadas de las naves y satélites del jugador eliminado
         ListaSimplementeEnlazada<Nave> naves = jugador.obtenerNaves();
         naves.iterar((nave) -> {
@@ -697,6 +709,7 @@ public class Menu {
             tablero.asignarValor(coords[0], coords[1], coords[2], new Radiacion(coords[0], coords[1], coords[2], DURACION_RADIACION, RADIACION));
             return true;
         });
+
         // Eliminar las naves y satélites del jugador de las listas
         IteradorLista<Nave> iterNaves = naves.iterador();
         while (iterNaves.haySiguiente()) {
@@ -706,6 +719,7 @@ public class Menu {
         while (iterSatelites.haySiguiente()) {
             iterSatelites.borrar();
         }
+        System.out.println("El jugador " + jugador.obtenerNombre() + " ha sido eliminado.");
     }
 
     /**
