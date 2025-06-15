@@ -1,6 +1,7 @@
 package menu;
 
 // Importaciones necesarias
+import Coordenada.Coordenada;
 import enums.*;
 import estructuras.lista.IteradorLista;
 import estructuras.lista.ListaSimplementeEnlazada;
@@ -97,13 +98,13 @@ public class Menu {
 
             int opcion = leerEnteroEntreLimites("Ingrese una opción: ", 1, 8);
             accion = Accion.desdeCodigo(opcion - 1);
-            int[] coordenadas;
+            Coordenada coordenadas;
             boolean cambioDeTurno = false;
 
             switch (accion) {
                 case AGREGAR_NAVE -> {
                     coordenadas = solicitarCoordenadas("Ingrese la posición en ");
-                    if (agregarNave(coordenadas[0], coordenadas[1], coordenadas[2])) {
+                    if (agregarNave(coordenadas)) {
                         cambioDeTurno = true;
                         System.out.println("Nave agregada exitosamente.");
                     }
@@ -115,7 +116,7 @@ public class Menu {
                 }
                 case AGREGAR_SATELITE -> {
                     coordenadas = solicitarCoordenadas("Ingrese la posición en ");
-                    if (agregarSatelite(coordenadas[0], coordenadas[1], coordenadas[2])) {
+                    if (agregarSatelite(coordenadas)) {
                         cambioDeTurno = true;
                         System.out.println("Satelite agregado exitosamente.");
                     }
@@ -136,7 +137,7 @@ public class Menu {
                     }
                     
                     coordenadas = solicitarCoordenadas("Ingrese la posición en ");
-                    if (atacarSector(coordenadas[0], coordenadas[1], coordenadas[2], naveSeleccionada)) {
+                    if (atacarSector(coordenadas, naveSeleccionada)) {
                         cambioDeTurno = true;
                         System.out.println("Ataque realizado.");
                     }
@@ -285,11 +286,11 @@ public class Menu {
         boolean baseCreada = false;
         while (!baseCreada) {
             System.out.println(jugadores[i].obtenerNombre() + ", ingrese la posición de su base:");
-            int[] coordenadas = solicitarCoordenadas("Ingrese la coordenada en ");
-            Pieza pieza = obtenerPiezaEnPosicion(coordenadas[0], coordenadas[1], coordenadas[2]);
+            Coordenada coordenadas = solicitarCoordenadas("Ingrese la coordenada en ");
+            Pieza pieza = obtenerPiezaEnPosicion(coordenadas);
             if (pieza.obtenerTipo() == TipoPieza.VACIO) {
-                Base base = new Base(jugadores[i], coordenadas[0], coordenadas[1], coordenadas[2], BASE, VIDA_BASE, ESCUDO_INICIAL_BASE);
-                tablero.asignarValor(coordenadas[0], coordenadas[1], coordenadas[2], base);
+                Base base = new Base(jugadores[i], coordenadas, BASE, VIDA_BASE, ESCUDO_INICIAL_BASE);
+                tablero.asignarValor(coordenadas, base);
                 this.jugadores[i].agregarBase(base);
                 baseCreada = true;
             } else {
@@ -309,25 +310,25 @@ public class Menu {
      * 
      * @return true si la nave fue agregada exitosamente, false en caso contrario.
      */
-    private boolean agregarNave(int x, int y, int z) {
+    private boolean agregarNave(Coordenada coordenadas) {
 
-        if (!coordenadasValidas(x, y, z)) {
+        if (!coordenadasValidas(coordenadas)) {
             System.out.println("Posición fuera de los límites.");
             return false;
         }
 
-        if (!verificarDistancia(x, y, z)) {
+        if (!verificarDistancia(coordenadas)) {
             System.out.println("La nave debe estar a 5 casilleros o menos de su base.");
             return false;
         }
-        Pieza pieza = obtenerPiezaEnPosicion(x, y, z);
+        Pieza pieza = obtenerPiezaEnPosicion(coordenadas);
         if (pieza.obtenerTipo() != TipoPieza.VACIO) {
             System.out.println("Error: No podes colocar una nave en esta posición.");
             return false;
         }
 
-        Nave nave = new Nave(jugadores[jugadorActual - 1], x, y, z, NAVE, VIDA_NAVE, DANIO_INICIAL_NAVE);
-        tablero.asignarValor(x, y, z, nave);
+        Nave nave = new Nave(jugadores[jugadorActual - 1], coordenadas, NAVE, VIDA_NAVE, DANIO_INICIAL_NAVE);
+        tablero.asignarValor(coordenadas, nave);
 
         // Incrementar la cantidad de naves del jugador actual
         jugadores[jugadorActual - 1].agregarNave(nave);
@@ -345,21 +346,21 @@ public class Menu {
      * 
      * @return true si el satélite fue agregado exitosamente, false en caso contrario.
      */
-    private boolean agregarSatelite(int x, int y, int z) {
+    private boolean agregarSatelite(Coordenada coordenadas) {
 
-        if (!coordenadasValidas(x, y, z)) {
+        if (!coordenadasValidas(coordenadas)) {
             System.out.println("Posición fuera de los límites.");
             return false;
         }
         
-        Pieza pieza = obtenerPiezaEnPosicion(x, y, z);
+        Pieza pieza = obtenerPiezaEnPosicion(coordenadas);
 
         if (pieza.obtenerTipo() != TipoPieza.VACIO) {
 
             if (pieza.obtenerTipo() == TipoPieza.SATELITE) {
                 Jugador duenio = pieza.obtenerDuenio();
-                duenio.eliminarSatelite(x, y, z);
-                tablero.asignarValor(x, y, z, new Radiacion(x, y, z, DURACION_RADIACION, RADIACION));
+                duenio.eliminarSatelite(coordenadas);
+                tablero.asignarValor(coordenadas, new Radiacion(coordenadas, DURACION_RADIACION, RADIACION));
                 System.out.println("Habia un satelite en esa posición, ambos fueron destruidos.");
                 return false;
             } else {
@@ -368,8 +369,8 @@ public class Menu {
             }
 
         } else {
-            Satelite satelite = new Satelite(jugadores[jugadorActual - 1], x, y, z, SATELITE, VIDA_SATELITE, dimension / FACTOR_DETECCION_SATELITE);
-            tablero.asignarValor(x, y, z, satelite);
+            Satelite satelite = new Satelite(jugadores[jugadorActual - 1], coordenadas, SATELITE, VIDA_SATELITE, dimension / FACTOR_DETECCION_SATELITE);
+            tablero.asignarValor(coordenadas, satelite);
 
             // Incrementar la cantidad de satélites del jugador actual
             jugadores[jugadorActual - 1].agregarSatelite(satelite);
@@ -388,19 +389,19 @@ public class Menu {
      * @param z Coordenada Z del sector a atacar.
      * @param naveAtacante Nave que está realizando el ataque.
      */
-    private boolean atacarSector(int x, int y, int z, Nave naveAtacante) {
+    private boolean atacarSector(Coordenada coordenadas, Nave naveAtacante) {
 
-        if (!coordenadasValidas(x, y, z)) {
+        if (!coordenadasValidas(coordenadas)) {
             System.out.println("Posición fuera de los límites.");
             return false;
         }
 
-        if (!verificarDistancia(x, y, z, naveAtacante)) {
+        if (!verificarDistancia(coordenadas, naveAtacante)) {
             System.out.println("El ataque debe ser a menos de 5 casilleros de la nave.");
             return false;
         }
 
-        Sector sector = tablero.obtenerSector(x, y, z);
+        Sector sector = tablero.obtenerSector(coordenadas);
         Pieza ficha = sector.obtenerValor();
     
         if (ficha == null || ficha.obtenerTipo() == TipoPieza.VACIO) {
@@ -424,7 +425,7 @@ public class Menu {
             return false;
         }
         int danio = naveAtacante.obtenerDanio(); // Daño infligido por la nave atacante
-        Radiacion radiacion = new Radiacion(x, y, z, DURACION_RADIACION, RADIACION); // Variable para almacenar la radiación si es necesario
+        Radiacion radiacion = new Radiacion(coordenadas, DURACION_RADIACION, RADIACION); // Variable para almacenar la radiación si es necesario
         boolean piezaDestruida = false; // Variable para verificar si la base fue destruida
         switch (ficha.obtenerTipo()) {
             case BASE -> {
@@ -435,14 +436,14 @@ public class Menu {
                         System.out.println("¡Una base ha sido atacada! Escudo restante: " + base.obtenerEscudo());
                         if (vida != base.obtenerVida()) {
                             System.out.println("¡Una base ha sido atacada! Vida restante: " + base.obtenerVida());
-                            tablero.asignarValor(x, y, z, ficha); // Actualiza con vida reducida
+                            tablero.asignarValor(coordenadas, ficha); // Actualiza con vida reducida
                         }
                     } else {
                         base.reducirVida(danio);
                         if (base.obtenerVida() <= 0) {
                             System.out.println("¡Una base ha sido destruida!");
                             piezaDestruida = true;
-                            duenio.eliminarBase(x, y, z);
+                            duenio.eliminarBase(coordenadas);
                             if (duenio.obtenerBases().estaVacia()) {
                                 System.out.println("¡El jugador " + duenio.obtenerNombre() + " ha sido eliminado!");
                                 jugadores = jugadoresRestantes(jugadores, duenio);
@@ -450,7 +451,7 @@ public class Menu {
                             }
                         } else {
                             System.out.println("¡Una base ha sido atacada! Vida restante: " + base.obtenerVida());
-                            tablero.asignarValor(x, y, z, base); // Actualiza con vida reducida
+                            tablero.asignarValor(coordenadas, base); // Actualiza con vida reducida
                         }
                     }
                 }
@@ -465,17 +466,17 @@ public class Menu {
                 if (ficha.obtenerVida() < 1) {
                     System.out.println("¡Una nave enemiga ha sido destruida!");
                     piezaDestruida = true;
-                    duenio.eliminarNave(x, y, z);
+                    duenio.eliminarNave(coordenadas);
                 }
             }
             case SATELITE -> {
                 System.out.println("¡Un satelite enemigo ha sido destruido!");
                 piezaDestruida = true;
-                duenio.eliminarSatelite(x, y, z);
+                duenio.eliminarSatelite(coordenadas);
             }
         }
         if (piezaDestruida) {
-            tablero.asignarValor(x, y, z, radiacion);
+            tablero.asignarValor(coordenadas, radiacion);
         }
 
         return true;
@@ -492,7 +493,7 @@ public class Menu {
      */
     private void usarCarta(Carta carta, Jugador jugador) {
         System.out.println("Usando carta: " + carta.getNombre());
-        int[] coordenadas;
+        Coordenada coordenadas;
         Sector sector;
         Pieza pieza;
         switch (carta.getTipo()) {
@@ -511,17 +512,15 @@ public class Menu {
                 for (int dx = -radioRandom; dx <= radioRandom; dx++) {
                     for (int dy = -radioRandom; dy <= radioRandom; dy++) {
                         for (int dz = -radioRandom; dz <= radioRandom; dz++) {
-                            int nuevaX = coordenadas[0] + dx;
-                            int nuevaY = coordenadas[1] + dy;
-                            int nuevaZ = coordenadas[2] + dz;
+                            Coordenada nuevaCoordenadas = new Coordenada(coordenadas.getX() + dx, coordenadas.getY() + dy, coordenadas.getZ() + dz);
 
-                            if (coordenadasValidas(nuevaX, nuevaY, nuevaZ)) {
-                                sector = tablero.obtenerSector(nuevaX, nuevaY, nuevaZ);
+                            if (coordenadasValidas(nuevaCoordenadas)) {
+                                sector = tablero.obtenerSector(nuevaCoordenadas);
                                 pieza = sector.obtenerValor();
                                 if (pieza.obtenerTipo() != TipoPieza.VACIO) {
-                                    System.out.println("Pieza encontrada en X: " + (nuevaX + 1)
-                                            + " Y: " + (nuevaY + 1)
-                                            + " Z: " + (nuevaZ + 1)
+                                    System.out.println("Pieza encontrada en X: " + (nuevaCoordenadas.getX() + 1)
+                                            + " Y: " + (nuevaCoordenadas.getY() + 1)
+                                            + " Z: " + (nuevaCoordenadas.getZ() + 1)
                                             + " - Tipo: " + pieza.obtenerTipo());
                                 }
                             }
@@ -567,15 +566,13 @@ public class Menu {
                 for (int dx = -radio; dx <= radio; dx++) {
                     for (int dy = -radio; dy <= radio; dy++) {
                         for (int dz = -radio; dz <= radio; dz++) {
-                            int nuevaX = coordenadas[0] + dx;
-                            int nuevaY = coordenadas[1] + dy;
-                            int nuevaZ = coordenadas[2] + dz;
+                            Coordenada nuevaCoordenadas = new Coordenada(coordenadas.getX() + dx, coordenadas.getY() + dy, coordenadas.getZ() + dz);
 
-                            if (coordenadasValidas(nuevaX, nuevaY, nuevaZ)) {
-                                sector = tablero.obtenerSector(nuevaX, nuevaY, nuevaZ);
+                            if (coordenadasValidas(nuevaCoordenadas)) {
+                                sector = tablero.obtenerSector(nuevaCoordenadas);
                                 pieza = sector.obtenerValor();
                                 if (pieza != null && pieza.obtenerTipo() != TipoPieza.VACIO && !esCasillaPropia(pieza)) {
-                                    atacarSector(nuevaX, nuevaY, nuevaZ, naveSeleccionada);
+                                    atacarSector(nuevaCoordenadas, naveSeleccionada);
                                 }
                             }
                         }
@@ -621,24 +618,24 @@ public class Menu {
             return false;
         }
 
-        int[] coordsViejas = naveAMover.obtenerCoordenadas();
-        int[] nuevaCoordenadas = solicitarCoordenadas("Ingrese la nueva posición en ");
+        Coordenada coordsViejas = naveAMover.obtenerCoordenadas();
+        Coordenada nuevaCoordenadas = solicitarCoordenadas("Ingrese la nueva posición en ");
     
-        if (!coordenadasValidas(nuevaCoordenadas[0], nuevaCoordenadas[1], nuevaCoordenadas[2])) {
+        if (!coordenadasValidas(nuevaCoordenadas)) {
             System.out.println("Posición fuera del tablero.");
             return false;
         }
-    
-        if (!verificarDistancia(nuevaCoordenadas[0], nuevaCoordenadas[1], nuevaCoordenadas[2])) {
+
+        if (!verificarDistancia(nuevaCoordenadas)) {
             System.out.println("La nave debe mantenerse a 5 casilleros o menos de su base.");
             return false;
         }
 
-        Pieza pieza = obtenerPiezaEnPosicion(nuevaCoordenadas[0], nuevaCoordenadas[1], nuevaCoordenadas[2]);
-        
+        Pieza pieza = obtenerPiezaEnPosicion(nuevaCoordenadas);
+
         if (pieza.obtenerTipo() != TipoPieza.VACIO) {
             if (!(jugadores[jugadorActual - 1].esAliado(pieza.obtenerDuenio())) && pieza.obtenerTipo() == TipoPieza.BASE && pieza.obtenerVida() <= 3) {
-                pieza.obtenerDuenio().eliminarBase(nuevaCoordenadas[0], nuevaCoordenadas[1], nuevaCoordenadas[2]);
+                pieza.obtenerDuenio().eliminarBase(nuevaCoordenadas);
                 jugadores[jugadorActual - 1].agregarBase((Base) pieza);
                 if (pieza.obtenerDuenio().obtenerBases().largo() < 1) {
                     procesarPerdedor(pieza.obtenerDuenio());
@@ -654,9 +651,9 @@ public class Menu {
             }
         }
     
-        tablero.asignarValor(coordsViejas[0], coordsViejas[1], coordsViejas[2], new Vacio(coordsViejas[0], coordsViejas[1], coordsViejas[2]));
-        naveAMover.cambiarCoordenadas(nuevaCoordenadas[0], nuevaCoordenadas[1], nuevaCoordenadas[2]);
-        tablero.asignarValor(nuevaCoordenadas[0], nuevaCoordenadas[1], nuevaCoordenadas[2], naveAMover);
+        tablero.asignarValor(coordsViejas, new Vacio(coordsViejas));
+        naveAMover.cambiarCoordenadas(nuevaCoordenadas);
+        tablero.asignarValor(nuevaCoordenadas, naveAMover);
         System.out.println("Nave desplazada exitosamente.");
         return true;
     }
@@ -718,14 +715,14 @@ public class Menu {
         // Asignar radiación a las coordenadas de las naves y satélites del jugador eliminado
         ListaSimplementeEnlazada<Nave> naves = jugador.obtenerNaves();
         naves.iterar((nave) -> {
-            int[] coords = nave.obtenerCoordenadas();
-            tablero.asignarValor(coords[0], coords[1], coords[2], new Radiacion(coords[0], coords[1], coords[2], DURACION_RADIACION, RADIACION));
+            Coordenada coords = nave.obtenerCoordenadas();
+            tablero.asignarValor(coords, new Radiacion(coords, DURACION_RADIACION, RADIACION));
             return true;
         });
         ListaSimplementeEnlazada<Satelite> satelites = jugador.obtenerSatelites();
         satelites.iterar((satelite) -> {
-            int[] coords = satelite.obtenerCoordenadas();
-            tablero.asignarValor(coords[0], coords[1], coords[2], new Radiacion(coords[0], coords[1], coords[2], DURACION_RADIACION, RADIACION));
+            Coordenada coords = satelite.obtenerCoordenadas();
+            tablero.asignarValor(coords, new Radiacion(coords, DURACION_RADIACION, RADIACION));
             return true;
         });
 
@@ -778,16 +775,14 @@ public class Menu {
         
         while (iter.haySiguiente()) {
             Satelite satelite = iter.verActual();
-            int[] coords = satelite.obtenerCoordenadas();
+            Coordenada coords = satelite.obtenerCoordenadas();
             int radio = satelite.obtenerRadioDeteccion();
             for (int dx = -radio; dx <= radio; dx++) {
                 for (int dy = -radio; dy <= radio; dy++) {
                     for (int dz = -radio; dz <= radio; dz++) {
-                        int nuevaX = coords[0] + dx;
-                        int nuevaY = coords[1] + dy;
-                        int nuevaZ = coords[2] + dz;
-                        if (coordenadasValidas(nuevaX, nuevaY, nuevaZ)) {
-                            Sector sector = tablero.obtenerSector(nuevaX, nuevaY, nuevaZ);
+                        Coordenada coordenadas = new Coordenada(coords.getX() + dx, coords.getY() + dy, coords.getZ() + dz);
+                        if (coordenadasValidas(coordenadas)) {
+                            Sector sector = tablero.obtenerSector(coordenadas);
                             Pieza pieza = sector.obtenerValor();
                             if (pieza.obtenerTipo() != TipoPieza.VACIO && !esCasillaPropia(pieza) && !jugador.esAliado(pieza.obtenerDuenio())) {
                                 detectadas.insertarUltimo(pieza);
@@ -814,8 +809,8 @@ public class Menu {
         System.out.println();
         final int[] contador = {1};
         piezas.iterar(pieza -> {
-            int[] coords = pieza.obtenerCoordenadas();
-            System.out.println(contador[0] + ". " + tipoPieza + " en X: " + (coords[0] + 1) + " Y: " + (coords[1] + 1) + " Z: " + (coords[2] + 1));
+            Coordenada coords = pieza.obtenerCoordenadas();
+            System.out.println(contador[0] + ". " + tipoPieza + " en X: " + (coords.getX() + 1) + " Y: " + (coords.getY() + 1) + " Z: " + (coords.getZ() + 1));
             contador[0]++;
             return true;
         });
@@ -906,7 +901,7 @@ public class Menu {
                 Radiacion radiacion = (Radiacion) pieza;
                 radiacion.reducirDuracion();
                 if (!radiacion.estaActiva()) {
-                    tablero.asignarValor(pieza.obtenerCoordenadas()[0], pieza.obtenerCoordenadas()[1], pieza.obtenerCoordenadas()[2], new Vacio(pieza.obtenerCoordenadas()[0], pieza.obtenerCoordenadas()[1], pieza.obtenerCoordenadas()[2]));
+                    tablero.asignarValor(pieza.obtenerCoordenadas(), new Vacio(pieza.obtenerCoordenadas()));
                     iter.borrar();
                     tablero.obtenerPiezasNoVacias().borrarEnPosicion(contador);
                     elementoBorrado = true;
@@ -994,11 +989,11 @@ public class Menu {
      * @param mensaje El mensaje que se mostrará al solicitar las coordenadas.
      * @return Un arreglo de enteros con las coordenadas [x, y, z].
      */
-    private int[] solicitarCoordenadas(String mensaje) {
+    private Coordenada solicitarCoordenadas(String mensaje) {
         int x = leerPosicion(mensaje + "X: ", dimension) - VALOR_AJUSTE;
         int y = leerPosicion(mensaje + "Y: ", dimension) - VALOR_AJUSTE;
         int z = leerPosicion(mensaje + "Z: ", dimension) - VALOR_AJUSTE;
-        return new int[]{x, y, z};
+        return new Coordenada(x, y, z);
     }
 
     /**
@@ -1009,10 +1004,10 @@ public class Menu {
      * @param z La coordenada z.
      * @return true si las coordenadas son válidas, false en caso contrario.
      */
-    private boolean coordenadasValidas(int x, int y, int z) {
-        return x >= 0 && x < dimension &&
-               y >= 0 && y < dimension &&
-               z >= 0 && z < dimension;
+    private boolean coordenadasValidas(Coordenada coords) {
+        return coords.getX() >= 0 && coords.getX() < dimension &&
+               coords.getY() >= 0 && coords.getY() < dimension &&
+               coords.getZ() >= 0 && coords.getZ() < dimension;
     }
     
     /**
@@ -1037,8 +1032,8 @@ public class Menu {
      * @param z La coordenada z de la posición.
      * @return true si hay una pieza en la posición, false en caso contrario.
      */
-    private Pieza obtenerPiezaEnPosicion(int x, int y, int z) {
-        return tablero.obtenerSector(x, y, z).obtenerValor();
+    private Pieza obtenerPiezaEnPosicion(Coordenada coords) {
+        return tablero.obtenerSector(coords).obtenerValor();
     }
 
     /**
@@ -1049,15 +1044,15 @@ public class Menu {
      * @param z La coordenada z.
      * @return true si la distancia es válida (5 casilleros o menos), false en caso contrario.
      */
-    private boolean verificarDistancia(int x, int y, int z) {
+    private boolean verificarDistancia(Coordenada coords) {
         Jugador jugador = jugadores[jugadorActual - 1];
         IteradorLista<Base> iter = jugador.obtenerBases().iterador();
         while (iter.haySiguiente()) {
             Pieza base = iter.verActual();
-            int[] coords = base.obtenerCoordenadas();
-            int dx = coords[0] - x;
-            int dy = coords[1] - y;
-            int dz = coords[2] - z;
+            Coordenada coordsBase = base.obtenerCoordenadas();
+            int dx = coordsBase.getX() - coords.getX();
+            int dy = coordsBase.getY() - coords.getY();
+            int dz = coordsBase.getZ() - coords.getZ();
             double distancia = Math.sqrt(dx * dx + dy * dy + dz * dz);
             if (distancia <= LIMITE_DISTANCIA) {
                 return true; // La nave está dentro del rango de la base
@@ -1075,11 +1070,11 @@ public class Menu {
      * @param z La coordenada z del sector a atacar.
      * @param naveAtacante La nave que está realizando el ataque.
      */
-    private boolean verificarDistancia(int x, int y, int z, Nave naveAtacante) {
-        int[] coordsNave = naveAtacante.obtenerCoordenadas();
-        int dx = coordsNave[0] - x;
-        int dy = coordsNave[1] - y;
-        int dz = coordsNave[2] - z;
+    private boolean verificarDistancia(Coordenada coords, Nave naveAtacante) {
+        Coordenada coordsNave = naveAtacante.obtenerCoordenadas();
+        int dx = coordsNave.getX() - coords.getX();
+        int dy = coordsNave.getY() - coords.getY();
+        int dz = coordsNave.getZ() - coords.getZ();
         double distancia = Math.sqrt(dx * dx + dy * dy + dz * dz);
         return distancia <= LIMITE_DISTANCIA; // Verifica si la distancia es menor o igual a 5
     }

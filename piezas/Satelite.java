@@ -1,6 +1,7 @@
 package piezas;
 
 // Importaciones necesarias
+import Coordenada.Coordenada;
 import enums.TipoPieza;
 import jugador.Jugador;
 import utils.ValidacionesUtils;
@@ -17,22 +18,20 @@ public class Satelite extends Pieza {
     /**
      * Constructor  del Satélite
      * @param duenio   Jugador propietario del satélite
-     * @param x        Coordenada X
-     * @param y        Coordenada Y
-     * @param z        Coordenada Z
+     * @param coordenadas Coordenadas del satélite en el tablero
      * @param nombre   Representación del satélite en el tablero
      * @param vida     Vida inicial del satélite
      * @param radioDeteccion Radio de detección del satélite
      *    
      */
-    public Satelite(Jugador duenio, int x, int y, int z, String nombre, int vida, int radioDeteccion) {
-        super(TipoPieza.SATELITE, duenio, x, y, z, nombre, vida, 0);
+    public Satelite(Jugador duenio, Coordenada coordenadas, String nombre, int vida, int radioDeteccion) {
+        super(TipoPieza.SATELITE, duenio, coordenadas, nombre, vida, 0);
         if (!creacionValida()) {
             throw new RuntimeException("Creación de pieza Satélite inválida: " + 
                     "Dueño: " + duenio + ", " +
                     "Nombre: " + nombre + ", " +
                     "Vida: " + vida + ", " +
-                    "Coordenadas: [" + x + ", " + y + ", " + z + "]");
+                    "Coordenadas: [" + coordenadas.getX() + ", " + coordenadas.getY() + ", " + coordenadas.getZ() + "]");
         }
         ValidacionesUtils.validarMayorACero(radioDeteccion, "Radio de detección");
         this.radioDeteccion = radioDeteccion;

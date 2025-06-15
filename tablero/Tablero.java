@@ -1,6 +1,7 @@
 package tablero;
 
 // Importaciones necesarias
+import Coordenada.Coordenada;
 import estructuras.lista.IteradorLista;
 import estructuras.lista.ListaSimplementeEnlazada;
 import piezas.Pieza;
@@ -51,8 +52,9 @@ public class Tablero {
 
 			for (int y = 0; y < tamanio; y++) {
 				for (int z = 0; z < tamanio; z++) {
-					Vacio pieza = new Vacio(x, y, z);
-					Sector sector = new Sector(x, y, z, pieza);
+					Coordenada coordenadas = new Coordenada(x, y, z);
+					Vacio pieza = new Vacio(coordenadas);
+					Sector sector = new Sector(coordenadas, pieza);
 					tablero[x].insertarUltimo(sector);
 				}
 			}
@@ -63,16 +65,16 @@ public class Tablero {
 	 * Asigna un valor a un sector específico del tablero.
 	 * Si el valor es diferente de VACIO, se agrega a la lista de piezas no vacías.
 	 *
-	 * @param x     Coordenada X del sector.
-	 * @param y     Coordenada Y del sector.
-	 * @param z     Coordenada Z del sector.
+	 * @param coordenadas Coordenadas del sector donde se asignará el valor.
 	 * @param valor Pieza a asignar al sector.
 	 * 
 	 * @throws RuntimeException si las coordenadas están fuera de los límites del tablero
 	 *                         o si el valor de la pieza es nulo.
 	 */
-	public void asignarValor(int x, int y, int z, Pieza valor) {
-		if (x < 0 || x >= tamanio || y < 0 || y >= tamanio || z < 0 || z >= tamanio) {
+	public void asignarValor(Coordenada coordenadas, Pieza valor) {
+		if (coordenadas.getX() < 0 || coordenadas.getX() >= tamanio ||
+			coordenadas.getY() < 0 || coordenadas.getY() >= tamanio ||
+			coordenadas.getZ() < 0 || coordenadas.getZ() >= tamanio) {
 			throw new RuntimeException("Coordenadas fuera de los límites del tablero");
 		}
 		if (valor == null) {
@@ -81,10 +83,10 @@ public class Tablero {
 		if (!piezasNoVacias.contains(valor)) {
 			piezasNoVacias.insertarUltimo(valor);
 		}
-		IteradorLista<Sector> iter = tablero[x].iterador();
+		IteradorLista<Sector> iter = tablero[coordenadas.getX()].iterador();
 		while (iter.haySiguiente()) {
 			Sector sector = iter.verActual();
-			if (sector.obtenerCoordenadas()[1] == y && sector.obtenerCoordenadas()[2] == z) {
+			if (sector.obtenerCoordenadas().equals(coordenadas)) {
 				sector.asignarValor(valor);
 				break;
 			}
@@ -110,17 +112,15 @@ public class Tablero {
 	/**
 	 * Obtiene un sector específico del tablero basado en sus coordenadas.
 	 *
-	 * @param x Coordenada X del sector.
-	 * @param y Coordenada Y del sector.
-	 * @param z Coordenada Z del sector.
+	 * @param coordenadas Coordenadas del sector.
 	 * 
 	 * @return Sector correspondiente a las coordenadas dadas, o null si no existe.
 	 */
-	public Sector obtenerSector(int x, int y, int z) {
-		IteradorLista<Sector> iter = tablero[x].iterador();
+	public Sector obtenerSector(Coordenada coordenadas) {
+		IteradorLista<Sector> iter = tablero[coordenadas.getX()].iterador();
 		while (iter.haySiguiente()) {
 			Sector sector = iter.verActual();
-			if (sector.obtenerCoordenadas()[1] == y && sector.obtenerCoordenadas()[2] == z) {
+			if (sector.obtenerCoordenadas().equals(coordenadas)) {
 				return sector;
 			}
 			iter.siguiente();

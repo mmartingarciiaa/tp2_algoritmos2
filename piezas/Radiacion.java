@@ -1,6 +1,7 @@
 package piezas;
 
 // Importaciones necesarias
+import Coordenada.Coordenada;
 import enums.TipoPieza;
 
 /**
@@ -15,20 +16,18 @@ public class Radiacion extends Pieza {
     /**
      * Constructor de la clase Radiacion
      * @param duenio: dueño de la pieza con radiacion activa
-     * @param x: coordenada x de la pieza con radiacion activa
-     * @param y: coordenada y de la pieza con radiacion activa
-     * @param z: coordenada z de la pieza con radiacion activa
+     * @param coordenadas: coordenadas de la pieza con radiacion activa
      * @param duracion: cuantos turnos la pieza va a tener radiacion activa
      */
-    public Radiacion(int x, int y, int z, int duracion, String nombre) {
-        super(TipoPieza.RADIACION, null, x, y, z, nombre, VIDA_POR_DEFECTO, duracion);
+    public Radiacion(Coordenada coordenadas, int duracion, String nombre) {
+        super(TipoPieza.RADIACION, null, coordenadas, nombre, VIDA_POR_DEFECTO, duracion);
         this.turnosActiva = duracion;
         if (!creacionValida()) {
             throw new RuntimeException("Creación de pieza Radiación inválida: " + 
                     "Dueño: null, " +
                     "Nombre: " + nombre + ", " +
                     "Vida: " + VIDA_POR_DEFECTO + ", " +
-                    "Coordenadas: [" + x + ", " + y + ", " + z + "]");
+                    "Coordenadas: [" + coordenadas.getX() + ", " + coordenadas.getY() + ", " + coordenadas.getZ() + "]");
         }
         this.recienCreada = true;
     }
@@ -38,7 +37,7 @@ public class Radiacion extends Pieza {
         return this.obtenerNombre() != null &&
                 !this.obtenerNombre().isEmpty() &&
                 turnosActiva > 0 &&
-                this.obtenerCoordenadas() != null && this.obtenerCoordenadas().length == 3;
+                this.obtenerCoordenadas() != null && this.obtenerCoordenadas() != null;
     }
 
 

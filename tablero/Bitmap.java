@@ -1,6 +1,7 @@
 package tablero;
 
 // Importaciones necesarias
+import Coordenada.Coordenada;
 import estructuras.lista.IteradorLista;
 import estructuras.lista.ListaSimplementeEnlazada;
 import java.awt.Graphics;
@@ -41,7 +42,7 @@ public class Bitmap {
     /**
      * Colorea un píxel específico con un color RGB.
      *
-     * @param x, y coordenadas horizontal y vertical respectivamente del píxel
+     * @param x,y coordenadas horizontal y vertical respectivamente del píxel
      * @param r componente roja del color (0-255)
      * @param g componente verde del color (0-255)
      * @param b componente azul del color (0-255)
@@ -56,7 +57,7 @@ public class Bitmap {
      * Dibuja una imagen externa dentro del lienzo de este Bitmap.
      *
      * @param ruta         ruta del archivo de imagen a cargar
-     * @param x, y         coordenada X e Y donde comienza el dibujo
+     * @param x,y         coordenada X e Y donde comienza el dibujo
      * @param anchoEscalado  ancho al que se escalará la imagen
      * @param altoEscalado alto al que se escalará la imagen
      * @throws IOException por si no puede leerse el archivo
@@ -107,8 +108,8 @@ public class Bitmap {
             IteradorLista<Sector> iter = sectoresEnX.iterador();
             while (iter.haySiguiente()) {
                 Sector sector = iter.verActual();
-                int[] coords = sector.obtenerCoordenadas();
-                int y = coords[1], z = coords[2];
+                Coordenada coords = sector.obtenerCoordenadas();
+                int y = coords.getY(), z = coords.getZ();
                 int yInvertido = dimension - 1 - y;
     
                 int desplazamientoZ = z * (dimension * TAM_CELDA + ESPACIADO_CAPAS);

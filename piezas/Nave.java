@@ -1,6 +1,7 @@
 package piezas;
 
 // Importaciones necesarias
+import Coordenada.Coordenada;
 import enums.TipoPieza;
 import jugador.Jugador;
 import utils.ValidacionesUtils;
@@ -19,9 +20,7 @@ public class Nave extends Pieza {
     /**
      * Constructor de la nave.
      * @param duenio        Jugador propietario de la nave
-     * @param x             Coordenada X
-     * @param y             Coordenada Y
-     * @param z             Coordenada Z
+     * @param coordenadas   Coordenadas de la nave en el tablero
      * @param nombre        Representación de la nave en el tablero
      * @param vida          Vida inicial de la nave
      * @param danioInicial  Poder de ataque inicial de la nave (debe ser mayor a cero)
@@ -29,8 +28,8 @@ public class Nave extends Pieza {
      * @throws RuntimeException si la creación de la pieza no es válida
      * @throws IllegalArgumentException si el daño inicial es menor o igual a cero
      */
-    public Nave(Jugador duenio, int x, int y, int z, String nombre, int vida, int danioInicial) {
-        super(TipoPieza.NAVE, duenio, x, y, z, nombre, vida, ESCUDO_INICIAL);
+    public Nave(Jugador duenio, Coordenada coordenadas, String nombre, int vida, int danioInicial) {
+        super(TipoPieza.NAVE, duenio, coordenadas, nombre, vida, ESCUDO_INICIAL);
         ValidacionesUtils.validarMayorACero(danioInicial, "Daño inicial de la nave");
         this.danio = danioInicial;
     }

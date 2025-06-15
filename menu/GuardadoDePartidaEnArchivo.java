@@ -58,12 +58,10 @@ public class GuardadoDePartidaEnArchivo {
     IteradorLista<Jugador> iter = jugadores.iterador();
     while (iter.haySiguiente()) {
       Jugador jugador = iter.verActual();
-      if (jugador.obtenerBases().largo() > 0) {
-        GuardadoDePartidaEnArchivo.guardarJugador(jugador, writer);
-        GuardadoDePartidaEnArchivo.guardarBase(jugador, writer);
-        GuardadoDePartidaEnArchivo.guardarNave(jugador, writer);
-        GuardadoDePartidaEnArchivo.guardarSatelite(jugador, writer);
-      }
+      GuardadoDePartidaEnArchivo.guardarJugador(jugador, writer);
+      GuardadoDePartidaEnArchivo.guardarBase(jugador, writer);
+      GuardadoDePartidaEnArchivo.guardarNave(jugador, writer);
+      GuardadoDePartidaEnArchivo.guardarSatelite(jugador, writer);
       iter.siguiente();
     }
   }
@@ -103,7 +101,7 @@ public class GuardadoDePartidaEnArchivo {
 
     while (bases.haySiguiente()) {
       Base base = bases.verActual();
-      writer.println("b" + " - " + base.obtenerCoordenadas()[0] + "," + base.obtenerCoordenadas()[1] + "," + base.obtenerCoordenadas()[2] + " - " + base.obtenerVida() + " - " + base.obtenerEscudo() );
+      writer.println("b" + " - " + base.obtenerCoordenadas().getX() + "," + base.obtenerCoordenadas().getY() + "," + base.obtenerCoordenadas().getZ() + " - " + base.obtenerVida() + " - " + base.obtenerEscudo() );
       bases.siguiente();
     }
   }
@@ -120,7 +118,7 @@ public class GuardadoDePartidaEnArchivo {
 
     while (naves.haySiguiente()) {
       Nave nave = naves.verActual();
-      writer.println("n" + " - "  + nave.obtenerCoordenadas()[0] + "," + nave.obtenerCoordenadas()[1] + "," + nave.obtenerCoordenadas()[2] + " - " + nave.obtenerVida() + " - " + nave.obtenerEscudo() + " - " + nave.obtenerDanio());
+      writer.println("n" + " - "  + nave.obtenerCoordenadas().getX() + "," + nave.obtenerCoordenadas().getY() + "," + nave.obtenerCoordenadas().getZ() + " - " + nave.obtenerVida() + " - " + nave.obtenerEscudo() + " - " + nave.obtenerDanio());
       naves.siguiente();
     }
   }
@@ -137,7 +135,7 @@ public class GuardadoDePartidaEnArchivo {
 
     while (satelites.haySiguiente()) {
       Satelite satelite = satelites.verActual();
-      writer.println("s"+ " - "  + satelite.obtenerCoordenadas()[0] + "," + satelite.obtenerCoordenadas()[1] + "," + satelite.obtenerCoordenadas()[2] + " - " + satelite.obtenerVida() + " - " + satelite.obtenerEscudo() + " - " + satelite.obtenerRadioDeteccion());
+      writer.println("s"+ " - "  + satelite.obtenerCoordenadas().getX() + "," + satelite.obtenerCoordenadas().getY() + "," + satelite.obtenerCoordenadas().getZ() + " - " + satelite.obtenerVida() + " - " + satelite.obtenerEscudo() + " - " + satelite.obtenerRadioDeteccion());
       satelites.siguiente();
     }
   }
@@ -169,7 +167,7 @@ public class GuardadoDePartidaEnArchivo {
         Pieza pieza = iteradorPiezas.verActual();
 
         if (pieza.obtenerTipo() == TipoPieza.RADIACION) {
-          writer.println("r" + " - " + pieza.obtenerCoordenadas()[0] + "," + pieza.obtenerCoordenadas()[1] + "," + pieza.obtenerCoordenadas()[2] + " - " + ((Radiacion)pieza).obtenerDuracion());
+          writer.println("r" + " - " + pieza.obtenerCoordenadas().getX() + "," + pieza.obtenerCoordenadas().getY() + "," + pieza.obtenerCoordenadas().getZ() + " - " + ((Radiacion)pieza).obtenerDuracion());
         }
 
         iteradorPiezas.siguiente();

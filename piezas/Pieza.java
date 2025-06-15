@@ -1,6 +1,7 @@
 package piezas;
 
 // Importaciones necesarias
+import Coordenada.Coordenada;
 import enums.TipoPieza;
 import jugador.Jugador;
 import utils.ValidacionesUtils;
@@ -13,7 +14,7 @@ import utils.ValidacionesUtils;
 public class Pieza {
 	private final TipoPieza tipo;
 	private final String nombre;
-	private final int[] coordenadas;
+	private Coordenada coordenadas;
 	private Jugador duenio;
 	private int vida;
 	private int escudo;
@@ -23,17 +24,15 @@ public class Pieza {
 	 * 
 	 * @param tipo: Tipo de la pieza (debe pertenecer a TipoPieza)
 	 * @param duenio: Jugador dueño de la pieza
-	 * @param x: Coordenada X de la pieza
-	 * @param y: Coordenada Y de la pieza
-	 * @param z: Coordenada Z de la pieza
+	 * @param coordenadas: Coordenadas de la pieza en el tablero
 	 * @param nombre: Nombre de la pieza
 	 * @param vida: Vida inicial de la pieza (debe ser mayor a cero)
 	 * @param escudo: Escudo inicial de la pieza (debe ser mayor o igual a cero)
 	 */
-	public Pieza(TipoPieza tipo, Jugador duenio, int x, int y, int z, String nombre, int vida, int escudo) {
+	public Pieza(TipoPieza tipo, Jugador duenio, Coordenada coordenadas, String nombre, int vida, int escudo) {
 		this.tipo = tipo;
 		this.duenio = duenio;
-		this.coordenadas = new int[] {x, y, z};
+		this.coordenadas = coordenadas;
 		this.nombre = nombre;
 		this.vida = vida;
 		this.escudo = escudo;
@@ -51,7 +50,7 @@ public class Pieza {
 				vida > 0 && 
 				escudo >= 0 && 
 				coordenadas != null && 
-				coordenadas.length == 3;
+				coordenadas != null;
 	}
 
 	/**
@@ -89,7 +88,7 @@ public class Pieza {
 	/**
 	 * @return: Devuelve las coordenadas pasadas 
 	 */
-	public int[] obtenerCoordenadas() {
+	public Coordenada obtenerCoordenadas() {
 		return coordenadas;
 	}
 	
@@ -105,14 +104,10 @@ public class Pieza {
 	/**
 	 * Cambia las coordenadas de la pieza.
 	 * 
-	 * @param x: nueva coordenada X
-	 * @param y: nueva coordenada Y
-	 * @param z: nueva coordenada Z
+	 * @param coordenadas: nuevas coordenadas de la pieza
 	 */
-	public void cambiarCoordenadas(int x, int y, int z) {
-		this.coordenadas[0] = x;
-		this.coordenadas[1] = y;
-		this.coordenadas[2] = z;
+	public void cambiarCoordenadas(Coordenada coordenadas) {
+		this.coordenadas = coordenadas;
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package jugador;
 
 // Importaciones necesarias
+import Coordenada.Coordenada;
 import estructuras.cola.ColaEnlazada;
 import estructuras.lista.IteradorLista;
 import estructuras.lista.ListaSimplementeEnlazada;
@@ -76,16 +77,15 @@ public class Jugador {
     /**
      * Elimina una base de la lista de bases del jugador.
      * 
-     * @param x Coordenada x de la base a eliminar.
-     * @param y Coordenada y de la base a eliminar.
-     * @param z Coordenada z de la base a eliminar.
+     * @param coordenadasDondeEliminar Coordenadas de la base a eliminar.
+     * Si no se encuentra una base con esas coordenadas, no se realiza ninguna acción.
      */
-    public void eliminarBase(int x, int y, int z) {
+    public void eliminarBase(Coordenada coordenadasDondeEliminar) {
         IteradorLista<Base> iter = bases.iterador();
         while (iter.haySiguiente()) {
             Base base = iter.verActual();
-            int[] coords = base.obtenerCoordenadas();
-            if (coords[0] == x && coords[1] == y && coords[2] == z) {
+            Coordenada coords = base.obtenerCoordenadas();
+            if (coords.equals(coordenadasDondeEliminar)) {
                 iter.borrar();
                 break;
             }
@@ -114,16 +114,15 @@ public class Jugador {
     /**
      * Elimina una nave de la lista de naves del jugador.
      *
-     * @param x Coordenada x de la nave a eliminar.
-     * @param y Coordenada y de la nave a eliminar.
-     * @param z Coordenada z de la nave a eliminar.
+     * @param coordenadasDondeEliminar Coordenadas de la nave a eliminar.
+     * Si no se encuentra una nave con esas coordenadas, no se realiza ninguna acción.
      */
-    public void eliminarNave(int x, int y, int z) {
+    public void eliminarNave(Coordenada coordenadasDondeEliminar) {
         IteradorLista<Nave> iter = naves.iterador();
         while (iter.haySiguiente()) {
             Nave nave = iter.verActual();
-            int[] coords = nave.obtenerCoordenadas();
-            if (coords[0] == x && coords[1] == y && coords[2] == z) {
+            Coordenada coords = nave.obtenerCoordenadas();
+            if (coords.equals(coordenadasDondeEliminar)) {
                 iter.borrar();
                 break;
             }
@@ -182,16 +181,15 @@ public class Jugador {
     /**
      * Elimina un satélite de la lista de satélites del jugador.
      *
-     * @param x Coordenada x del satélite a eliminar.
-     * @param y Coordenada y del satélite a eliminar.
-     * @param z Coordenada z del satélite a eliminar.
+     * @param coordenadasDondeEliminar Coordenadas del satélite a eliminar.
+     * Si no se encuentra un satélite con esas coordenadas, no se realiza ninguna acción.
      */
-    public void eliminarSatelite(int x, int y, int z) {
+    public void eliminarSatelite(Coordenada coordenadasDondeEliminar) {
         IteradorLista<Satelite> iter = satelites.iterador();
         while (iter.haySiguiente()) {
             Satelite satelite = iter.verActual();
-            int[] coords = satelite.obtenerCoordenadas();
-            if (coords[0] == x && coords[1] == y && coords[2] == z) {
+            Coordenada coords = satelite.obtenerCoordenadas();
+            if (coords.equals(coordenadasDondeEliminar)) {
                 iter.borrar();
                 break;
             }

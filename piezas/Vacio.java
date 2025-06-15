@@ -1,6 +1,7 @@
 package piezas;
 
 // Importaciones necesarias
+import Coordenada.Coordenada;
 import enums.TipoPieza;
 
 /**
@@ -15,18 +16,16 @@ public class Vacio extends Pieza {
 
     /**
      * Construye un sector Vacio en las coordenadas dadas
-     * @param x Coordenada X
-     * @param y Coordenada Y
-     * @param z Coordenada Z
+     * @param coordenadas Coordenadas del sector vacío
      */
-    public Vacio(int x, int y, int z) {
-        super(TipoPieza.VACIO, null, x,y,z, NOMBRE_POR_DEFECTO, VIDA_POR_DEFECTO, 0);
+    public Vacio(Coordenada coordenadas) {
+        super(TipoPieza.VACIO, null, coordenadas, NOMBRE_POR_DEFECTO, VIDA_POR_DEFECTO, 0);
         if (!(this.obtenerCoordenadas() != null && 
-                this.obtenerCoordenadas().length == 3)) {
+                this.obtenerCoordenadas() != null)) {
             throw new RuntimeException("Creación de pieza Vacio inválida: " + 
                     "Nombre: " + NOMBRE_POR_DEFECTO + ", " +
                     "Vida: " + VIDA_POR_DEFECTO + ", " +
-                    "Coordenadas: [" + x + ", " + y + ", " + z + "]");
+                    "Coordenadas: [" + coordenadas.getX() + ", " + coordenadas.getY() + ", " + coordenadas.getZ() + "]");
         }
     }
 }

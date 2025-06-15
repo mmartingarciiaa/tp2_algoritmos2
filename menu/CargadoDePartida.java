@@ -1,5 +1,6 @@
 package menu;
 
+import Coordenada.Coordenada;
 import estructuras.lista.IteradorLista;
 import estructuras.lista.ListaSimplementeEnlazada;
 import java.io.BufferedReader;
@@ -97,9 +98,9 @@ public class CargadoDePartida {
                 throw new IllegalArgumentException("Coordenadas inválidas: " + partes[1]);
             }
 
-            int x = Integer.parseInt(coordenadas[0].trim());
-            int y = Integer.parseInt(coordenadas[1].trim());
-            int z = Integer.parseInt(coordenadas[2].trim());
+            Coordenada coords = new Coordenada(Integer.parseInt(coordenadas[0].trim()),
+                                                Integer.parseInt(coordenadas[1].trim()),
+                                                Integer.parseInt(coordenadas[2].trim()));
             int vida = Integer.parseInt(partes[2].trim());
             
             Pieza pieza;
@@ -110,7 +111,7 @@ public class CargadoDePartida {
                         throw new IllegalArgumentException("Falta escudo para la base: " + linea);
                     }
                     int escudo = Integer.parseInt(partes[3].trim());
-                    pieza = new Base(jugador, x, y, z, "B", vida, escudo);
+                    pieza = new Base(jugador, coords, "B", vida, escudo);
                     jugador.agregarBase((Base) pieza);
                 }
                 case "n" -> {
@@ -118,7 +119,7 @@ public class CargadoDePartida {
                         throw new IllegalArgumentException("Falta daño para la nave: " + linea);
                     }
                     int danio = Integer.parseInt(partes[4].trim());
-                    pieza = new Nave(jugador, x, y, z, "N", vida, danio);
+                    pieza = new Nave(jugador, coords, "N", vida, danio);
                     jugador.agregarNave((Nave) pieza);
                 }
                 case "s" -> {
@@ -126,14 +127,14 @@ public class CargadoDePartida {
                         throw new IllegalArgumentException("Falta radio para el satélite: " + linea);
                     }
                     int radio = Integer.parseInt(partes[4].trim());
-                    pieza = new Satelite(jugador, x, y, z, "S", vida, radio);
+                    pieza = new Satelite(jugador, coords, "S", vida, radio);
                     jugador.agregarSatelite((Satelite) pieza);
                 }
                 default -> {
                     return;
                 }
             }
-            tablero.asignarValor(x, y, z, pieza);
+            tablero.asignarValor(coords, pieza);
 
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
             throw new IllegalArgumentException("Error al parsear la línea: " + linea, e);
@@ -153,13 +154,15 @@ public class CargadoDePartida {
             throw new IllegalArgumentException("Formato inválido de línea de radiación: " + linea);
         }
         String[] coordenadas = partes[1].split(",");
-        int x = Integer.parseInt(coordenadas[0].trim());
-        int y = Integer.parseInt(coordenadas[1].trim());
-        int z = Integer.parseInt(coordenadas[2].trim());
+        Coordenada coords = new Coordenada(
+            Integer.parseInt(coordenadas[0].trim()),
+            Integer.parseInt(coordenadas[1].trim()),
+            Integer.parseInt(coordenadas[2].trim())
+        );
         int duracion = Integer.parseInt(partes[2].trim());
         
-        Pieza radiacion = new Radiacion(x, y, z, duracion, "R");
-        tablero.asignarValor(x, y, z, radiacion);
+        Pieza radiacion = new Radiacion(coords, duracion, "R");
+        tablero.asignarValor(coords, radiacion);
     }
 
     /**
