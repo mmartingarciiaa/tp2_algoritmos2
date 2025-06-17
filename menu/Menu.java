@@ -46,7 +46,7 @@ public class Menu {
     private final String NAVE = "N";  // Caracter para representar una nave
     private final String BASE = "B";  // Caracter para representar una base
     private final String SATELITE = "S";  // Caracter para representar un satélite
-    private final String RADIACION = "R";  //Caracter para representar un satelite
+    private final String RADIACION = "R";  //Caracter para representar radiación
 
     private final int VALOR_AJUSTE = 1; // Valor de ajuste para las coordenadas ingresadas por el usuario
 

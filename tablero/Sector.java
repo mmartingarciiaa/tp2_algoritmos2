@@ -25,9 +25,8 @@ public class Sector {
      * @throws RuntimeException si el valor del sector es nulo
      */
     public Sector(Coordenada coordenadas, Pieza valor) {
-        ValidacionesUtils.noNulo(valor, "del sector");
         this.coordenadas = coordenadas;
-        this.valor = valor;
+        this.asignarValor(valor);
     }
 
     /**
@@ -43,6 +42,7 @@ public class Sector {
      * Asigna un nuevo valor al sector.
      */
     public void asignarValor(Pieza valor) {
+        ValidacionesUtils.noNulo(valor, "del sector");
         this.valor = valor;
     }
 

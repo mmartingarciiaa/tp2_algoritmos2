@@ -11,20 +11,21 @@ import enums.TipoPieza;
 */
 
 public class Vacio extends Pieza {
-    private static final String NOMBRE_POR_DEFECTO = "_";
-    private static final int VIDA_POR_DEFECTO = 0;
+    private static final String NOMBRE = "_";
+    private static final int VIDA = 1;
+    private static final int ESCUDO = 0;
 
     /**
      * Construye un sector Vacio en las coordenadas dadas
      * @param coordenadas Coordenadas del sector vacío
      */
     public Vacio(Coordenada coordenadas) {
-        super(TipoPieza.VACIO, null, coordenadas, NOMBRE_POR_DEFECTO, VIDA_POR_DEFECTO, 0);
+        super(TipoPieza.VACIO, null, coordenadas, NOMBRE, VIDA, ESCUDO);
         if (!(this.obtenerCoordenadas() != null && 
                 this.obtenerCoordenadas() != null)) {
             throw new RuntimeException("Creación de pieza Vacio inválida: " + 
-                    "Nombre: " + NOMBRE_POR_DEFECTO + ", " +
-                    "Vida: " + VIDA_POR_DEFECTO + ", " +
+                    "Nombre: " + NOMBRE + ", " +
+                    "Vida: " + VIDA + ", " +
                     "Coordenadas: [" + coordenadas.getX() + ", " + coordenadas.getY() + ", " + coordenadas.getZ() + "]");
         }
     }

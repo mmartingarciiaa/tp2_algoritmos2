@@ -13,6 +13,7 @@ import utils.ValidacionesUtils;
  */
 
 public class Satelite extends Pieza {
+    private static final int ESCUDO = 0;
     private final int radioDeteccion;
 
     /**
@@ -25,7 +26,7 @@ public class Satelite extends Pieza {
      *    
      */
     public Satelite(Jugador duenio, Coordenada coordenadas, String nombre, int vida, int radioDeteccion) {
-        super(TipoPieza.SATELITE, duenio, coordenadas, nombre, vida, 0);
+        super(TipoPieza.SATELITE, duenio, coordenadas, nombre, vida, ESCUDO);
         if (!creacionValida()) {
             throw new RuntimeException("Creación de pieza Satélite inválida: " + 
                     "Dueño: " + duenio + ", " +
@@ -39,9 +40,8 @@ public class Satelite extends Pieza {
 
     /**
      * Obtiene el radio de detección del satélite
-     * @return El radio de detección como un entero
      */
     public int obtenerRadioDeteccion() {
-        return radioDeteccion;
+        return this.radioDeteccion;
     }
 }
