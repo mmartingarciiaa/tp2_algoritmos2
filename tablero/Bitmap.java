@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import jugador.Jugador;
 import piezas.Pieza;
+import utils.ValidacionesUtils;
 
 /**
  * Clase que permite crear y manipular una imagen BMP píxel por píxel,
@@ -34,6 +35,8 @@ public class Bitmap {
      * @param alto  alto de la imagen en píxeles
      */
     public Bitmap(int ancho, int alto) {
+        ValidacionesUtils.validarMayorACero(alto, "del alto del Bitmap");
+        ValidacionesUtils.validarMayorACero(ancho, "del ancho del Bitmap");
         this.ancho = ancho;
         this.alto = alto;
         this.imagen = new BufferedImage(ancho, alto, BufferedImage.TYPE_INT_RGB);

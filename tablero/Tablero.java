@@ -6,6 +6,7 @@ import estructuras.lista.IteradorLista;
 import estructuras.lista.ListaSimplementeEnlazada;
 import piezas.Pieza;
 import piezas.Vacio;
+import utils.ValidacionesUtils;
 
 /**
  * Clase Tablero representa un tablero tridimensional de juego,
@@ -27,9 +28,7 @@ public class Tablero {
 	 */
 	@SuppressWarnings("unchecked")
 	public Tablero(int dimension) {
-		if (dimension <= 0) {
-			throw new RuntimeException("La dimensión del tablero debe ser mayor a cero");
-		}
+		ValidacionesUtils.validarMayorACero(dimension, "del tablero");
 		this.tamanio = dimension;
 		this.tablero = (ListaSimplementeEnlazada<Sector>[]) new ListaSimplementeEnlazada[tamanio];
 		this.piezasNoVacias = new ListaSimplementeEnlazada<>();
@@ -77,9 +76,7 @@ public class Tablero {
 			coordenadas.getZ() < 0 || coordenadas.getZ() >= tamanio) {
 			throw new RuntimeException("Coordenadas fuera de los límites del tablero");
 		}
-		if (valor == null) {
-			throw new RuntimeException("El valor de la pieza no puede ser nulo");
-		}
+		ValidacionesUtils.noNulo(valor, "de la pieza");
 		if (!piezasNoVacias.contains(valor)) {
 			piezasNoVacias.insertarUltimo(valor);
 		}

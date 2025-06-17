@@ -3,6 +3,7 @@ package tablero;
 // Importaciones necesarias
 import Coordenada.Coordenada;
 import piezas.Pieza;
+import utils.ValidacionesUtils;
 
 /**
  * Clase Sector representa un sector del tablero de juego.
@@ -24,9 +25,7 @@ public class Sector {
      * @throws RuntimeException si el valor del sector es nulo
      */
     public Sector(Coordenada coordenadas, Pieza valor) {
-        if (valor == null) {
-            throw new RuntimeException("El valor del sector no puede ser nulo");
-        }
+        ValidacionesUtils.noNulo(valor, "del sector");
         this.coordenadas = coordenadas;
         this.valor = valor;
     }
