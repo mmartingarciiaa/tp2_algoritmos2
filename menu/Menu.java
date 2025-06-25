@@ -63,7 +63,18 @@ public class Menu {
 
     private Mazo mazo; // Instancia de la clase Mazo
     Scanner sc = new Scanner(System.in);    // Creo un objeto Scanner
-    
+
+
+    public Menu() {
+        this.tablero = null; // Se inicializará más tarde cuando se cree o cargue la partida
+        this.dimension = 0; // Se establecerá al iniciar una nueva partida o cargar una existente
+        this.numJugadores = 0; // Se establecerá al iniciar una nueva partida
+        this.jugadorActual = 1; // El juego siempre comienza con el jugador 1
+        this.jugadores = null; // Se inicializará al crear los jugadores
+        // Las listas ya están inicializadas como campos finales
+        this.mazo = null; // Se creará cuando comience el juego
+        this.sc = new Scanner(System.in); // Scanner para entrada del usuario
+    }
     /**
      * Muestra el menú del juego y maneja las acciones de los jugadores.
      * Itera a través de los turnos de los jugadores, permitiendo realizar acciones como agregar naves,
@@ -162,9 +173,10 @@ public class Menu {
                         break;
                     }
                     Carta cartaAUsar = jugadores[jugadorActual - 1].sacarCarta();
-                    usarCarta(cartaAUsar, jugadores[jugadorActual - 1]);
-                    System.out.println("Carta usada exitosamente");
-                    cambioDeTurno = true;
+                    if (usarCarta(cartaAUsar, jugadores[jugadorActual - 1])) {
+                        System.out.println("Carta usada exitosamente");
+                        cambioDeTurno = true;
+                    }
                 }
                 case ALIANZA -> {
                     if (jugadores.length < 3) {
@@ -491,7 +503,7 @@ public class Menu {
      * @param carta Carta a usar.
      * @param jugador Jugador que está usando la carta.
      */
-    private void usarCarta(Carta carta, Jugador jugador) {
+    private boolean usarCarta(Carta carta, Jugador jugador) {
         System.out.println("Usando carta: " + carta.getNombre());
         Coordenada coordenadas;
         Sector sector;
@@ -501,10 +513,11 @@ public class Menu {
                 Base baseSeleccionada = seleccionarPieza(jugador.obtenerBases(), "Base");
                 if (baseSeleccionada == null) {
                     System.out.println("Selección inválida.");
-                    return;
+                    return false;
                 }
                 System.out.println("Aumentando escudo de la base");
                 baseSeleccionada.aumentarEscudo(3);
+                return true;
             }
             case RASTREADOR_CUANTICO -> {
                 coordenadas = solicitarCoordenadas("Ingrese la coordenada en ");
@@ -527,72 +540,100 @@ public class Menu {
                         }
                     }
                 }
+                return true;
             }
             case DOBLE_SALTO_HIPERESPACIAL -> {
-                moverNave();
-                moverNave();
-                System.out.println("¡Nave movida dos veces!");
+                if (jugador.obtenerNaves().largo() < 1){
+                    System.out.println("No se puede usar esta carta sin naves");
+                    return false;
+                } else {
+                    moverNave();
+                    moverNave();
+                    System.out.println("¡Nave movida dos veces!");
+                    return true;
+                }
             }
             case BASE_ADICIONAL -> {
                 crearBase(jugadorActual - 1);
                 System.out.println("¡Base adicional creada exitosamente!");
+                return true;
             }
             case SUMAR_VIDA_A_BASE -> {
                 Base baseSeleccionada = seleccionarPieza(jugador.obtenerBases(), "Base");
                 if (baseSeleccionada == null) {
                     System.out.println("Selección inválida.");
-                    return;
+                    return false;
                 }
                 baseSeleccionada.aumentarVida(VIDA_EXTRA);
                 System.out.println("¡Vida de la base aumentada exitosamente!");
+                return true;
             }
             case NAVE_HACE_DAÑO_EXTRA -> {
-                Nave naveSeleccionada = seleccionarPieza(jugador.obtenerNaves(), "Nave");
-                if (naveSeleccionada == null) {
-                    System.out.println("Selección inválida.");
-                    return;
+                if (jugador.obtenerNaves().largo() < 1){
+                    System.out.println("No se puede usar esta carta sin naves");
+                    return false;
+                } else {
+                    Nave naveSeleccionada = seleccionarPieza(jugador.obtenerNaves(), "Nave");
+                    if (naveSeleccionada == null) {
+                        System.out.println("Selección inválida.");
+                        return false;
+                    }
+                    naveSeleccionada.aumentarDanio(DANIO_EXTRA);
+                    System.out.println("¡Daño de la nave aumentado exitosamente!");
+                    return true;
                 }
-                naveSeleccionada.aumentarDanio(DANIO_EXTRA);
-                System.out.println("¡Daño de la nave aumentado exitosamente!");
             }
             case NAVE_HACE_DAÑO_EN_AREA -> {
-                Nave naveSeleccionada = seleccionarPieza(jugador.obtenerNaves(), "Nave");
-                if (naveSeleccionada == null) {
-                    System.out.println("Selección inválida.");
-                    return;
-                }
-                int radio = 1;
-                coordenadas = solicitarCoordenadas("Ingrese la coordenada en ");
-                for (int dx = -radio; dx <= radio; dx++) {
-                    for (int dy = -radio; dy <= radio; dy++) {
-                        for (int dz = -radio; dz <= radio; dz++) {
-                            Coordenada nuevaCoordenadas = new Coordenada(coordenadas.getX() + dx, coordenadas.getY() + dy, coordenadas.getZ() + dz);
+                if (jugador.obtenerNaves().largo() < 1){
+                    System.out.println("No se puede usar esta carta sin naves");
+                    return false;
+                } else {
+                    Nave naveSeleccionada = seleccionarPieza(jugador.obtenerNaves(), "Nave");
+                    if (naveSeleccionada == null) {
+                        System.out.println("Selección inválida.");
+                        return false;
+                    }
+                    int radio = 1;
+                    coordenadas = solicitarCoordenadas("Ingrese la coordenada en ");
+                    for (int dx = -radio; dx <= radio; dx++) {
+                        for (int dy = -radio; dy <= radio; dy++) {
+                            for (int dz = -radio; dz <= radio; dz++) {
+                                Coordenada nuevaCoordenadas = new Coordenada(coordenadas.getX() + dx, coordenadas.getY() + dy, coordenadas.getZ() + dz);
 
-                            if (coordenadasValidas(nuevaCoordenadas)) {
-                                sector = tablero.obtenerSector(nuevaCoordenadas);
-                                pieza = sector.obtenerValor();
-                                if (pieza != null && pieza.obtenerTipo() != TipoPieza.VACIO && !esCasillaPropia(pieza)) {
-                                    atacarSector(nuevaCoordenadas, naveSeleccionada);
+                                if (coordenadasValidas(nuevaCoordenadas)) {
+                                    sector = tablero.obtenerSector(nuevaCoordenadas);
+                                    pieza = sector.obtenerValor();
+                                    if (pieza != null && pieza.obtenerTipo() != TipoPieza.VACIO && !esCasillaPropia(pieza)) {
+                                        atacarSector(nuevaCoordenadas, naveSeleccionada);
+                                    }
                                 }
                             }
                         }
                     }
                 }
                 System.out.println("¡Ataque en área realizado exitosamente!");
+                return true;
             }
             case NAVE_OBTIENE_ESCUDO -> {
-                Nave naveSeleccionada = seleccionarPieza(jugador.obtenerNaves(), "Nave");
-                if (naveSeleccionada == null) {
-                    System.out.println("Selección inválida.");
-                    return;
+                if (jugador.obtenerNaves().largo() < 1){
+                    System.out.println("No se puede usar esta carta sin naves");
+                    return false;
+                } else {
+                    Nave naveSeleccionada = seleccionarPieza(jugador.obtenerNaves(), "Nave");
+                    if (naveSeleccionada == null) {
+                        System.out.println("Selección inválida.");
+                        return false;
+                    }
+                    naveSeleccionada.aumentarEscudo(ESCUDO_EXTRA);
+                    System.out.println("¡Escudo de la nave aumentado exitosamente!");
+                    return true;
                 }
-                naveSeleccionada.aumentarEscudo(ESCUDO_EXTRA);
-                System.out.println("¡Escudo de la nave aumentado exitosamente!");
             }
             default -> {
                 System.out.println("Tipo de carta no reconocido.");
             }
         }
+        return false;
     }
     
     /**
