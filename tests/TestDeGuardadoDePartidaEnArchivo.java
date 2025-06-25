@@ -1,5 +1,6 @@
 package tests;
 
+import Coordenada.Coordenada;
 import estructuras.lista.ListaSimplementeEnlazada;
 import jugador.Alianza;
 import jugador.Jugador;
@@ -49,9 +50,9 @@ public class TestDeGuardadoDePartidaEnArchivo {
     ListaSimplementeEnlazada<Jugador> jugadores = new ListaSimplementeEnlazada<>();
 
     Jugador jugador = new Jugador("test");
-    jugador.agregarBase(new Base(jugador, 1,1,1,"b", 100, 50));
-    jugador.agregarNave(new Nave(jugador, 2, 2, 2, "n", 80, 30));
-    jugador.agregarSatelite(new Satelite(jugador, 3,3,3, "s", 60, 40));
+    jugador.agregarBase(new Base(jugador,  new Coordenada(1,1,1),"b", 100, 50));
+    jugador.agregarNave(new Nave(jugador, new Coordenada(2, 2, 2), "n", 80, 30));
+    jugador.agregarSatelite(new Satelite(jugador, new Coordenada(3,3,3), "s", 60, 40));
 
     jugadores.insertarUltimo(jugador);
 
@@ -76,23 +77,23 @@ public class TestDeGuardadoDePartidaEnArchivo {
     String archivo = tempDir.resolve("partida.txt").toString();
 
     Jugador jugador = new Jugador("jugador1");
-    jugador.agregarBase(new Base(jugador, 1,1,1,"b", 100, 50));
-    jugador.agregarNave(new Nave(jugador, 2, 2, 2, "n", 80, 30));
-    jugador.agregarSatelite(new Satelite(jugador, 3,3,3, "s", 60, 40));
+    jugador.agregarBase(new Base(jugador, new Coordenada(1,1,1),"b", 100, 50));
+    jugador.agregarNave(new Nave(jugador, new Coordenada(2, 2, 2), "n", 80, 30));
+    jugador.agregarSatelite(new Satelite(jugador, new Coordenada(3,3,3), "s", 60, 40));
 
     jugadores.insertarUltimo(jugador);
 
     Jugador jugador2 = new Jugador("jugador2");
-    jugador2.agregarBase(new Base(jugador2, 4,4,4,"b", 100, 50));
-    jugador2.agregarNave(new Nave(jugador2, 5, 5, 5, "n", 80, 30));
-    jugador2.agregarSatelite(new Satelite(jugador2, 6,6,6, "s", 60, 40));
+    jugador2.agregarBase(new Base(jugador2, new Coordenada(4,4,4),"b", 100, 50));
+    jugador2.agregarNave(new Nave(jugador2, new Coordenada(5, 5, 5), "n", 80, 30));
+    jugador2.agregarSatelite(new Satelite(jugador2, new Coordenada(6,6,6), "s", 60, 40));
 
     jugadores.insertarUltimo(jugador2);
 
     Jugador jugador3 = new Jugador("jugador3");
-    jugador3.agregarBase(new Base(jugador2, 7,7,7,"b", 100, 50));
-    jugador3.agregarNave(new Nave(jugador2, 8, 8, 8, "n", 80, 30));
-    jugador3.agregarSatelite(new Satelite(jugador2, 9,9,9, "s", 60, 40));
+    jugador3.agregarBase(new Base(jugador2, new Coordenada(7,7,7),"b", 100, 50));
+    jugador3.agregarNave(new Nave(jugador2, new Coordenada(8, 8, 8), "n", 80, 30));
+    jugador3.agregarSatelite(new Satelite(jugador2, new Coordenada(9,9,9), "s", 60, 40));
 
     jugadores.insertarUltimo(jugador3);
 
