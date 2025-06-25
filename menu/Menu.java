@@ -54,34 +54,35 @@ public class Menu {
     private int dimension; // Dimensiones del tablero
 
     private int numJugadores;  // Número de jugadores
-    private int jugadorActual = 1; // Jugador actual (1 a número de jugadores) [Usar una cola para el turno]
+    private int jugadorActual; // Jugador actual (1 a número de jugadores) [Usar una cola para el turno]
     private Jugador[] jugadores;    // Arreglo de jugadores
 
-    private final ListaSimplementeEnlazada<Jugador> listaJugadores = new ListaSimplementeEnlazada<>();
-    private final ListaSimplementeEnlazada<Alianza> alianzas = new ListaSimplementeEnlazada<>();
-    private ListaSimplementeEnlazada<Pieza> piezasDetectadas = new ListaSimplementeEnlazada<>(); // Lista para almacenar piezas detectadas por satélites
+    private final ListaSimplementeEnlazada<Jugador> listaJugadores;
+    private final ListaSimplementeEnlazada<Alianza> alianzas;
+    private ListaSimplementeEnlazada<Pieza> piezasDetectadas; // Lista para almacenar piezas detectadas por satélites
 
     private Mazo mazo; // Instancia de la clase Mazo
-    Scanner sc = new Scanner(System.in);    // Creo un objeto Scanner
+    private final Scanner sc; // Scanner para entrada del usuario
 
-
+    /**
+     * Constructor de la clase Menu.
+     * Inicializa el jugador actual, el scanner, las listas de jugadores, alianzas y piezas detectadas.
+     */
     public Menu() {
-        this.tablero = null; // Se inicializará más tarde cuando se cree o cargue la partida
-        this.dimension = 0; // Se establecerá al iniciar una nueva partida o cargar una existente
-        this.numJugadores = 0; // Se establecerá al iniciar una nueva partida
-        this.jugadorActual = 1; // El juego siempre comienza con el jugador 1
-        this.jugadores = null; // Se inicializará al crear los jugadores
-        // Las listas ya están inicializadas como campos finales
-        this.mazo = null; // Se creará cuando comience el juego
-        this.sc = new Scanner(System.in); // Scanner para entrada del usuario
+        this.jugadorActual = 1;
+        this.sc = new Scanner(System.in);
+        this.listaJugadores = new ListaSimplementeEnlazada<>();
+        this.alianzas = new ListaSimplementeEnlazada<>();
+        this.piezasDetectadas = new ListaSimplementeEnlazada<>();
     }
+
     /**
      * Muestra el menú del juego y maneja las acciones de los jugadores.
      * Itera a través de los turnos de los jugadores, permitiendo realizar acciones como agregar naves,
      * mover naves, agregar satélites, atacar sectores, robar cartas, usar cartas, formar alianzas y dejar de jugar.
      * El juego continúa hasta que solo queda un jugador o se decide dejar de jugar.
      */
-    public void menu() {
+    public void jugar() {
         this.mensajeInicial();
         Accion accion;
         ListaSimplementeEnlazada<Carta> listaCartas = CartaUtils.crearListaDeCartasBase(jugadores.length);
