@@ -17,16 +17,9 @@ public class Vacio extends Pieza {
 
     /**
      * Construye un sector Vacio en las coordenadas dadas
-     * @param coordenadas Coordenadas del sector vacío
+     * @param coordenadas Coordenadas del sector vacío no pueden ser vacias
      */
     public Vacio(Coordenada coordenadas) {
         super(TipoPieza.VACIO, null, coordenadas, NOMBRE, VIDA, ESCUDO);
-        if (!(this.obtenerCoordenadas() != null && 
-                this.obtenerCoordenadas() != null)) {
-            throw new RuntimeException("Creación de pieza Vacio inválida: " + 
-                    "Nombre: " + NOMBRE + ", " +
-                    "Vida: " + VIDA + ", " +
-                    "Coordenadas: [" + coordenadas.getX() + ", " + coordenadas.getY() + ", " + coordenadas.getZ() + "]");
-        }
     }
 }

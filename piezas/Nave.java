@@ -19,14 +19,12 @@ public class Nave extends Pieza {
 
     /**
      * Constructor de la nave.
-     * @param duenio        Jugador propietario de la nave
-     * @param coordenadas   Coordenadas de la nave en el tablero
-     * @param nombre        Representación de la nave en el tablero
-     * @param vida          Vida inicial de la nave
-     * @param danioInicial  Poder de ataque inicial de la nave (debe ser mayor a cero)
+	 * @param duenio: Jugador dueño de la pieza 
+	 * @param coordenadas: Coordenadas de la pieza en el tablero no pueden ser nulas
+	 * @param nombre: Nombre de la pieza no puede ser nulo y debe tener al menos 1 caracter
+	 * @param vida: Vida inicial de la pieza (debe ser mayor a cero)
+	 * @param danioInicial  Poder de ataque inicial de la nave (debe ser mayor a cero)
      * 
-     * @throws RuntimeException si la creación de la pieza no es válida
-     * @throws IllegalArgumentException si el daño inicial es menor o igual a cero
      */
     public Nave(Jugador duenio, Coordenada coordenadas, String nombre, int vida, int danioInicial) {
         super(TipoPieza.NAVE, duenio, coordenadas, nombre, vida, ESCUDO);

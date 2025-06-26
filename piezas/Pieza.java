@@ -23,44 +23,21 @@ public class Pieza {
 	 * Constructor de la clase Pieza.
 	 * 
 	 * @param tipo: Tipo de la pieza (debe pertenecer a TipoPieza)
-	 * @param duenio: Jugador dueño de la pieza
-	 * @param coordenadas: Coordenadas de la pieza en el tablero
-	 * @param nombre: Nombre de la pieza
+	 * @param duenio: Jugador dueño de la pieza 
+	 * @param coordenadas: Coordenadas de la pieza en el tablero no pueden ser nulas
+	 * @param nombre: Nombre de la pieza no puede ser nulo y debe tener al menos 1 caracter
 	 * @param vida: Vida inicial de la pieza (debe ser mayor a cero)
 	 * @param escudo: Escudo inicial de la pieza (debe ser mayor o igual a cero)
 	 */
 	public Pieza(TipoPieza tipo, Jugador duenio, Coordenada coordenadas, String nombre, int vida, int escudo) {
+		ValidacionesUtils.validarMayorACero(vida, "Vida");
+		ValidacionesUtils.validarPositivo(escudo, "Escudo");
 		this.tipo = tipo;
 		this.duenio = duenio;
 		this.cambiarCoordenadas(coordenadas);
 		this.cambiarNombre(nombre);
-		this.cambiarVida(vida);
-		this.cambiarEscudo(escudo);
-	}
-
-	/**
-	 * Verifica si la creación de la pieza es válida.
-	 * 
-	 * @return true si la creación es válida, false en caso contrario
-	 */
-	protected boolean creacionValida() {
-    	return duenio != null &&
-				nombre != null && 
-				!nombre.isEmpty() && 
-				vida > 0 && 
-				escudo >= 0 && 
-				coordenadas != null && 
-				coordenadas != null;
-	}
-
-	/**
-	 * Verifica si la pieza pertenece a un jugador específico.
-	 * 
-	 * @param jugador: Jugador a verificar
-	 * @return true si la pieza pertenece al jugador, false en caso contrario
-	 */
-	public boolean perteneceAJugador(Jugador jugador) {
-		return this.duenio.equals(jugador);
+		this.vida = vida;
+		this.escudo = escudo;
 	}
 	
 	
@@ -68,7 +45,6 @@ public class Pieza {
 	 * Incrementa el valor de la vida de la pieza.
 	 * 
 	 * @param vida: cantidad de vida a aumentar (debe ser mayor a cero)
-	 * @throws RuntimeException si la cantidad de vida a aumentar no es mayor a cero.
 	 */
 	public void aumentarVida(int vida) {
 		ValidacionesUtils.validarMayorACero(vida, "Vida");
@@ -79,7 +55,6 @@ public class Pieza {
 	 * Reduce la vida de la pieza.
 	 * 
 	 * @param danioInfligido: cantidad de daño infligido (debe ser mayor a cero)
-	 * @throws RuntimeException si la cantidad de daño infligido no es mayor a cero.
 	 */
 	public void reducirVida(int danioInfligido) {
 		ValidacionesUtils.validarMayorACero(danioInfligido, "Danio infligido");
@@ -92,7 +67,6 @@ public class Pieza {
 	 * Si el valor proporcionado no cumple con esta condición, se lanza una excepción.
 	 *
 	 * @param escudo el valor del escudo que se establecerá. Debe ser mayor a cero.
-	 * @throws RuntimeException si el valor del escudo no es mayor a cero.
 	 */
 	public void aumentarEscudo(int escudo) {
 		ValidacionesUtils.validarMayorACero(escudo, "Escudo");
@@ -105,7 +79,6 @@ public class Pieza {
 	 * menor a cero, este se establece en cero.
 	 *
 	 * @param danioInfligido el valor del daño que se infligirá al escudo. Debe ser mayor a cero.
-	 * @throws RuntimeException si el daño infligido no es mayor a cero.
 	 */
 	public void reducirEscudo(int danioInfligido) {
 		ValidacionesUtils.validarMayorACero(danioInfligido, "Danio infligido");
@@ -119,7 +92,6 @@ public class Pieza {
 	/**
 	 * Devuelve el valor del escudo de la pieza.
 	 *
-	 * @return el estado actual del escudo como un valor entero.
 	 * @author Patricio Alaniz
 	 */
 	public int obtenerEscudo() {
@@ -128,7 +100,7 @@ public class Pieza {
 
 	/**
 	 * Devuelve el dueño de la pieza.
-	 * @return
+	 * @return 
 	 */
 	public Jugador obtenerDuenio() {
 		return this.duenio;
@@ -144,7 +116,7 @@ public class Pieza {
 	
 	/**
 	 * Devuelve el tipo de pieza de la pieza.
-	 * @return
+	 * @return 
 	 */
 	public TipoPieza obtenerTipo() {
 		return this.tipo;
@@ -152,7 +124,7 @@ public class Pieza {
 	
 	/**
 	 * Devuelve las coordenas de la pieza.
-	 * @return
+	 * @return 
 	 */
 	public Coordenada obtenerCoordenadas() {
 		return this.coordenadas;
@@ -160,7 +132,7 @@ public class Pieza {
 	
 	/**
 	 * Devuelve el valor de la vida de la pieza.
-	 * @return
+	 * @return 
 	 */
 	public int obtenerVida() {
 		return this.vida;
@@ -168,31 +140,16 @@ public class Pieza {
 
 	/**
 	 * Cambia el nombre de la pieza.
-	 * @param nombre: no puede ser nulo
+	 * @param nombre: no puede ser nulo y debe tener al menos un caracter
 	 */
 	private void cambiarNombre(String nombre) {
 		ValidacionesUtils.noNulo(nombre, "Nombre asignado");
+		if (nombre.trim().isEmpty()) {
+			throw new IllegalArgumentException("El nombre de la pieza debe tener al menos un caracter.");
+		}
 		this.nombre = nombre;
 	}
 
-	/**
-	 * Cambia el valor de vida de la pieza.
-	 * @param vida: debe ser mayor a 0
-	 */
-	private void cambiarVida(int vida) {
-		ValidacionesUtils.validarMayorACero(vida, "Vida");
-		this.vida = vida;
-
-	}
-
-	/**
-	 * Cambia el valor de escudo de la pieza.
-	 * @param escudo: no puede ser menor a 0
-	 */
-	private void cambiarEscudo(int escudo) {
-		ValidacionesUtils.validarPositivo(escudo, "Escudo");
-		this.escudo = escudo;
-	}
 
 	/**
 	 * Cambia las coordenadas de la pieza.

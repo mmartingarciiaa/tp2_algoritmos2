@@ -12,25 +12,14 @@ import jugador.Jugador;
 public class Base extends Pieza {
     /**
      * Constructor de la clase Pieza 
-     * @param duenio: jugador al que pertenece la base
-     * @param coordenadas: coordenadas de la base 
-     * @param nombre: nombre de la base
-     * @param vida: vida de la base 
-     * @param escudo: escudo de la base
-     * 
-     * @throws RuntimeException si la creación de la pieza no es válida
+	 * @param duenio: Jugador dueño de la pieza 
+	 * @param coordenadas: Coordenadas de la pieza en el tablero no pueden ser nulas
+	 * @param nombre: Nombre de la pieza no puede ser nulo y debe tener al menos 1 caracter
+	 * @param vida: Vida inicial de la pieza (debe ser mayor a cero)
+	 * @param escudo: Escudo inicial de la pieza (debe ser mayor o igual a cero)
      */
 	public Base(Jugador duenio, Coordenada coordenadas, String nombre, int vida, int escudo) {
         // Llama al constructor de la clase base Pieza
 		super(TipoPieza.BASE, duenio, coordenadas, nombre, vida, escudo);
-        if (!creacionValida()) {
-            throw new RuntimeException("Creación de pieza Base inválida: " + 
-                    "Dueño: " + duenio + ", " +
-                    "Nombre: " + nombre + ", " +
-                    "Vida: " + vida + ", " +
-                    "Escudo: " + escudo + ", " +
-                    "Coordenadas: [" + coordenadas.getX() + ", " + coordenadas.getY() + ", " + coordenadas.getZ() + "]");
-        }
-	}
-
+    }
 }

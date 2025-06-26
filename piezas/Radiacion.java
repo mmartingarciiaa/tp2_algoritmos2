@@ -9,35 +9,20 @@ import enums.TipoPieza;
  * Hereda de la clase Pieza y define las características específicas de una pieza con radiación activa.
  */
 public class Radiacion extends Pieza {
-    private static final int VIDA = 1;
+    private static final int ESCUDO = 0;
     private int turnosActiva;
     private boolean recienCreada;
 
     /**
      * Constructor de la clase Radiacion
-     * @param duenio: dueño de la pieza con radiacion activa
-     * @param coordenadas: coordenadas de la pieza con radiacion activa
-     * @param duracion: cuantos turnos la pieza va a tener radiacion activa
+	 * @param duenio: Jugador dueño de la pieza 
+	 * @param coordenadas: Coordenadas de la pieza en el tablero no pueden ser nulas
+     * @param duracion: cuantos turnos la pieza va a tener radiacion activa (debe ser mayor a cero)
      */
     public Radiacion(Coordenada coordenadas, int duracion, String nombre) {
-        super(TipoPieza.RADIACION, null, coordenadas, nombre, VIDA, duracion);
+        super(TipoPieza.RADIACION, null, coordenadas, nombre, duracion, ESCUDO);
         this.turnosActiva = duracion;
-        if (!creacionValida()) {
-            throw new RuntimeException("Creación de pieza Radiación inválida: " + 
-                    "Dueño: null, " +
-                    "Nombre: " + nombre + ", " +
-                    "Vida: " + VIDA + ", " +
-                    "Coordenadas: [" + coordenadas.getX() + ", " + coordenadas.getY() + ", " + coordenadas.getZ() + "]");
-        }
         this.recienCreada = true;
-    }
-
-    @Override
-    protected boolean creacionValida() {
-        return this.obtenerNombre() != null &&
-                !this.obtenerNombre().isEmpty() &&
-                turnosActiva > 0 &&
-                this.obtenerCoordenadas() != null && this.obtenerCoordenadas() != null;
     }
 
 
@@ -66,6 +51,6 @@ public class Radiacion extends Pieza {
      *  Devuelve true si la radiacion sigue activa y false si no
      */
     public boolean estaActiva() {
-        return this.turnosActiva >= 0;
+        return this.turnosActiva > 0;
     }
 }
