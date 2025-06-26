@@ -10,6 +10,7 @@ import enums.TipoPieza;
  */
 public class Radiacion extends Pieza {
     private static final int ESCUDO = 0;
+    private static final int VIDA = 1;
     private int turnosActiva;
     private boolean recienCreada;
 
@@ -20,7 +21,7 @@ public class Radiacion extends Pieza {
      * @param duracion: cuantos turnos la pieza va a tener radiacion activa (debe ser mayor a cero)
      */
     public Radiacion(Coordenada coordenadas, int duracion, String nombre) {
-        super(TipoPieza.RADIACION, null, coordenadas, nombre, duracion, ESCUDO);
+        super(TipoPieza.RADIACION, null, coordenadas, nombre, VIDA, ESCUDO);
         this.turnosActiva = duracion;
         this.recienCreada = true;
     }

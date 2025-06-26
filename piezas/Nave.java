@@ -14,7 +14,7 @@ import utils.ValidacionesUtils;
  */
 
 public class Nave extends Pieza {
-    private static final int ESCUDO = 0;
+    private static final int ESCUDO_INICIAL = 0;
     private int danio;
 
     /**
@@ -27,7 +27,7 @@ public class Nave extends Pieza {
      * 
      */
     public Nave(Jugador duenio, Coordenada coordenadas, String nombre, int vida, int danioInicial) {
-        super(TipoPieza.NAVE, duenio, coordenadas, nombre, vida, ESCUDO);
+        super(TipoPieza.NAVE, duenio, coordenadas, nombre, vida, ESCUDO_INICIAL);
         ValidacionesUtils.validarMayorACero(danioInicial, "Daño inicial de la nave");
         this.danio = danioInicial;
     }

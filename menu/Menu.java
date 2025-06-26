@@ -32,7 +32,6 @@ public class Menu {
     private final int VIDA_NAVE = 1;  // Vida inicial de la nave
     private final int DANIO_INICIAL_NAVE = 1; // Daño inicial de la nave
     
-    private final int VIDA_SATELITE = 1;  // Vida inicial del satélite
     private final int FACTOR_DETECCION_SATELITE = 4; // Factor de detección del satélite
     private final int FACTOR_RASTREADOR_CUANTICO = 2; // Factor de rastreo del rastreador cuántico
 
@@ -382,7 +381,7 @@ public class Menu {
             }
 
         } else {
-            Satelite satelite = new Satelite(jugadores[jugadorActual - 1], coordenadas, SATELITE, VIDA_SATELITE, dimension / FACTOR_DETECCION_SATELITE);
+            Satelite satelite = new Satelite(jugadores[jugadorActual - 1], coordenadas, SATELITE, dimension / FACTOR_DETECCION_SATELITE);
             tablero.asignarValor(coordenadas, satelite);
 
             // Incrementar la cantidad de satélites del jugador actual

@@ -127,7 +127,7 @@ public class CargadoDePartida {
                         throw new IllegalArgumentException("Falta radio para el satélite: " + linea);
                     }
                     int radio = Integer.parseInt(partes[4].trim());
-                    pieza = new Satelite(jugador, coords, "S", vida, radio);
+                    pieza = new Satelite(jugador, coords, "S", radio);
                     jugador.agregarSatelite((Satelite) pieza);
                 }
                 default -> {

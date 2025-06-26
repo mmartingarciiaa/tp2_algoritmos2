@@ -14,6 +14,7 @@ import utils.ValidacionesUtils;
 
 public class Satelite extends Pieza {
     private static final int ESCUDO = 0;
+    private static final int VIDA = 1;
     private final int radioDeteccion;
 
     /**
@@ -25,8 +26,8 @@ public class Satelite extends Pieza {
      * @param radioDeteccion Radio de detección del satélite debe ser mayor a 0
      *    
      */
-    public Satelite(Jugador duenio, Coordenada coordenadas, String nombre, int vida, int radioDeteccion) {
-        super(TipoPieza.SATELITE, duenio, coordenadas, nombre, vida, ESCUDO);
+    public Satelite(Jugador duenio, Coordenada coordenadas, String nombre, int radioDeteccion) {
+        super(TipoPieza.SATELITE, duenio, coordenadas, nombre, VIDA, ESCUDO);
         ValidacionesUtils.validarMayorACero(radioDeteccion, "Radio de detección");
         this.radioDeteccion = radioDeteccion;
     }
